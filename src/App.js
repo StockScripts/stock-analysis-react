@@ -1,24 +1,18 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import NavBar from './navBar/NavBar'
+import PerformanceReport from './reports/PerformanceReport'
+
+export const CompanyContext = React.createContext()
 
 function App() {
+  const [company, setCompany] = React.useState()
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <CompanyContext.Provider value={setCompany}>
+        <NavBar />
+        <PerformanceReport company={company} />
+      </CompanyContext.Provider>
     </div>
   );
 }
