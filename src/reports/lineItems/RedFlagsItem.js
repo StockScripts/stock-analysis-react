@@ -1,6 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import { formatValue } from './utils'
 
 function RedFlags({data}) {
   const {

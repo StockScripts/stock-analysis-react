@@ -1,6 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import { formatValue } from './utils'
 
 function DebtRepaymentItem({data}) {
   const {year1, year2, year3, year4} = data
