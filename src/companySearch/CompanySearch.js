@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { getCompanies } from './companyAPI'
+import { useHistory } from 'react-router-dom';
+import { getCompanies, getCompany } from './companyAPI'
 import { CompanyContext } from '../App'
 
-function CompanySearch() {
+function CompanySearch(props) {
+  let history = useHistory()
   const [ticker, setTicker] = useState()
   const  [companies, setCompanies] = useState()
+  const  [selectedCompany, setSelectedCompany] = useState()
 
   const setCompany = useContext(CompanyContext)
 
@@ -19,6 +22,15 @@ function CompanySearch() {
     })
   }, [ticker])
 
+  useEffect(() => {
+    if (selectedCompany) {
+      getCompany(selectedCompany).then(company => {
+        setCompany(company)
+        history.push('/report')
+      })
+    }
+  }, [selectedCompany])
+
   const handleChange = (e) => {
     setTicker(e.target.value)
   }
@@ -26,10 +38,7 @@ function CompanySearch() {
   const handleSubmit = (e) => {
     e.preventDefault()
     if (ticker) {
-      const selectedCompany = companies.find(company => (
-        company.ticker.toLowerCase() == ticker.toLowerCase()
-      ))
-      setCompany(selectedCompany)
+      setSelectedCompany(ticker)
       clearEntry()
     }
   }
@@ -40,8 +49,19 @@ function CompanySearch() {
   }
 
   const selectCompany = (e) => {
-    const selectedCompany = companies.find(company => (company.id == e.target.value))
-    setCompany(selectedCompany)
+    const value = e.target.value
+    let selectedCompany = companies.find(company => {
+      if (company.id) {
+        return company.id.toString() === value
+      }
+      return company.symbol === value
+    })
+    if (selectedCompany.id) {
+      setCompany(selectedCompany)
+      history.push('/report')
+    } else {
+      setSelectedCompany(selectedCompany.symbol)
+    }
     clearEntry()
   }
 
@@ -49,13 +69,14 @@ function CompanySearch() {
     if (!!companies && companies.length > 0) {
       let companyItems = companies.map(company =>
         <option
+          key={company.symbol}
           className="block px-4 py-2 text-md leading-5 text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:bg-gray-100 focus:text-gray-900 whitespace-normal"
-          value={company.id} onClick={selectCompany}
+          value={company.id || company.symbol} onClick={selectCompany}
         >
-          {company.ticker} - {company.name}
+          {company.symbol} - {company.name || company.securityName}
         </option>
       )
-      companyItems.unshift(<option hidden></option>)  //first option is automatically selected when user presses enter
+      companyItems.unshift(<option key='hidden' hidden></option>)  //first option is automatically selected when user presses enter
       return (
         <div
           className="absolute left-0 mt-2 w-56 shadow-lg rounded bg-white"
@@ -68,7 +89,7 @@ function CompanySearch() {
 
   return (
     <div className="relative">
-      <form autocomplete="off" onSubmit={handleSubmit}>
+      <form autoComplete="off" onSubmit={handleSubmit}>
         <input 
           className="bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded shadow py-2 px-4 m-2 appearance-none leading-normal"
           placeholder="Ticker or Company"

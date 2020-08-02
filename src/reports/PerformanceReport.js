@@ -18,22 +18,18 @@ function PerformanceReport({company}) {
 
   React.useEffect(() => {
     if (!!company) {
-      getPerformanceReportById(company.id).then(reportData => {
-        setReportData(reportData)
-      })
+      if (typeof company === 'string') {
+        getPerformanceReportByTicker(company).then(reportData => {
+          setReportData(reportData)
+        })
+      } else if (company.id) {
+        getPerformanceReportById(company.id).then(reportData => {
+          setReportData(reportData)
+        })
+      }
       return
     }
   }, [company])
-
-  const formatValue = (value) => {
-    const numDigits = value.toString().length
-    if (numDigits > 9) {
-      return `${(value/1000000000).toString()}B`
-    } else if (numDigits > 6) {
-      return `${(value/1000000).toString()}M`
-    }
-    return value
-  }
 
   const renderTable = (data) => {
     const {performance_reports} = data
@@ -44,60 +40,62 @@ function PerformanceReport({company}) {
     return (
       <div>
         <table className="shadow-lg bg-white mb-10">
-          <tr>
-            <th className="bg-indigo-100 border-t border-l border-r-0 text-left px-8 py-4"></th>
-            <th className="bg-indigo-100 border-t border-r-0 text-left px-8 py-4 text-indigo-800">{year1.fiscal_date}</th>
-            <th className="bg-indigo-100 border-t border-r-0 text-left px-8 py-4 text-indigo-800">{year2.fiscal_date}</th>
-            <th className="bg-indigo-100 border-t border-r-0 text-left px-8 py-4 text-indigo-800">{year3.fiscal_date}</th>
-            <th className="bg-indigo-100 border-t border-r text-left px-8 py-4 text-indigo-800">{year4.fiscal_date}</th>
-          </tr>
-          <RevenueItem data={{year1, year2, year3, year4}} />
-          <ProfitItem data={{year1, year2, year3, year4}} />
-          <ReturnsItem data={{year1, year2, year3, year4}} />
-          <FreeCashFlowItem data={{year1, year2, year3, year4}} />
-          <LeverageItem data={{year1, year2, year3, year4}} />
-          <DebtRepaymentItem data={{year1, year2, year3, year4}} />
-          <LiquidityItem data={{year1, year2, year3, year4}} />
-          <DividendItem data={{year1, year2, year3, year4}} />
-          <RedFlagsItem
-            data={{
-              receivablesToSales: {
-                year1: year1.receivables_to_sales,
-                year2: year2.receivables_to_sales,
-                year3: year3.receivables_to_sales,
-                year4: year4.receivables_to_sales
-              },
-              inventoryToSales: {
-                year1: year1.inventory_to_sales,
-                year2: year2.inventory_to_sales,
-                year3: year3.inventory_to_sales,
-                year4: year4.inventory_to_sales
-              },
-              opExToSales: {
-                year1: year1.operating_expense_to_sales,
-                year2: year2.operating_expense_to_sales,
-                year3: year3.operating_expense_to_sales,
-                year4: year4.operating_expense_to_sales
-              },
-              sgaToSales: {
-                year1: year1.sga_to_sales,
-                year2: year2.sga_to_sales,
-                year3: year3.sga_to_sales,
-                year4: year4.sga_to_sales
-              }
-            }}
-          />
+          <tbody>
+            <tr>
+              <th className="bg-indigo-100 border-t border-l border-r-0 text-left px-8 py-4"></th>
+              <th className="bg-indigo-100 border-t border-r-0 text-left px-8 py-4 text-indigo-800">{year1.fiscal_date}</th>
+              <th className="bg-indigo-100 border-t border-r-0 text-left px-8 py-4 text-indigo-800">{year2.fiscal_date}</th>
+              <th className="bg-indigo-100 border-t border-r-0 text-left px-8 py-4 text-indigo-800">{year3.fiscal_date}</th>
+              <th className="bg-indigo-100 border-t border-r text-left px-8 py-4 text-indigo-800">{year4.fiscal_date}</th>
+            </tr>
+            <RevenueItem data={{year1, year2, year3, year4}} />
+            <ProfitItem data={{year1, year2, year3, year4}} />
+            <ReturnsItem data={{year1, year2, year3, year4}} />
+            <FreeCashFlowItem data={{year1, year2, year3, year4}} />
+            <LeverageItem data={{year1, year2, year3, year4}} />
+            <DebtRepaymentItem data={{year1, year2, year3, year4}} />
+            <LiquidityItem data={{year1, year2, year3, year4}} />
+            <DividendItem data={{year1, year2, year3, year4}} />
+            <RedFlagsItem
+              data={{
+                receivablesToSales: {
+                  year1: year1.receivables_to_sales,
+                  year2: year2.receivables_to_sales,
+                  year3: year3.receivables_to_sales,
+                  year4: year4.receivables_to_sales
+                },
+                inventoryToSales: {
+                  year1: year1.inventory_to_sales,
+                  year2: year2.inventory_to_sales,
+                  year3: year3.inventory_to_sales,
+                  year4: year4.inventory_to_sales
+                },
+                opExToSales: {
+                  year1: year1.operating_expense_to_sales,
+                  year2: year2.operating_expense_to_sales,
+                  year3: year3.operating_expense_to_sales,
+                  year4: year4.operating_expense_to_sales
+                },
+                sgaToSales: {
+                  year1: year1.sga_to_sales,
+                  year2: year2.sga_to_sales,
+                  year3: year3.sga_to_sales,
+                  year4: year4.sga_to_sales
+                }
+              }}
+            />
+          </tbody>
         </table>
       </div>
     )
   }
 
   return (
-    company ? <div className="static">
+    company ? <div className="static mt-45 bg-white">
       <div className="text-center">
         <div className="inline-block">
           <div className="text-left text-indigo-800 text-xl font-bold m-3">
-            {`${company.name} (${company.ticker})`}
+            {`${company.name } (${company.symbol})`}
           </div>
           <div>{reportData ? renderTable(reportData) : null}</div>
         </div>
