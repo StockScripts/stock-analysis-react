@@ -1,4 +1,6 @@
 import React from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faChartLine } from '@fortawesome/free-solid-svg-icons'
 import CompanySearch from '../companySearch/CompanySearch'
 
 function NavBar() {
@@ -9,8 +11,8 @@ function NavBar() {
         
       <div className="pl-4 flex items-center">
         <a className="toggleColour text-white no-underline hover:no-underline font-bold text-2xl lg:text-4xl"  href="/"> 
-          <svg className="fill-current h-8 w-8 mr-2 inline" width="54" height="54" viewBox="0 0 54 54" xmlns="http://www.w3.org/2000/svg"><path d="M13.5 22.1c1.8-7.2 6.3-10.8 13.5-10.8 10.8 0 12.15 8.1 17.55 9.45 3.6.9 6.75-.45 9.45-4.05-1.8 7.2-6.3 10.8-13.5 10.8-10.8 0-12.15-8.1-17.55-9.45-3.6-.9-6.75.45-9.45 4.05zM0 38.3c1.8-7.2 6.3-10.8 13.5-10.8 10.8 0 12.15 8.1 17.55 9.45 3.6.9 6.75-.45 9.45-4.05-1.8 7.2-6.3 10.8-13.5 10.8-10.8 0-12.15-8.1-17.55-9.45-3.6-.9-6.75.45-9.45 4.05z"/></svg>
-          PixyStocks
+          <FontAwesomeIcon icon={faChartLine} />
+          <span className="ml-4">PixyStocks</span>
         </a>
       </div>
 
@@ -22,7 +24,7 @@ function NavBar() {
 
       <div className="w-full flex-grow lg:flex lg:items-center lg:w-auto hidden lg:block mt-2 lg:mt-0 bg-white lg:bg-transparent text-black p-4 lg:p-0 z-20" id="nav-content">
         <ul className="list-reset lg:flex justify-end flex-1 items-center">
-          <li className="mr-3">
+          {/* <li className="mr-3">
             <a className="inline-block py-2 px-4 text-black font-bold no-underline" href="/">Active</a>
           </li>
           <li className="mr-3">
@@ -30,9 +32,9 @@ function NavBar() {
           </li>
           <li className="mr-3">
             <a className="inline-block text-black no-underline hover:text-gray-800 hover:text-underline py-2 px-4" href="/">link</a>
-          </li>
+          </li> */}
         </ul>
-        <button id="navAction" className="mx-auto lg:mx-0 hover:underline bg-white text-gray-800 font-bold rounded-full mt-4 lg:mt-0 py-4 px-8 shadow opacity-75">Action</button>
+        {/* <button id="navAction" className="mx-auto lg:mx-0 hover:underline bg-white text-gray-800 font-bold rounded-full mt-4 lg:mt-0 py-4 px-8 shadow opacity-75">Action</button> */}
         <div>
         <CompanySearch />
       </div>

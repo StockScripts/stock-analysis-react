@@ -1,4 +1,5 @@
 import React from 'react';
+import CompanySearch from '../companySearch/CompanySearch'
 
 export default function Home() {
   return (
@@ -6,15 +7,12 @@ export default function Home() {
       <div className="pt-24">
         <div className="container px-3 mx-auto flex flex-wrap flex-col md:flex-row items-center">
           <div className="flex flex-col w-full md:w-2/5 justify-center items-start text-center md:text-left">
-            <p className="uppercase tracking-loose w-full">What business are you?</p>
-            <h1 className="my-4 text-5xl font-bold leading-tight">Main Hero Message to sell yourself!</h1>
-            <p className="leading-normal text-2xl mb-8">Sub-hero message, not too long and not too short. Make it just right!</p>
-
-            <button className="mx-auto lg:mx-0 hover:underline bg-white text-gray-800 font-bold rounded-full my-6 py-4 px-8 shadow-lg">Subscribe</button>
-            
+            <p className="uppercase tracking-loose w-full">Looking for quality stocks to invest in?</p>
+            <h1 className="my-4 text-5xl font-bold leading-tight">Quickly evaluate companies and start investing!</h1>
+            <p className="leading-normal text-2xl mb-8">Simple and straightforward. Get just the information you need.</p>
           </div>
-          <div className="w-full md:w-3/5 py-6 text-center">
-            <img className="w-full md:w-4/5 z-50" alt='checklist' src={require('./hero.png')} />
+          <div className="w-full md:w-3/5 py-6 text-right">
+            <img className="w-full md:w-4/5 z-50 ml-auto rounded-lg mb-10" alt='graph' src={require('./charts.png')} />
           </div>
         </div>
       </div>
@@ -36,17 +34,23 @@ export default function Home() {
 
       <section className="bg-white border-b py-8">
         <div className="container max-w-5xl mx-auto m-8">
-          <h1 className="w-full my-2 text-5xl font-bold leading-tight text-center text-gray-800">Title</h1>
+          <h1 className="w-full my-2 text-3xl font-bold leading-tight text-center text-gray-800">What should I look for in stocks?</h1>
           <div className="w-full mb-4">	
             <div className="h-1 mx-auto gradient w-64 opacity-25 my-0 py-0 rounded-t"></div>
           </div>
         
           <div className="flex flex-wrap">
+            <div className="w-full p-6">
+              <p className="text-gray-600 text-center">
+                Let's make this simple. If you were a gold digger, what would you look for?
+              </p>
+            </div>
             <div className="w-5/6 sm:w-1/2 p-6">
-              <h3 className="text-3xl text-gray-800 font-bold leading-none mb-3">Lorem ipsum dolor sit amet</h3>
-              <p className="text-gray-600 mb-8">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam at ipsum eu nunc commodo posuere et sit amet ligula.<br /><br />
-              
-              Images from: <a className="text-orange-500 underline" href="https://undraw.co/">undraw.co</a></p>
+              <h3 className="text-xl text-gray-800 font-bold leading-none mb-3">Are they making money?</h3>
+              <p className="text-gray-600 mb-8">
+                You want someone who's making good money and getting a raise every year. The annual raise is the important part.
+                <br /><br />
+              </p>
               
             </div>
             <div className="w-full sm:w-1/2 p-6">
@@ -148,7 +152,7 @@ export default function Home() {
               <div className="align-middle">
                 <h3 className="text-3xl text-gray-800 font-bold leading-none mb-3">Lorem ipsum dolor sit amet</h3>
                 <p className="text-gray-600 mb-8">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam at ipsum eu nunc commodo posuere et sit amet ligula.<br /><br />
-                Images from: <a className="text-orange-500 underline" href="https://undraw.co/">undraw.co</a></p>
+                </p>
               </div>
             </div>
 
@@ -175,15 +179,13 @@ export default function Home() {
 
       <section className="container mx-auto text-center py-6 mb-12">
 
-        <h1 className="w-full my-2 text-5xl font-bold leading-tight text-center text-white">Call to Action</h1>
+        <h1 className="w-full my-2 text-5xl font-bold leading-tight text-center text-white">Evaluate a stock now</h1>
         <div className="w-full mb-4">	
           <div className="h-1 mx-auto bg-white w-1/6 opacity-25 my-0 py-0 rounded-t"></div>
         </div>
 
-        <h3 className="my-4 text-3xl leading-tight">Main Hero Message to sell yourself!</h3>	
-
-        <button className="mx-auto lg:mx-0 hover:underline bg-white text-gray-800 font-bold rounded-full my-6 py-4 px-8 shadow-lg">Action!</button>
-          
+        <h3 className="my-4 text-3xl leading-tight">No subscriptions. No complicated tools.</h3>	
+        <CompanySearch />
       </section>
 
 
@@ -196,10 +198,7 @@ export default function Home() {
             
               <a className="text-orange-600 no-underline hover:no-underline font-bold text-2xl lg:text-4xl"  href="/"> 
                 <svg className="h-8 fill-current inline" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512.005 512.005">
-                <rect x="16.539" y="425.626" width="479.767" height="50.502" transform="matrix(1,0,0,1,0,0)" fill="rgb(0,0,0)" />
-                <path className="plane-take-off" d=" M 510.7 189.151 C 505.271 168.95 484.565 156.956 464.365 162.385 L 330.156 198.367 L 155.924 35.878 L 107.19 49.008 L 211.729 230.183 L 86.232 263.767 L 36.614 224.754 L 0 234.603 L 45.957 314.27 L 65.274 347.727 L 105.802 336.869 L 240.011 300.886 L 349.726 271.469 L 483.935 235.486 C 504.134 230.057 516.129 209.352 510.7 189.151 Z "/>
-                </svg> LANDING
-                
+                </svg> PixyStocks
               </a>
             </div>
           

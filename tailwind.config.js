@@ -10,7 +10,13 @@ module.exports = {
     extend: {
       margin: {
         '45': '4.5rem'
-      }
+      },
+      opacity: {
+        '80': .80
+      },
+      height: {
+        '96': '24rem;'
+      },
     },
   },
   variants: {},

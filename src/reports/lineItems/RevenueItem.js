@@ -1,8 +1,32 @@
 import React from 'react';
-import { formatValue } from './utils'
+import {
+  Bar,
+  Line,
+} from 'recharts';
+import {
+  Chart,
+  TooltipContent,
+} from './components/ChartComponents'
+import {
+  YearsTableHeader,
+  RowHeader,
+} from './components/TableComponents'
+import {
+  ItemTitle
+} from './components/ReportComponents'
+import { 
+  getUnit,
+  formatValue,
+ } from './utils'
 
-function RevenueItem({data}) {
-  const {year1, year2, year3, year4} = data
+function RevenueItem({revenueItems}) {
+  const [unit, setUnit] = React.useState(null)
+
+  React.useEffect(() => {
+    if (revenueItems && revenueItems[0]) {
+      setUnit(getUnit(revenueItems[0].totalRevenue))
+    }
+  })
 
   const _passFailClass = (value1, value2) => {
     let classColor = 'text-green-600'
@@ -10,28 +34,95 @@ function RevenueItem({data}) {
     if (value1 < 0 || value2 < 0) {
       classColor = 'text-orange-600'
     }
-    return `border-t font-semibold px-8 py-4 ${classColor}`
+    return `font-semibold px-4 py-4 ${classColor}`
   }
 
-  return <>
-    <tr>
-      <td colspan="5" className="text-left text-lg border border-r-0 px-8 py-4 font-bold text-indigo-500">Are you getting a raise every year?</td>
-    </tr>
-    <tr>
-      <td className="border-t border-l border-r-0 px-8 py-4 font-bold text-left pl-12 text-indigo-800 text-opacity-75">Revenue</td>
-      <td className={_passFailClass(year1.total_revenue, year1.total_revenue_yoy)}>{formatValue(year1.total_revenue)}</td>
-      <td className={_passFailClass(year2.total_revenue, year2.total_revenue_yoy)}>{formatValue(year2.total_revenue)}</td>
-      <td className={_passFailClass(year3.total_revenue, year3.total_revenue_yoy)}>{formatValue(year3.total_revenue)}</td>
-      <td className={_passFailClass(year4.total_revenue, year4.total_revenue_yoy)}>{formatValue(year4.total_revenue)}</td>
-    </tr>
-    <tr>
-      <td className="border-t border-l border-r-0 px-8 py-4 font-bold text-left pl-12 text-indigo-800 text-opacity-75">YOY Growth</td>
-      <td className={_passFailClass(year1.total_revenue, year1.total_revenue_yoy)}>{year1.total_revenue_yoy}</td>
-      <td className={_passFailClass(year2.total_revenue, year2.total_revenue_yoy)}>{year2.total_revenue_yoy}%</td>
-      <td className={_passFailClass(year3.total_revenue, year3.total_revenue_yoy)}>{year3.total_revenue_yoy}%</td>
-      <td className={_passFailClass(year4.total_revenue, year4.total_revenue_yoy)}>{year4.total_revenue_yoy}%</td>
-    </tr>
-  </>
+  const revenueChartData = revenueItems.map((item) => {
+    return {
+      year: item.fiscalDate.split('-')[0],
+      revenue: formatValue(item.totalRevenue, unit),
+      revenueYOY: item.totalRevenueYOY,
+    }
+  })
+
+  const totalRevenueData = () => {
+    return revenueItems.map((item) => {
+      return <td className={_passFailClass(item.totalRevenue, item.totalRevenueYOY ? item.totalRevenueYOY : null)}>
+        {formatValue(item.totalRevenue, unit)}
+      </td>
+    })
+  }
+
+  const totalRevenueYOYData = () => {
+    return revenueItems.map((item) => {
+      return <td className={_passFailClass(item.totalRevenue, item.totalRevenueYOY ? item.totalRevenueYOY : null)}>
+        {item.totalRevenueYOY ? `${item.totalRevenueYOY}%` : ''}
+      </td>
+    })
+  }
+
+  const renderRevenueTooltip = (props) => {
+    const { active, payload, label} = props
+      if (active) {
+        const revenue = {
+          label: 'Revenue',
+          value: `${payload[0].payload.revenue} ${unit}`,
+          fontColor: 'text-indigo-400'
+        }
+        const revenueYOY = {
+          label: 'Revenue YOY',
+          value: `${payload[0].payload.revenueYOY}%`,
+          fontColor: 'text-indigo-400'
+        }
+        return (
+          <TooltipContent
+            label={label}
+            chartItems={[revenue, revenueYOY]}
+          />
+        )
+      }
+      return null
+  }
+
+  const displayYears = () => {
+    return <YearsTableHeader years={revenueItems.map(item => item.fiscalDate)}/>
+  }
+
+  return (
+    <div className="w-full h-full md:w-1/2 p-3">
+      <div className="bg-white border rounded shadow">
+        <div className="border-b p-3">
+            <ItemTitle title='Revenue - Are you getting a raise every year?' />
+        </div>
+        <div className="p-5">
+          <Chart 
+            data={revenueChartData}
+            yAxisLabel={`Revenue (${unit})`}
+            tooltipRenderer={renderRevenueTooltip}
+          >
+            <Bar name="Revenue" dataKey="revenue" barSize={35} fill="#a3bffa" unit={unit} />
+            <Line type="monotone" dataKey="revenue" stroke="#718096" />
+          </Chart>
+          <table className="w-full table-auto">
+            <tbody>
+              <tr>
+                <th></th>
+                {displayYears()}
+              </tr>
+              <tr>
+                <RowHeader itemName='Revenue' />
+                {totalRevenueData()}
+              </tr>
+              <tr>
+                <RowHeader itemName='YOY Growth' />
+                {totalRevenueYOYData()}
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  )
 }
 
 export default RevenueItem

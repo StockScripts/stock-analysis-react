@@ -1,3 +1,8 @@
 @tailwind base;
+
+.recharts-wrapper {
+  margin : 0 auto;
+}
+
 @tailwind components;
 @tailwind utilities;
