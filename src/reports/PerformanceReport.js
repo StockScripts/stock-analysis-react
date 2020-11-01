@@ -1,7 +1,8 @@
 import React from 'react';
+import { useParams } from 'react-router-dom'
 import {
   getPerformanceReportById,
-  getPerformanceReportByTicker
+  getPerformanceReportBySymbol
 } from './performanceReportAPI'
 import RevenueItem from './lineItems/RevenueItem'
 import ProfitItem from './lineItems/ProfitItem'
@@ -12,7 +13,9 @@ import LiquidityItem from './lineItems/LiquidityItem'
 import DividendItem from './lineItems/DividendItem'
 import RedFlagsItem from './lineItems/RedFlagsItem'
 
-function PerformanceReport({company}) {
+function PerformanceReport() {
+  let { company } = useParams()
+
   const [reportData, setReportData] = React.useState(null)
   const [sortedReportData, setSortedReportData] = React.useState(null)
   const [sortedDividendData, setSortedDividendData] = React.useState(null)
@@ -20,7 +23,7 @@ function PerformanceReport({company}) {
   React.useEffect(() => {
     if (!!company) {
       if (typeof company === 'string') {
-        getPerformanceReportByTicker(company).then(reportData => {
+        getPerformanceReportBySymbol(company).then(reportData => {
           setReportData(reportData)
         })
       } else if (company.id) {
@@ -32,33 +35,33 @@ function PerformanceReport({company}) {
     }
   }, [company])
 
-  React.useEffect(() => {
-    if (reportData) {
-      let sorted = reportData.performance_reports.sort((a, b) => (a.fiscal_date > b.fiscal_date) ? 1 : -1)
-      setSortedReportData(sorted)
+  // React.useEffect(() => {
+  //   if (reportData) {
+  //     let sorted = reportData.performance_reports.sort((a, b) => (a.fiscal_date > b.fiscal_date) ? 1 : -1)
+  //     setSortedReportData(sorted)
 
-      if (reportData.dividends) {
-        const dividendHistory = reportData.dividends.history
-        sorted = Object.keys(dividendHistory).sort((a, b) => (a > b) ? 1 : -1)
-        sorted = sorted.map(item => {
-          return {
-            date: item,
-            amount: dividendHistory[item]
-          }
-        })
-        setSortedDividendData(sorted)
-      } else {
-        setSortedDividendData([])
-      }
-    }
-  }, [reportData])
+  //     if (reportData.dividends) {
+  //       const dividendHistory = reportData.dividends.history
+  //       sorted = Object.keys(dividendHistory).sort((a, b) => (a > b) ? 1 : -1)
+  //       sorted = sorted.map(item => {
+  //         return {
+  //           date: item,
+  //           amount: dividendHistory[item]
+  //         }
+  //       })
+  //       setSortedDividendData(sorted)
+  //     } else {
+  //       setSortedDividendData([])
+  //     }
+  //   }
+  // }, [reportData])
 
   const renderRevenueItem = () => {
-    const revenueItems = sortedReportData.map((report) => {
+    const revenueItems = reportData.report.map((data) => {
       return {
-        fiscalDate: report.fiscal_date,
-        totalRevenue: report.total_revenue,
-        totalRevenueYOY: report.total_revenue_yoy,
+        fiscalDate: data.fiscal_date,
+        totalRevenue: data.revenue,
+        totalRevenueYOY: data.revenue_yoy
       }
     })
     return (
@@ -67,13 +70,13 @@ function PerformanceReport({company}) {
   }
 
   const renderProfitItem = () => {
-    const profitItems = sortedReportData.map((report) => {
+    const profitItems = reportData.report.map((data) => {
       return {
-        fiscalDate: report.fiscal_date,
-        netIncome: report.net_income,
-        netIncomeYOY: report.net_income_yoy,
-        netMargin: report.net_margin,
-        revenue: report.total_revenue
+        fiscalDate: data.fiscal_date,
+        netIncome: data.net_income,
+        netIncomeYOY: data.net_income_yoy,
+        netMargin: data.net_margin,
+        revenue: data.revenue
       }
     })
     return (
@@ -82,12 +85,12 @@ function PerformanceReport({company}) {
   }
 
   const renderReturnsItem = () => {
-    const returnsItems = sortedReportData.map((report) => {
+    const returnsItems = reportData.report.map((data) => {
       return {
-        fiscalDate: report.fiscal_date,
-        roe: report.roe,
-        netIncome: report.net_income,
-        equity: report.shareholder_equity,
+        fiscalDate: data.fiscal_date,
+        roe: data.roe,
+        netIncome: data.net_income,
+        equity: data.equity,
         
       }
     })
@@ -97,10 +100,10 @@ function PerformanceReport({company}) {
   }
 
   const renderFreeCashFlowItem = () => {
-    const freeCashFlowItems = sortedReportData.map((report) => {
+    const freeCashFlowItems = reportData.report.map((data) => {
       return {
-        fiscalDate: report.fiscal_date,
-        freeCashFlow: report.free_cash_flow,
+        fiscalDate: data.fiscal_date,
+        freeCashFlow: data.free_cash_flow,
       }
     })
     return (
@@ -109,16 +112,16 @@ function PerformanceReport({company}) {
   }
 
   const renderLiabilitiesItem = () => {
-    const liabilitiesItems = sortedReportData.map((report) => {
+    const liabilitiesItems = reportData.report.map((data) => {
       return {
-        fiscalDate: report.fiscal_date,
-        totalLiabilities: report.total_liabilities,
-        shareholderEquity: report.shareholder_equity,
-        leverageRatio: report.leverage_ratio,
-        longTermDebt: report.long_term_debt,
-        longTermDebtToEquity: report.long_term_debt_to_equity,
-        netIncome: report.net_income,
-        netIncomeToLongTermDebt: report.net_income_to_long_term_debt,
+        fiscalDate: data.fiscal_date,
+        totalLiabilities: data.total_liabilities,
+        shareholderEquity: data.equity,
+        leverageRatio: data.leverage_ratio,
+        longTermDebt: data.long_term_debt,
+        longTermDebtToEquity: data.long_term_debt_to_equity,
+        netIncome: data.net_income,
+        netIncomeToLongTermDebt: data.net_income_to_long_term_debt,
       }
     })
     return (
@@ -127,12 +130,12 @@ function PerformanceReport({company}) {
   }
 
   const renderLiquidityItem = () => {
-    const liquidityItems = sortedReportData.map((report) => {
+    const liquidityItems = reportData.report.map((data) => {
       return {
-        fiscalDate: report.fiscal_date,
-        quickAssets: report.quick_assets,
-        currentLiabilities: report.current_liabilities,
-        quickRatio: report.quick_ratio,
+        fiscalDate: data.fiscal_date,
+        quickAssets: data.quick_assets,
+        currentLiabilities: data.current_liabilities,
+        quickRatio: data.quick_ratio,
       }
     })
     return (
@@ -163,18 +166,18 @@ function PerformanceReport({company}) {
   }
 
   const renderRedFlagsItem = () => {
-    const redFlagsItems = sortedReportData.map((report) => {
+    const redFlagsItems = reportData.report.map((data) => {
       return {
-        fiscalDate: report.fiscal_date,
-        totalRevenue: report.total_revenue,
-        receivables: report.receivables,
-        receivablesToSales: report.receivables_to_sales,
-        inventory: report.inventory,
-        inventoryToSales: report.inventory_to_sales,
-        opEx: report.operating_expense,
-        opExToSales: report.operating_expense_to_sales,
-        sga: report.sga,
-        sgaToSales: report.sga_to_sales,
+        fiscalDate: data.fiscal_date,
+        totalRevenue: data.total_revenue,
+        receivables: data.receivables,
+        receivablesToSales: data.receivables_to_sales,
+        inventory: data.inventory,
+        inventoryToSales: data.inventory_to_sales,
+        opEx: data.operating_expense,
+        opExToSales: data.operating_expense_to_sales,
+        sga: data.sga,
+        sgaToSales: data.sga_to_sales,
       }
     })
     return (
@@ -183,7 +186,7 @@ function PerformanceReport({company}) {
   }
 
   const renderItems = () => {
-    if (sortedReportData) {
+    if (reportData) {
       return (
         <>
           {renderRevenueItem()}
@@ -192,7 +195,7 @@ function PerformanceReport({company}) {
           {renderLiabilitiesItem()}
           {renderLiquidityItem()}
           {renderFreeCashFlowItem()}
-          {renderDividendItem()}
+          {/* {renderDividendItem()} */}
           {renderRedFlagsItem()}
         </>
       )

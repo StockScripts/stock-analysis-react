@@ -66,7 +66,8 @@ function App() {
           <NavBar />
           <Switch>
             <Route exact path="/"><Home /></Route>
-            <Route path="/report"><PerformanceReport company={company} /></Route>
+            {/* <Route path="/report"><PerformanceReport company={company} /></Route> */}
+            <Route path="/report/:company"><PerformanceReport /></Route>
           </Switch>
         </Router>
       </CompanyContext.Provider>

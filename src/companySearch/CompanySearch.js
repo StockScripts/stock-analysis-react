@@ -2,31 +2,44 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import { getCompanies, getCompany } from './companyAPI'
 import { CompanyContext } from '../App'
+import Notification from '../components/modal/Notification'
 
 function CompanySearch(props) {
   let history = useHistory()
   const [ticker, setTicker] = useState()
   const  [companies, setCompanies] = useState()
+  const  [error, setError] = useState()
   const  [selectedCompany, setSelectedCompany] = useState()
 
   const setCompany = useContext(CompanyContext)
 
+  const errorMessage = "Something went wrong and we couldn't process your request."
   useEffect(() => {
     if (!ticker) {
       setCompanies([])
       return
     }
 
-    getCompanies(ticker).then(data => {
-      setCompanies(data.companies)
-    })
+    getCompanies(ticker)
+      .then(response => {
+        if (response.hasOwnProperty('companies')) {
+          setCompanies(response.companies)
+          setError(null)
+        } else {
+          // setError(response.status)
+          setError(errorMessage)
+        }
+      })
+      .catch(error => {
+        setError(errorMessage)
+      })
   }, [ticker])
 
   useEffect(() => {
     if (selectedCompany) {
       getCompany(selectedCompany).then(company => {
         setCompany(company)
-        history.push('/report')
+        history.push(`/report/${company.symbol}`)
       })
     }
   }, [selectedCompany])
@@ -58,11 +71,15 @@ function CompanySearch(props) {
     })
     if (selectedCompany.id) {
       setCompany(selectedCompany)
-      history.push('/report')
+      history.push(`/report/${selectedCompany.symbol}`)
     } else {
       setSelectedCompany(selectedCompany.symbol)
     }
     clearEntry()
+  }
+
+  const onClose = () => {
+    setError(null)
   }
 
   const renderDropdown = () => {
@@ -87,32 +104,36 @@ function CompanySearch(props) {
     }
   }
 
+  let displayError = error ? 'Error' : null
   return (
-    <div className="relative">
-      <form autoComplete="off" onSubmit={handleSubmit}>
-        <input 
-          className="bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded shadow py-2 px-4 m-2 appearance-none leading-normal"
-          placeholder="Ticker or Company"
-          value={ticker}
-          onChange={handleChange}
-          type="text"
-        />
-        {renderDropdown()}
-        <button
-          id="navAction"
-          className="mx-auto lg:mx-0 hover:underline bg-white text-gray-800 font-bold rounded-full mt-4 lg:mt-0 py-4 px-8 shadow opacity-75"
-          type="submit"
-        >
-          Search
-        </button>
-        {/* <button
-          className="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-2 px-4 border border-indigo-400 rounded shadow m-2"
-          type="submit"
-        >
-          Search
-        </button> */}
-      </form>
-    </div>
+    <>
+      {displayError ? <Notification title='Oops' notification={error} onClose={onClose} /> : null}
+      <div className="relative">
+        <form autoComplete="off" onSubmit={handleSubmit}>
+          <input 
+            className="bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded shadow py-2 px-4 m-2 appearance-none leading-normal"
+            placeholder="Ticker or Company"
+            value={ticker}
+            onChange={handleChange}
+            type="text"
+          />
+          {renderDropdown()}
+          <button
+            id="navAction"
+            className="mx-auto lg:mx-0 hover:underline bg-white text-gray-800 font-bold rounded-full mt-4 lg:mt-0 py-4 px-8 shadow opacity-75"
+            type="submit"
+          >
+            Search
+          </button>
+          {/* <button
+            className="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-2 px-4 border border-indigo-400 rounded shadow m-2"
+            type="submit"
+          >
+            Search
+          </button> */}
+        </form>
+      </div>
+    </>
   )
 }
 

@@ -1,4 +1,4 @@
-const baseUrl = 'http://localhost:3000/performance_reports'
+const baseUrl = 'http://localhost:3001/reports'
 
 export const getPerformanceReportById = (companyId) => {
   return fetch(`${baseUrl}?company_id=${companyId}`)
@@ -6,8 +6,8 @@ export const getPerformanceReportById = (companyId) => {
     .then(response => response)
 }
 
-export const getPerformanceReportByTicker = (ticker) => {
-  return fetch(`${baseUrl}?reports_by_ticker=${ticker}`)
+export const getPerformanceReportBySymbol = (symbol) => {
+  return fetch(`${baseUrl}/${symbol}`)
     .then(res => res.json())
     .then(response => response)
 }

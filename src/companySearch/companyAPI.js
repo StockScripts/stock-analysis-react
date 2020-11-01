@@ -1,13 +1,21 @@
-const baseUrl = 'http://localhost:3000/companies'
+const baseUrl = 'http://localhost:3001/companies'
 
 export const getCompanies = (identifier) => {
-  return fetch(`${baseUrl}/search?identifier=${identifier}`)
-    .then(res => res.json())
-    .then(response => response)
+  return fetch(`${baseUrl}?identifier=${identifier}`)
+    .then(response => {
+      if (!response.ok) {
+        return response
+      }
+      return response.json()
+    })
 }
 
 export const getCompany = (symbol) => {
   return fetch(`${baseUrl}/${symbol}`)
-    .then(res => res.json())
-    .then(response => response.company)
+    .then(response => {
+      if (!response.ok) {
+        throw Error(response)
+      }
+      return response.json()
+    })
 }
