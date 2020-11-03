@@ -192,6 +192,7 @@ export default function Home() {
       <footer className="bg-white">
         <div className="container mx-auto  px-8">
 
+            <div className="text-gray-600">Data provided by <a href="https://iexcloud.io">IEX Cloud</a></div>
               <div className="w-full flex flex-col md:flex-row py-6">
               
             <div className="flex-1 mb-6">
@@ -201,7 +202,6 @@ export default function Home() {
                 </svg> PixyStocks
               </a>
             </div>
-          
           
                   <div className="flex-1">
                       <p className="uppercase text-gray-500 md:mb-6">Links</p>
