@@ -1,4 +1,4 @@
-const baseUrl = 'http://localhost:3001/companies'
+const baseUrl = '/companies'
 
 export const getCompanies = (identifier) => {
   return fetch(`${baseUrl}?identifier=${identifier}`)

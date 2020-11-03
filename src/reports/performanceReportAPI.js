@@ -1,4 +1,4 @@
-const baseUrl = 'http://localhost:3001/reports'
+const baseUrl = '/reports'
 
 export const getPerformanceReportById = (companyId) => {
   return fetch(`${baseUrl}?company_id=${companyId}`)
