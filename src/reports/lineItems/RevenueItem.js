@@ -26,7 +26,7 @@ function RevenueItem({revenueItems}) {
     if (revenueItems && revenueItems[0]) {
       setUnit(getUnit(revenueItems[0].totalRevenue))
     }
-  })
+  }, [revenueItems])
 
   const _passFailClass = (value1, value2) => {
     let classColor = 'text-green-600'
@@ -46,16 +46,16 @@ function RevenueItem({revenueItems}) {
   })
 
   const totalRevenueData = () => {
-    return revenueItems.map((item) => {
-      return <td className={_passFailClass(item.totalRevenue, item.totalRevenueYOY ? item.totalRevenueYOY : null)}>
+    return revenueItems.map((item, index) => {
+      return <td className={_passFailClass(item.totalRevenue, item.totalRevenueYOY ? item.totalRevenueYOY : null)} key={index}>
         {formatValue(item.totalRevenue, unit)}
       </td>
     })
   }
 
   const totalRevenueYOYData = () => {
-    return revenueItems.map((item) => {
-      return <td className={_passFailClass(item.totalRevenue, item.totalRevenueYOY ? item.totalRevenueYOY : null)}>
+    return revenueItems.map((item, index) => {
+      return <td className={_passFailClass(item.totalRevenue, item.totalRevenueYOY ? item.totalRevenueYOY : null)} key={index}>
         {item.totalRevenueYOY ? `${item.totalRevenueYOY}%` : ''}
       </td>
     })

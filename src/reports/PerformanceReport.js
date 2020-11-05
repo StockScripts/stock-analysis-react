@@ -1,63 +1,41 @@
 import React from 'react';
 import { useParams } from 'react-router-dom'
 import {
-  getPerformanceReportById,
   getPerformanceReportBySymbol
 } from './performanceReportAPI'
+import ScaleLoader from "react-spinners/ScaleLoader";
 import RevenueItem from './lineItems/RevenueItem'
 import ProfitItem from './lineItems/ProfitItem'
 import ReturnsItem from './lineItems/ReturnsItem'
 import FreeCashFlowItem from './lineItems/FreeCashFlowItem'
 import LiabilitiesItem from './lineItems/LiabilitiesItem'
 import LiquidityItem from './lineItems/LiquidityItem'
-import DividendItem from './lineItems/DividendItem'
+// import DividendItem from './lineItems/DividendItem'
 import RedFlagsItem from './lineItems/RedFlagsItem'
 
 function PerformanceReport() {
   let { company } = useParams()
 
   const [reportData, setReportData] = React.useState(null)
-  const [sortedReportData, setSortedReportData] = React.useState(null)
-  const [sortedDividendData, setSortedDividendData] = React.useState(null)
+  const [companyInfo, setCompanyInfo] = React.useState(null)
+  const [loading, setLoading] = React.useState(false)
 
   React.useEffect(() => {
     if (!!company) {
       if (typeof company === 'string') {
+        setLoading(true)
         getPerformanceReportBySymbol(company).then(reportData => {
-          setReportData(reportData)
+          setReportData(reportData.report.items)
+          setCompanyInfo(reportData.report.company)
+          setLoading(false)
         })
-      } else if (company.id) {
-        getPerformanceReportById(company.id).then(reportData => {
-          setReportData(reportData)
-        })
-      }
+      } 
       return
     }
   }, [company])
 
-  // React.useEffect(() => {
-  //   if (reportData) {
-  //     let sorted = reportData.performance_reports.sort((a, b) => (a.fiscal_date > b.fiscal_date) ? 1 : -1)
-  //     setSortedReportData(sorted)
-
-  //     if (reportData.dividends) {
-  //       const dividendHistory = reportData.dividends.history
-  //       sorted = Object.keys(dividendHistory).sort((a, b) => (a > b) ? 1 : -1)
-  //       sorted = sorted.map(item => {
-  //         return {
-  //           date: item,
-  //           amount: dividendHistory[item]
-  //         }
-  //       })
-  //       setSortedDividendData(sorted)
-  //     } else {
-  //       setSortedDividendData([])
-  //     }
-  //   }
-  // }, [reportData])
-
   const renderRevenueItem = () => {
-    const revenueItems = reportData.report.map((data) => {
+    const revenueItems = reportData.map((data) => {
       return {
         fiscalDate: data.fiscal_date,
         totalRevenue: data.revenue,
@@ -70,7 +48,7 @@ function PerformanceReport() {
   }
 
   const renderProfitItem = () => {
-    const profitItems = reportData.report.map((data) => {
+    const profitItems = reportData.map((data) => {
       return {
         fiscalDate: data.fiscal_date,
         netIncome: data.net_income,
@@ -85,7 +63,7 @@ function PerformanceReport() {
   }
 
   const renderReturnsItem = () => {
-    const returnsItems = reportData.report.map((data) => {
+    const returnsItems = reportData.map((data) => {
       return {
         fiscalDate: data.fiscal_date,
         roe: data.roe,
@@ -100,7 +78,7 @@ function PerformanceReport() {
   }
 
   const renderFreeCashFlowItem = () => {
-    const freeCashFlowItems = reportData.report.map((data) => {
+    const freeCashFlowItems = reportData.map((data) => {
       return {
         fiscalDate: data.fiscal_date,
         freeCashFlow: data.free_cash_flow,
@@ -112,7 +90,7 @@ function PerformanceReport() {
   }
 
   const renderLiabilitiesItem = () => {
-    const liabilitiesItems = reportData.report.map((data) => {
+    const liabilitiesItems = reportData.map((data) => {
       return {
         fiscalDate: data.fiscal_date,
         totalLiabilities: data.total_liabilities,
@@ -130,7 +108,7 @@ function PerformanceReport() {
   }
 
   const renderLiquidityItem = () => {
-    const liquidityItems = reportData.report.map((data) => {
+    const liquidityItems = reportData.map((data) => {
       return {
         fiscalDate: data.fiscal_date,
         quickAssets: data.quick_assets,
@@ -143,30 +121,30 @@ function PerformanceReport() {
     )
   }
 
-  const renderDividendItem = () => {
-    const dividendItems = sortedReportData.map((report) => {
-      return {
-        fiscalDate: report.fiscal_date,
-        dividendsPerShare: report.dividends_per_share,
-        dividendsPerShareYOY: report.dividends_per_share_yoy,
-        dividendPayoutRatio: report.dividend_payout_ratio,
-        dividendsPaid: report.dividends_paid,
-        netIncome: report.net_income,
-      }
-    })
-    if (sortedDividendData.length > 0) {
-      return (
-        <DividendItem 
-          dividendItems={dividendItems}
-          dividends={sortedDividendData}
-        />
-      )
-    }
-    return null
-  }
+  // const renderDividendItem = () => {
+  //   const dividendItems = sortedReportData.map((report) => {
+  //     return {
+  //       fiscalDate: report.fiscal_date,
+  //       dividendsPerShare: report.dividends_per_share,
+  //       dividendsPerShareYOY: report.dividends_per_share_yoy,
+  //       dividendPayoutRatio: report.dividend_payout_ratio,
+  //       dividendsPaid: report.dividends_paid,
+  //       netIncome: report.net_income,
+  //     }
+  //   })
+  //   if (sortedDividendData.length > 0) {
+  //     return (
+  //       <DividendItem 
+  //         dividendItems={dividendItems}
+  //         dividends={sortedDividendData}
+  //       />
+  //     )
+  //   }
+  //   return null
+  // }
 
   const renderRedFlagsItem = () => {
-    const redFlagsItems = reportData.report.map((data) => {
+    const redFlagsItems = reportData.map((data) => {
       return {
         fiscalDate: data.fiscal_date,
         totalRevenue: data.total_revenue,
@@ -203,22 +181,40 @@ function PerformanceReport() {
     return null
   }
 
+  let displayed = null
+
+  if (loading) {
+    displayed = <div className="sweet-loading">
+      <ScaleLoader
+        size={250}
+        color={"#5a67d8"}
+        loading={true}
+        height={90}
+        width={9}
+        margin={7}
+      />
+    </div>
+  } else {
+    displayed = <>
+        <div className="text-left text-indigo-800 text-xl font-bold m-3">
+          {companyInfo ? `${companyInfo.name } (${companyInfo.symbol})` : null}
+        </div>
+        <div className="w-full container mx-auto flex flex-wrap items-center mt-0 pt-3 pb-3 md:pb-0">
+          <div className="flex flex-row flex-wrap flex-grow mt-2">
+            {renderItems()}
+          </div>
+        </div>
+      </>
+  }
+
   return (
-    company ? <div className="static mt-45 bg-white">
+    <div className="static mt-45 bg-white">
       <div className="text-center">
         <div className="inline-block">
-          <div className="text-left text-indigo-800 text-xl font-bold m-3">
-            {`${company.name } (${company.symbol})`}
-          </div>
-          <div className="w-full container mx-auto flex flex-wrap items-center mt-0 pt-3 pb-3 md:pb-0">
-            <div className="flex flex-row flex-wrap flex-grow mt-2">
-              {renderItems()}
-            </div>
-          </div>
+          {displayed}
         </div>
       </div>
     </div>
-    : null
   )
 }
 

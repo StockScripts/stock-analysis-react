@@ -11,8 +11,6 @@ import PerformanceReport from './reports/PerformanceReport'
 export const CompanyContext = React.createContext()
 
 function App() {
-  const [company, setCompany] = React.useState()
-
   useEffect(() => {
     document.addEventListener('scroll', function() {
       var scrollpos = window.scrollY;
@@ -61,7 +59,7 @@ function App() {
 
   return (
     <div className="App">
-      <CompanyContext.Provider value={setCompany}>
+      <CompanyContext.Provider>
         <Router>
           <NavBar />
           <Switch>

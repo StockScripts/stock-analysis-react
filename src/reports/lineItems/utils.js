@@ -16,6 +16,8 @@ export const formatValue = (value, unit) => {
       return (value/1000000).toFixed(1)
     case 'T':
       return (value/1000).toFixed(1)
+    default:
+      return value
   }
 }
 

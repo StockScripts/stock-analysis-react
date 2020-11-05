@@ -6,7 +6,6 @@ import {
 } from 'recharts';
 import {
   YearsTableHeader,
-  RowHeader,
 } from './components/TableComponents'
 import {
   Chart,
@@ -20,22 +19,6 @@ import {
   formatValue,
  } from './utils'
 
-function RevenueTooltip(props) {
-  const { active, payload, unit, label} = props
-  if (active) {
-    const revenue = payload[0].payload.revenue
-    const revenueYOY = payload[0].payload.revenueYOY
-    return (
-      <div className="h-24 w-40 bg-gray-300 text-left text-indigo-800 opacity-90 font-bold">
-        <div className="pt-2 pl-2">{label}</div>
-        <div className="pl-2">Revenue: {revenue} {unit}</div>
-        <div className="pl-2">{revenueYOY ? `YOY Growth: ${revenueYOY}%` : null}</div>
-      </div>
-    )
-  }
-  return null
-}
-
 function ProfitItem({profitItems}) {
   const [unit, setUnit] = React.useState(null)
 
@@ -43,7 +26,7 @@ function ProfitItem({profitItems}) {
     if (profitItems && profitItems[0].netIncome) {
       setUnit(getUnit(profitItems[0].netIncome))
     }
-  })
+  }, [profitItems])
 
   const [displayInfo, setDisplayInfo] = React.useState(false);
 
@@ -129,16 +112,16 @@ function ProfitItem({profitItems}) {
   }
 
   const netIncomeData = () => {
-    return profitItems.map((item) => {
-      return <td className={_passFailClass(item.netIncome, item.netIncomeYOY ? item.netIncomeYOY : null)}>
+    return profitItems.map((item, index) => {
+      return <td className={_passFailClass(item.netIncome, item.netIncomeYOY ? item.netIncomeYOY : null)} key={index}>
         {formatValue(item.netIncome, unit)}
       </td>
     })
   }
 
   const netIncomeYOYData = () => {
-    return profitItems.map((item) => {
-      return <td className={_passFailClass(item.netIncome, item.netIncomeYOY ? item.netIncomeYOY : null)}>
+    return profitItems.map((item, index) => {
+      return <td className={_passFailClass(item.netIncome, item.netIncomeYOY ? item.netIncomeYOY : null)} key={index}>
         {item.netIncomeYOY ? `${item.netIncomeYOY}%` : ''}
       </td>
     })
@@ -149,8 +132,8 @@ function ProfitItem({profitItems}) {
   }
 
   const netMarginData = () => {
-    return profitItems.map((item) => {
-      return <td className={_passFailClass(item.netMargin)}>
+    return profitItems.map((item, index) => {
+      return <td className={_passFailClass(item.netMargin)} key={index}>
         {item.netMargin}%
       </td>
     })
@@ -159,14 +142,14 @@ function ProfitItem({profitItems}) {
   return <>
     {displayInfo ? <Modal onClose={onClose} /> : null}
 
-    <div class="w-full p-3">
-      <div class="bg-white border rounded shadow">
-        <div class="border-b p-3">
+    <div className="w-full p-3">
+      <div className="bg-white border rounded shadow">
+        <div className="border-b p-3">
           <ItemTitle title="Profits - Are you keeping the money you're making?" />
         </div>
-        <div class="p-5">
+        <div className="p-5">
           <div className="flex flex-row flex-wrap flex-grow mt-2">
-            <div class="w-full md:w-1/2 p-3">
+            <div className="w-full md:w-1/2 p-3">
               <Chart
                 data={netIncomeChartData}
                 yAxisLabel={`NetIncome (${unit})`}
@@ -176,7 +159,7 @@ function ProfitItem({profitItems}) {
                 <Line type="monotone" dataKey="netIncome" stroke="#718096" />
               </Chart>
             </div>
-            <div class="w-full md:w-1/2 p-3 self-center">
+            <div className="w-full md:w-1/2 p-3 self-center">
               <table className="w-full table-auto">
                 <tbody>
                   <tr>
@@ -194,7 +177,7 @@ function ProfitItem({profitItems}) {
                 </tbody>
               </table>
             </div>
-            <div class="w-full md:w-1/2 p-3">
+            <div className="w-full md:w-1/2 p-3">
               <Chart
                   data={netMarginChartData}
                   yAxisLabel={`Net Margin (%)`}
@@ -203,7 +186,7 @@ function ProfitItem({profitItems}) {
                   <Bar dataKey="netMargin" barSize={40} fill="#a3bffa" unit={unit} />
                 </Chart>
             </div>
-            <div class="w-full md:w-1/2 p-3 self-center">
+            <div className="w-full md:w-1/2 p-3 self-center">
               <table className="w-full table-auto">
                 <tbody>
                   <tr>

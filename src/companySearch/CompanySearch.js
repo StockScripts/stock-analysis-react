@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { getCompanies, getCompany } from './companyAPI'
-import { CompanyContext } from '../App'
 import Notification from '../components/modal/Notification'
 
 function CompanySearch(props) {
@@ -10,8 +9,6 @@ function CompanySearch(props) {
   const  [companies, setCompanies] = useState()
   const  [error, setError] = useState()
   const  [selectedCompany, setSelectedCompany] = useState()
-
-  const setCompany = useContext(CompanyContext)
 
   const errorMessage = "Something went wrong and we couldn't process your request."
   useEffect(() => {
@@ -37,12 +34,11 @@ function CompanySearch(props) {
 
   useEffect(() => {
     if (selectedCompany) {
-      getCompany(selectedCompany).then(company => {
-        setCompany(company)
-        history.push(`/report/${company.symbol}`)
+      getCompany(selectedCompany).then(data => {
+        history.push(`/report/${data.company.symbol}`)
       })
     }
-  }, [selectedCompany])
+  }, [selectedCompany, history])
 
   const handleChange = (e) => {
     setTicker(e.target.value)
@@ -69,12 +65,7 @@ function CompanySearch(props) {
       }
       return company.symbol === value
     })
-    if (selectedCompany.id) {
-      setCompany(selectedCompany)
-      history.push(`/report/${selectedCompany.symbol}`)
-    } else {
-      setSelectedCompany(selectedCompany.symbol)
-    }
+    setSelectedCompany(selectedCompany.symbol)
     clearEntry()
   }
 

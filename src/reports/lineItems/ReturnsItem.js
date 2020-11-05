@@ -6,11 +6,9 @@ import {
 import {
   Chart,
   TooltipContent,
-  LegendFormatter,
 } from './components/ChartComponents'
 import {
   YearsTableHeader,
-  RowHeader,
 } from './components/TableComponents'
 import { 
   getUnit,
@@ -25,7 +23,7 @@ function Returns({returnsItems}) {
     if (returnsItems && returnsItems[0].netIncome) {
       setUnit(getUnit(returnsItems[0].netIncome))
     }
-  })
+  }, [returnsItems])
 
   const [displayInfo, setDisplayInfo] = React.useState(false);
 
@@ -56,8 +54,8 @@ function Returns({returnsItems}) {
   }
 
   const roeData = () => {
-    return returnsItems.map((item) => {
-      return <td className={_passFailClass(item.roe)}>
+    return returnsItems.map((item, index) => {
+      return <td className={_passFailClass(item.roe)} key={index}>
         {item.roe}%
       </td>
     })

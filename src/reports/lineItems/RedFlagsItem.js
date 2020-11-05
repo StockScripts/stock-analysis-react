@@ -5,22 +5,10 @@ import {
 } from './components/TableComponents'
 import {
   LineCharts,
-  Chart,
   TooltipContent,
-  LegendFormatter,
 } from './components/ChartComponents'
 import {
-  ComposedChart,
-  ReferenceLine,
-  Bar,
   Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  Label,
-  ResponsiveContainer
 } from 'recharts';
 import { 
   getUnit,
@@ -34,7 +22,7 @@ function RedFlags({redFlagsItems}) {
     if (redFlagsItems && redFlagsItems[0].totalRevenue) {
       setUnit(getUnit(redFlagsItems[0].totalRevenue))
     }
-  })
+  }, [redFlagsItems])
 
   const _passFailClass = (value1, value2) => {
     let classColor = 'text-green-600'
@@ -59,8 +47,8 @@ function RedFlags({redFlagsItems}) {
   })
 
   const receivablesToSalesData = () => {
-    return redFlagsItems.map((item) => {
-      return <td className={_passFailClass(item.receivablesToSales)}>
+    return redFlagsItems.map((item, index) => {
+      return <td className={_passFailClass(item.receivablesToSales)} key={index}>
         {item.receivablesToSales}
       </td>
     })
@@ -103,8 +91,8 @@ function RedFlags({redFlagsItems}) {
   })
 
   const inventoryToSalesData = () => {
-    return redFlagsItems.map((item) => {
-      return <td className={_passFailClass(item.inventoryToSales)}>
+    return redFlagsItems.map((item, index) => {
+      return <td className={_passFailClass(item.inventoryToSales)} key={index}>
         {item.inventoryToSales}
       </td>
     })
@@ -174,8 +162,8 @@ function RedFlags({redFlagsItems}) {
   }
 
   const opExToSalesData = () => {
-    return redFlagsItems.map((item) => {
-      return <td className={_passFailClass(item.opExToSales)}>
+    return redFlagsItems.map((item, index) => {
+      return <td className={_passFailClass(item.opExToSales)} key={index}>
         {item.opExToSales}
       </td>
     })
@@ -191,8 +179,8 @@ function RedFlags({redFlagsItems}) {
   })
 
   const sgaToSalesData = () => {
-    return redFlagsItems.map((item) => {
-      return <td className={_passFailClass(item.sgaToSales)}>
+    return redFlagsItems.map((item, index) => {
+      return <td className={_passFailClass(item.sgaToSales)} key={index}>
         {item.sgaToSales}
       </td>
     })
@@ -226,14 +214,14 @@ function RedFlags({redFlagsItems}) {
   }
 
   return (
-    <div class="w-full p-3">
-      <div class="bg-white border rounded shadow">
-        <div class="border-b p-3">
-            <h5 class="font-bold text-gray-600">Red Flags - Are you financially stable?</h5>
+    <div className="w-full p-3">
+      <div className="bg-white border rounded shadow">
+        <div className="border-b p-3">
+            <h5 className="font-bold text-gray-600">Red Flags - Are you financially stable?</h5>
         </div>
-        <div class="p-5">
+        <div className="p-5">
           <div className="flex flex-row flex-wrap flex-grow mt-2">
-            <div class="w-full md:w-1/2 p-3">
+            <div className="w-full md:w-1/2 p-3">
               <LineCharts
                 data={receivablesToSalesChartData}
                 yAxisLabel={`Receivables / Sales (${unit})`}
@@ -242,7 +230,7 @@ function RedFlags({redFlagsItems}) {
                 <Line type="monotone" dataKey="receivablesToSales" stroke="#8884d8" />
               </LineCharts>
             </div>
-            <div class="w-full md:w-1/2 p-3 self-center">
+            <div className="w-full md:w-1/2 p-3 self-center">
               <table className="w-full table-fixed">
                 <tbody>
                   <tr>
@@ -256,7 +244,7 @@ function RedFlags({redFlagsItems}) {
                 </tbody>
               </table>
             </div>
-            <div class="w-full md:w-1/2 p-3">
+            <div className="w-full md:w-1/2 p-3">
               <LineCharts
                 data={inventoryToSalesChartData}
                 yAxisLabel={`Inventory / Sales (${unit})`}
@@ -265,7 +253,7 @@ function RedFlags({redFlagsItems}) {
                 <Line type="monotone" dataKey="inventoryToSales" stroke="#8884d8" />
               </LineCharts>
             </div>
-            <div class="w-full md:w-1/2 p-3 self-center">
+            <div className="w-full md:w-1/2 p-3 self-center">
               <table className="w-full table-fixed">
                 <tbody>
                   <tr>
@@ -279,7 +267,7 @@ function RedFlags({redFlagsItems}) {
                 </tbody>
               </table>
             </div>
-            <div class="w-full md:w-1/2 p-3">
+            <div className="w-full md:w-1/2 p-3">
               <LineCharts
                 data={opExToSalesChartData}
                 yAxisLabel={`Operating Expense / Sales`}
@@ -288,7 +276,7 @@ function RedFlags({redFlagsItems}) {
                 <Line type="monotone" dataKey="opExToSales" stroke="#8884d8" />
               </LineCharts>
             </div>
-            <div class="w-full md:w-1/2 p-3 self-center">
+            <div className="w-full md:w-1/2 p-3 self-center">
               <table className="w-full table-fixed">
                 <tbody>
                   <tr>
@@ -302,7 +290,7 @@ function RedFlags({redFlagsItems}) {
                 </tbody>
               </table>
             </div>
-            <div class="w-full md:w-1/2 p-3">
+            <div className="w-full md:w-1/2 p-3">
               <LineCharts
                 data={sgaToSalesChartData}
                 yAxisLabel={`SGA / Sales`}
@@ -311,7 +299,7 @@ function RedFlags({redFlagsItems}) {
                 <Line type="monotone" dataKey="sgaToSales" stroke="#8884d8" />
               </LineCharts>
             </div>
-            <div class="w-full md:w-1/2 p-3 self-center">
+            <div className="w-full md:w-1/2 p-3 self-center">
               <table className="w-full table-fixed">
                 <tbody>
                   <tr>

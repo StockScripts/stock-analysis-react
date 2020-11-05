@@ -1,8 +1,6 @@
 import React from 'react';
 import {
   Bar,
-  Tooltip,
-  Legend,
 } from 'recharts';
 import {
   Chart,
@@ -41,7 +39,7 @@ function FreeCashFlowItem({freeCashFlowItems}) {
     if (freeCashFlowItems && freeCashFlowItems[0]) {
       setUnit(getUnit(freeCashFlowItems[0]))
     }
-  })
+  }, [freeCashFlowItems])
 
   const onClose = () => {
     setDisplayInfo(false)
@@ -68,8 +66,8 @@ function FreeCashFlowItem({freeCashFlowItems}) {
   })
 
   const freeCashFlowData = () => {
-    return freeCashFlowItems.map((item) => {
-      return <td className={_passFailClass(item.freeCashFlow)}>
+    return freeCashFlowItems.map((item, index) => {
+      return <td className={_passFailClass(item.freeCashFlow)} key={index}>
         {formatValue(item.freeCashFlow, unit)}
       </td>
     })

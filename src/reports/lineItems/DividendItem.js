@@ -10,7 +10,7 @@ import {
   LegendFormatter,
 } from './components/ChartComponents'
 import {
-  ComposedChart, Line, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Label
+  Line, Bar, Legend
 } from 'recharts';
 import { 
   getUnit,

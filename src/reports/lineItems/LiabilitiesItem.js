@@ -9,16 +9,8 @@ import {
   LegendFormatter,
 } from './components/ChartComponents'
 import {
-  ComposedChart,
-  ReferenceLine,
   Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
   Legend,
-  Label,
-  ResponsiveContainer
 } from 'recharts';
 import { 
   getUnit,
@@ -80,8 +72,8 @@ function LeverageItem({liabilitiesItems}) {
   })
 
   const leverageRatioData = () => {
-    return liabilitiesItems.map((item) => {
-      return <td className={_leveragePassFailClass(item.leverageRatio)}>
+    return liabilitiesItems.map((item, index) => {
+      return <td className={_leveragePassFailClass(item.leverageRatio)} key={index}>
         {item.leverageRatio}
       </td>
     })
@@ -97,8 +89,8 @@ function LeverageItem({liabilitiesItems}) {
   })
 
   const longTermDebtToEquityData = () => {
-    return liabilitiesItems.map((item) => {
-      return <td className={_debtPassFailClass(item.longTermDebtToEquity)}>
+    return liabilitiesItems.map((item, index) => {
+      return <td className={_debtPassFailClass(item.longTermDebtToEquity)} key={index}>
         {item.longTermDebtToEquity}%
       </td>
     })
@@ -114,8 +106,8 @@ function LeverageItem({liabilitiesItems}) {
   })
 
   const netIncomeToLongTermDebtData = () => {
-    return liabilitiesItems.map((item) => {
-      return <td className={_debtRepaymentPassFailClass(item.netIncomeToLongTermDebt)}>
+    return liabilitiesItems.map((item, index) => {
+      return <td className={_debtRepaymentPassFailClass(item.netIncomeToLongTermDebt)} key={index}>
         {item.netIncomeToLongTermDebt}
       </td>
     })
@@ -203,12 +195,12 @@ function LeverageItem({liabilitiesItems}) {
   }
 
   return <>
-    <div class="w-full p-3">
-      <div class="bg-white border rounded shadow">
-        <div class="border-b p-3">
-            <h5 class="font-bold text-gray-600">Liabilities - Do you owe too much?</h5>
+    <div className="w-full p-3">
+      <div className="bg-white border rounded shadow">
+        <div className="border-b p-3">
+            <h5 className="font-bold text-gray-600">Liabilities - Do you owe too much?</h5>
         </div>
-        <div class="p-5">
+        <div className="p-5">
           <div className="flex flex-row flex-wrap flex-grow mt-2">
             <div className="w-full md:w-1/2 p-3">
               <Chart 
@@ -221,7 +213,7 @@ function LeverageItem({liabilitiesItems}) {
                 <Legend formatter={LegendFormatter}/>
               </Chart>
             </div>
-            <div class="w-full md:w-1/2 p-3 self-center">
+            <div className="w-full md:w-1/2 p-3 self-center">
               <table className="w-full table-fixed">
                 <tbody>
                   <tr>
@@ -235,7 +227,7 @@ function LeverageItem({liabilitiesItems}) {
                 </tbody>
               </table>
             </div>
-            <div class="w-full md:w-1/2 p-3">
+            <div className="w-full md:w-1/2 p-3">
               <Chart 
                 data={longTermDebtToEquityChartData}
                 yAxisLabel={`Long Term Debt / Equity (${unit})`}
@@ -246,7 +238,7 @@ function LeverageItem({liabilitiesItems}) {
                 <Legend formatter={LegendFormatter}/>
               </Chart>
             </div>
-            <div class="w-full md:w-1/2 p-3 self-center">
+            <div className="w-full md:w-1/2 p-3 self-center">
               <table className="w-full table-fixed">
                 <tbody>
                   <tr>
@@ -260,7 +252,7 @@ function LeverageItem({liabilitiesItems}) {
                 </tbody>
               </table>
             </div>
-            <div class="w-full md:w-1/2 p-3">
+            <div className="w-full md:w-1/2 p-3">
             <Chart 
                 data={netIncomeToDebtChartData}
                 yAxisLabel={`Net Income / Long Term Debt (${unit})`}
@@ -271,7 +263,7 @@ function LeverageItem({liabilitiesItems}) {
                 <Legend formatter={LegendFormatter}/>
               </Chart>
             </div>
-            <div class="w-full md:w-1/2 p-3 self-center">
+            <div className="w-full md:w-1/2 p-3 self-center">
               <table className="w-full table-fixed">
                 <tbody>
                   <tr>

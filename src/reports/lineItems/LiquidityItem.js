@@ -24,7 +24,7 @@ function LiquidityItem({liquidityItems}) {
     if (liquidityItems && liquidityItems[0].currentLiabilities) {
       setUnit(getUnit(liquidityItems[0].currentLiabilities))
     }
-  })
+  }, [liquidityItems])
 
   const _passFailClass = (value) => {
     let classColor = 'text-green-600'
@@ -49,8 +49,8 @@ function LiquidityItem({liquidityItems}) {
   }
 
   const quickRatioData = () => {
-    return liquidityItems.map((item) => {
-      return <td className={_passFailClass(item.quickRatio)}>
+    return liquidityItems.map((item, index) => {
+      return <td className={_passFailClass(item.quickRatio)} key={index}>
         {item.quickRatio}
       </td>
     })
