@@ -3,35 +3,32 @@ import {
   YearsTableHeader,
   RowHeader,
 } from './components/TableComponents'
-import {
-  Chart,
-  LineCharts,
-  TooltipContent,
-  LegendFormatter,
-} from './components/ChartComponents'
-import {
-  Line, Bar, Legend
-} from 'recharts';
+// import {
+//   Chart,
+//   LineCharts,
+//   TooltipContent,
+//   LegendFormatter,
+// } from './components/ChartComponents'
 import { 
   getUnit,
   formatValue,
  } from './utils'
 
-function DividendTooltip(props) {
-  const { active, payload, label} = props
-  if (active) {
-    const dividendsPerShare = payload[0].payload.dividendsPerShare
-    const dividendsPerShareYOY = payload[0].payload.dividendsPerShareYOY
-    return (
-      <div className="h-24 w-40 bg-gray-300 text-left text-indigo-800 opacity-90 font-bold">
-        <div className="pt-2 pl-2">{label}</div>
-        <div className="pl-2">Dividends Per Share: {dividendsPerShare}</div>
-        <div className="pl-2">{dividendsPerShareYOY ? `YOY Growth: ${dividendsPerShareYOY}%` : null}</div>
-      </div>
-    )
-  }
-  return null
-}
+// function DividendTooltip(props) {
+//   const { active, payload, label} = props
+//   if (active) {
+//     const dividendsPerShare = payload[0].payload.dividendsPerShare
+//     const dividendsPerShareYOY = payload[0].payload.dividendsPerShareYOY
+//     return (
+//       <div className="h-24 w-40 bg-gray-300 text-left text-indigo-800 opacity-90 font-bold">
+//         <div className="pt-2 pl-2">{label}</div>
+//         <div className="pl-2">Dividends Per Share: {dividendsPerShare}</div>
+//         <div className="pl-2">{dividendsPerShareYOY ? `YOY Growth: ${dividendsPerShareYOY}%` : null}</div>
+//       </div>
+//     )
+//   }
+//   return null
+// }
 
 function DividendItem({dividendItems, dividends}) {
   const [unit, setUnit] = React.useState(null)
@@ -68,34 +65,34 @@ function DividendItem({dividendItems, dividends}) {
     })
   }
 
-  const renderDividendPayoutRatioTooltip = (props) => {
-    const { active, payload, label} = props
-      if (active) {
-        const dividendsPaid = {
-          label: 'Dividends Paid',
-          value: `${payload[0].payload.dividendsPaid} ${unit}`,
-          fontColor: 'text-indigo-400'
-        }
-        const netIncome = {
-          label: 'Net Income',
-          value: `${payload[0].payload.netIncome} ${unit}`,
-          fontColor: 'text-indigo-400'
-        }
-        const dividendPayoutRatio = {
-          label: 'Dividend Payout Ratio',
-          value: `${payload[0].payload.dividendPayoutRatio}`,
-          fontColor: 'text-indigo-400'
-        }
+  // const renderDividendPayoutRatioTooltip = (props) => {
+  //   const { active, payload, label} = props
+  //     if (active) {
+  //       const dividendsPaid = {
+  //         label: 'Dividends Paid',
+  //         value: `${payload[0].payload.dividendsPaid} ${unit}`,
+  //         fontColor: 'text-indigo-400'
+  //       }
+  //       const netIncome = {
+  //         label: 'Net Income',
+  //         value: `${payload[0].payload.netIncome} ${unit}`,
+  //         fontColor: 'text-indigo-400'
+  //       }
+  //       const dividendPayoutRatio = {
+  //         label: 'Dividend Payout Ratio',
+  //         value: `${payload[0].payload.dividendPayoutRatio}`,
+  //         fontColor: 'text-indigo-400'
+  //       }
 
-        return (
-          <TooltipContent
-            label={label}
-            chartItems={[dividendsPaid, netIncome, dividendPayoutRatio]}
-          />
-        )
-      }
-      return null
-  }
+  //       return (
+  //         <TooltipContent
+  //           label={label}
+  //           chartItems={[dividendsPaid, netIncome, dividendPayoutRatio]}
+  //         />
+  //       )
+  //     }
+  //     return null
+  // }
 
   const dividendHistoryLineChartData = dividends.map((item) => {
     return {

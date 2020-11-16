@@ -4,28 +4,33 @@ import {
   RowHeader,
 } from './components/TableComponents'
 import {
-  Chart,
-  TooltipContent,
-  LegendFormatter,
-} from './components/ChartComponents'
+  ItemTitle
+} from './components/ReportComponents'
 import {
-  Bar,
-  Legend,
-} from 'recharts';
+  Bar
+} from 'react-chartjs-2'
 import { 
   getUnit,
   formatValue,
+  fiscalDateYear,
  } from './utils'
+ import { faCoins } from '@fortawesome/free-solid-svg-icons'
 
 function LeverageItem({liabilitiesItems}) {
   const [unit, setUnit] = React.useState(null)
   const [displayInfo, setDisplayInfo] = React.useState(false);
+  const [pass, setPass] = React.useState(true)
 
   React.useEffect(() => {
     if (liabilitiesItems && liabilitiesItems[0].totalLiabilities) {
       setUnit(getUnit(liabilitiesItems[0].totalLiabilities))
+      liabilitiesItems.forEach((item) => {
+        if (item.leverageRatio > 2) {
+          setPass(false)
+        }
+      })
     }
-  })
+  }, [liabilitiesItems])
 
   const onClose = () => {
     setDisplayInfo(false)
@@ -37,7 +42,7 @@ function LeverageItem({liabilitiesItems}) {
     if (value > 2) {
       classColor = 'text-orange-600'
     }
-    return `font-semibold px-8 py-4 ${classColor}`
+    return `text-sm py-1 ${classColor}`
   }
 
   const _debtPassFailClass = (value) => {
@@ -46,7 +51,7 @@ function LeverageItem({liabilitiesItems}) {
     if (value > 40) {
       classColor = 'text-orange-600'
     }
-    return `font-semibold px-8 py-4 ${classColor}`
+    return `text-sm py-1 ${classColor}`
   }
 
   const _debtRepaymentPassFailClass = (value) => {
@@ -55,21 +60,12 @@ function LeverageItem({liabilitiesItems}) {
     if (value < 0.2) {
       classColor = 'text-orange-600'
     }
-    return `font-semibold px-8 py-4 ${classColor}`
+    return `text-sm py-1 ${classColor}`
   }
 
   const displayYears = () => {
-    return <YearsTableHeader years={liabilitiesItems.map(item => item.fiscalDate)}/>
+    return <YearsTableHeader years={liabilitiesItems.map(item => fiscalDateYear(item.fiscalDate))}/>
   }
-
-  const leverageRatioChartData = liabilitiesItems.map((item) => {
-    return {
-      year: item.fiscalDate.split('-')[0],
-      totalLiabilities: formatValue(item.totalLiabilities, unit),
-      shareholderEquity: formatValue(item.shareholderEquity, unit),
-      leverageRatio: item.leverageRatio,
-    }
-  })
 
   const leverageRatioData = () => {
     return liabilitiesItems.map((item, index) => {
@@ -79,31 +75,37 @@ function LeverageItem({liabilitiesItems}) {
     })
   }
 
-  const longTermDebtToEquityChartData = liabilitiesItems.map((item) => {
-    return {
-      year: item.fiscalDate.split('-')[0],
-      longTermDebt: formatValue(item.longTermDebt, unit),
-      shareholderEquity: formatValue(item.shareholderEquity, unit),
-      longTermDebtToEquity: item.longTermDebtToEquity,
-    }
-  })
-
-  const longTermDebtToEquityData = () => {
+  const liabilitiesData = () => {
     return liabilitiesItems.map((item, index) => {
-      return <td className={_debtPassFailClass(item.longTermDebtToEquity)} key={index}>
-        {item.longTermDebtToEquity}%
+      return <td className={_debtPassFailClass(item.liabilities)} key={index}>
+        {formatValue(item.totalLiabilities, unit)} {unit}
       </td>
     })
   }
 
-  const netIncomeToDebtChartData = liabilitiesItems.map((item) => {
-    return {
-      year: item.fiscalDate.split('-')[0],
-      longTermDebt: formatValue(item.longTermDebt, unit),
-      netIncome: formatValue(item.netIncome, unit),
-      netIncomeToDebt: item.netIncomeToLongTermDebt,
-    }
-  })
+  const equityData = () => {
+    return liabilitiesItems.map((item, index) => {
+      return <td className={_debtPassFailClass(item.liabilities)} key={index}>
+        {formatValue(item.shareholderEquity, unit)} {unit}
+      </td>
+    })
+  }
+
+  const longTermDebtData = () => {
+    return liabilitiesItems.map((item, index) => {
+      return <td className={_debtPassFailClass(item.liabilities)} key={index}>
+        {formatValue(item.longTermDebt, unit)} {unit}
+      </td>
+    })
+  }
+
+  const netIncomeData = () => {
+    return liabilitiesItems.map((item, index) => {
+      return <td className={_debtPassFailClass(item.liabilities)} key={index}>
+        {formatValue(item.netIncome, unit)} {unit}
+      </td>
+    })
+  }
 
   const netIncomeToLongTermDebtData = () => {
     return liabilitiesItems.map((item, index) => {
@@ -113,175 +115,144 @@ function LeverageItem({liabilitiesItems}) {
     })
   }
 
-  const renderLeverageRatioTooltip = (props) => {
-    const { active, payload, label} = props
-      if (active) {
-        const shareholderEquity = {
-          label: 'Equity',
-          value: `${payload[0].payload.shareholderEquity} ${unit}`,
-          fontColor: 'text-indigo-400'
-        }
-        const totalLiabilities = {
+  const yearLabels = liabilitiesItems.map((item) => {
+    return fiscalDateYear(item.fiscalDate)
+  })
+
+  const leverageRatioDataset = liabilitiesItems.map((item) => {
+    return item.leverageRatio
+  })
+
+  const liabilitiesDataset = liabilitiesItems.map((item) => {
+    return formatValue(item.totalLiabilities, unit)
+  })
+
+  const equityDataset = liabilitiesItems.map((item) => {
+    return formatValue(item.shareholderEquity, unit)
+  })
+
+  const debtDataset = liabilitiesItems.map((item) => {
+    return formatValue(item.longTermDebt, unit)
+  })
+
+  const netIncomeDataset = liabilitiesItems.map((item) => {
+    return formatValue(item.netIncome, unit)
+  })
+
+  const leverageChartData = () => {
+    return {
+      labels: yearLabels,
+      datasets: [
+        // {
+        //   label: 'Leverage Ratio',
+        //   data: leverageRatioDataset,
+        //   backgroundColor: 'rgba(54, 162, 235, 0.2)',
+        //   borderColor: 'rgba(54, 162, 235, 1)',
+        //   borderWidth: 1,
+        //   barPercentage: .6,
+        // },
+        {
           label: 'Liabilities',
-          value: `${payload[0].payload.totalLiabilities} ${unit}`,
-          fontColor: 'text-orange-400'
-        }
-        const leverageRatio = {
-          label: 'Leverage Ratio',
-          value: payload[0].payload.leverageRatio,
-        }
-        return (
-          <TooltipContent
-            label={label}
-            chartItems={[totalLiabilities, shareholderEquity, leverageRatio]}
-          />
-        )
-      }
-      return null
-  }
-
-  const renderLongTermDebtTooltip = (props) => {
-    const { active, payload, label} = props
-      if (active) {
-        const shareholderEquity = {
+          data: liabilitiesDataset,
+          backgroundColor: 'rgba(255, 159, 64, 0.2)',
+          borderColor: 'rgb(255, 159, 64)',
+          borderWidth: 1,
+          barPercentage: .6,
+        },
+        {
           label: 'Equity',
-          value: `${payload[0].payload.shareholderEquity} ${unit}`,
-          fontColor: 'text-indigo-400'
-        }
-        const longTermDebt = {
-          label: 'Long Term Debt',
-          value: `${payload[0].payload.longTermDebt} ${unit}`,
-          fontColor: 'text-orange-400'
-        }
-        const longTermDebtToEquity = {
-          label: 'Long Term Debt to Equity',
-          value: `${payload[0].payload.longTermDebtToEquity}%`,
-        }
-        return (
-          <TooltipContent
-            label={label}
-            chartItems={[longTermDebt, shareholderEquity, longTermDebtToEquity]}
-          />
-        )
-      }
-      return null
+          data: equityDataset,
+          backgroundColor: 'rgba(54, 162, 235, 0.2)',
+          borderColor: 'rgba(54, 162, 235, 1)',
+          borderWidth: 1,
+          barPercentage: .6,
+        },
+      ],
+    }
   }
 
-  const renderNetIncomeToDebtTooltip = (props) => {
-    const { active, payload, label} = props
-      if (active) {
-        const netIncome = {
+  const options = {
+    legend: {
+      display: false
+    },
+    scales: {
+      yAxes: [
+        {
+          ticks: {
+            beginAtZero: true,
+          },
+          scaleLabel: {
+            display: true,
+            labelString: `Liabilities / Equity (${unit})`
+          }
+        },
+      ],
+    },
+  }
+
+  const debtChartData = () => {
+    return {
+      labels: yearLabels,
+      datasets: [
+        {
+          label: 'Long Term Debt',
+          data: debtDataset,
+          backgroundColor: 'rgba(255, 159, 64, 0.2)',
+          borderColor: 'rgb(255, 159, 64)',
+          borderWidth: 1,
+          barPercentage: .6,
+        },
+        {
           label: 'Net Income',
-          value: `${payload[0].payload.netIncome} ${unit}`,
-          fontColor: 'text-indigo-400'
-        }
-        const longTermDebt = {
-          label: 'Long Term Debt',
-          value: `${payload[0].payload.longTermDebt} ${unit}`,
-          fontColor: 'text-orange-400'
-        }
-        const netIncomeToDebt = {
-          label: 'Net Income to Long Term Debt',
-          value: `${payload[0].payload.netIncomeToDebt}`,
-        }
-        return (
-          <TooltipContent
-            label={label}
-            chartItems={[netIncome, longTermDebt, netIncomeToDebt]}
-          />
-        )
-      }
-      return null
+          data: netIncomeDataset,
+          backgroundColor: 'rgba(54, 162, 235, 0.2)',
+          borderColor: 'rgba(54, 162, 235, 1)',
+          borderWidth: 1,
+          barPercentage: .6,
+        },
+      ],
+    }
   }
 
-  return <>
-    <div className="w-full p-3">
-      <div className="bg-white border rounded shadow">
-        <div className="border-b p-3">
-            <h5 className="font-bold text-gray-600">Liabilities - Do you owe too much?</h5>
+  const borderColor = pass ? 'border-green-600' : 'border-orange-600'
+
+  return (
+    <>
+    <div className="w-full md:w-1/2 xl:w-1/3 p-3">
+      <div class={`h-full border-b-4 bg-white ${borderColor} rounded-md shadow-lg p-5`}>
+        <div className="p-3">
+          <ItemTitle
+            title="Liabilities "
+            subtitle="Do you owe too much?"
+            pass={pass}
+            icon={faCoins}
+          />
         </div>
-        <div className="p-5">
-          <div className="flex flex-row flex-wrap flex-grow mt-2">
-            <div className="w-full md:w-1/2 p-3">
-              <Chart 
-                data={leverageRatioChartData}
-                yAxisLabel={`Liabilities / Equity (${unit})`}
-                tooltipRenderer={renderLeverageRatioTooltip}
-              >
-                <Bar name="Liabilities" dataKey="totalLiabilities" barSize={35} fill="#fbd38d" />
-                <Bar name="Equity" dataKey="shareholderEquity" barSize={35} fill="#a3bffa" />
-                <Legend formatter={LegendFormatter}/>
-              </Chart>
-            </div>
-            <div className="w-full md:w-1/2 p-3 self-center">
-              <table className="w-full table-fixed">
-                <tbody>
-                  <tr>
-                    <th className="w-1/5"></th>
-                    {displayYears()}
-                  </tr>
-                  <tr>
-                    <RowHeader itemName='Leverage Ratio' />
-                    {leverageRatioData()}
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div className="w-full md:w-1/2 p-3">
-              <Chart 
-                data={longTermDebtToEquityChartData}
-                yAxisLabel={`Long Term Debt / Equity (${unit})`}
-                tooltipRenderer={renderLongTermDebtTooltip}
-              >
-                <Bar name="Long Term Debt" dataKey="longTermDebt" barSize={35} fill="#fbd38d" />
-                <Bar name="Equity" dataKey="shareholderEquity" barSize={35} fill="#a3bffa" />
-                <Legend formatter={LegendFormatter}/>
-              </Chart>
-            </div>
-            <div className="w-full md:w-1/2 p-3 self-center">
-              <table className="w-full table-fixed">
-                <tbody>
-                  <tr>
-                    <th className="w-1/5"></th>
-                    {displayYears()}
-                  </tr>
-                  <tr>
-                    <RowHeader itemName='Long Term Debt to Equity' />
-                    {longTermDebtToEquityData()}
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div className="w-full md:w-1/2 p-3">
-            <Chart 
-                data={netIncomeToDebtChartData}
-                yAxisLabel={`Net Income / Long Term Debt (${unit})`}
-                tooltipRenderer={renderNetIncomeToDebtTooltip}
-              >
-                <Bar name="Net Income" dataKey="netIncome" barSize={35} fill="#a3bffa" />
-                <Bar name="Long Term Debt" dataKey="longTermDebt" barSize={35} fill="#fbd38d" />
-                <Legend formatter={LegendFormatter}/>
-              </Chart>
-            </div>
-            <div className="w-full md:w-1/2 p-3 self-center">
-              <table className="w-full table-fixed">
-                <tbody>
-                  <tr>
-                    <th className="w-1/5"></th>
-                    {displayYears()}
-                  </tr>
-                  <tr>
-                    <RowHeader itemName='Net Income to Long Term Debt' />
-                    {netIncomeToLongTermDebtData()}
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
+        <Bar data={leverageChartData} options={options} />
+        <table className="w-full table-auto">
+          <tbody>
+            <tr>
+              <th className="w-1/5"></th>
+              {displayYears()}
+            </tr>
+            <tr>
+              <RowHeader itemName='Leverage Ratio' />
+              {leverageRatioData()}
+            </tr>
+            <tr>
+              <RowHeader itemName='Liabilities' />
+              {liabilitiesData()}
+            </tr>
+            <tr>
+              <RowHeader itemName='Equity' />
+              {equityData()}
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </>
+  )
 }
 
 export default LeverageItem

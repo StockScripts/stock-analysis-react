@@ -9,6 +9,7 @@ import ProfitItem from './lineItems/ProfitItem'
 import ReturnsItem from './lineItems/ReturnsItem'
 import FreeCashFlowItem from './lineItems/FreeCashFlowItem'
 import LiabilitiesItem from './lineItems/LiabilitiesItem'
+import DebtItem from './lineItems/DebtItem'
 import LiquidityItem from './lineItems/LiquidityItem'
 // import DividendItem from './lineItems/DividendItem'
 import RedFlagsItem from './lineItems/RedFlagsItem'
@@ -107,6 +108,20 @@ function PerformanceReport() {
     )
   }
 
+  const renderDebtItem = () => {
+    const debtItems = reportData.map((data) => {
+      return {
+        fiscalDate: data.fiscal_date,
+        longTermDebt: data.long_term_debt,
+        netIncome: data.net_income,
+        netIncomeToLongTermDebt: data.net_income_to_long_term_debt,
+      }
+    })
+    return (
+      <DebtItem debtItems={debtItems} />
+    )
+  }
+
   const renderLiquidityItem = () => {
     const liquidityItems = reportData.map((data) => {
       return {
@@ -147,7 +162,7 @@ function PerformanceReport() {
     const redFlagsItems = reportData.map((data) => {
       return {
         fiscalDate: data.fiscal_date,
-        totalRevenue: data.total_revenue,
+        totalRevenue: data.revenue,
         receivables: data.receivables,
         receivablesToSales: data.receivables_to_sales,
         inventory: data.inventory,
@@ -169,12 +184,13 @@ function PerformanceReport() {
         <>
           {renderRevenueItem()}
           {renderReturnsItem()}
-          {renderProfitItem()}
-          {renderLiabilitiesItem()}
-          {renderLiquidityItem()}
           {renderFreeCashFlowItem()}
-          {/* {renderDividendItem()} */}
+          {renderProfitItem()}
+          {renderLiquidityItem()}
+          {renderLiabilitiesItem()}
+          {renderDebtItem()}
           {renderRedFlagsItem()}
+          {/* {renderDividendItem()} */}
         </>
       )
     }
@@ -196,25 +212,33 @@ function PerformanceReport() {
     </div>
   } else {
     displayed = <>
-        <div className="text-left text-indigo-800 text-xl font-bold m-3">
+        <div className="text-left text-gray-800 text-xl font-bold p-4">
           {companyInfo ? `${companyInfo.name } (${companyInfo.symbol})` : null}
         </div>
-        <div className="w-full container mx-auto flex flex-wrap items-center mt-0 pt-3 pb-3 md:pb-0">
-          <div className="flex flex-row flex-wrap flex-grow mt-2">
+        {/* <div className="flex flex-row flex-wrap flex-grow mt-2">
             {renderItems()}
-          </div>
-        </div>
+        </div> */}
+        {/* <div className="flex flex-col md:flex-row">
+          <div className="w-full container mx-auto flex flex-wrap items-center mt-0 pt-3 pb-3 md:pb-0"> */}
+            <div className="flex flex-row flex-wrap flex-grow mt-2">
+              {renderItems()}
+            </div>
+          {/* </div>
+        </div> */}
       </>
   }
 
   return (
-    <div className="static mt-45 bg-white">
-      <div className="text-center">
-        <div className="inline-block">
-          {displayed}
-        </div>
-      </div>
+    <div className="main-content flex-1 bg-gray-100 mt-40 sm:mt-32 md:mt-16 pb-24 md:pb-5">
+      {displayed}
     </div>
+    // <div className="static mt-45 bg-white">
+    //   <div className="text-center">
+    //     <div className="inline-block">
+    //       {displayed}
+    //     </div>
+    //   </div>
+    // </div>
   )
 }
 

@@ -2,7 +2,7 @@ import React from 'react';
 
 export function YearsTableHeader({years}) {
   return years.map((year) => {
-    return <th key={year} className="border-b border-dotted text-left text-gray-600 text-opacity-75 px-2 text-sm font-normal">{year}</th>
+    return <th key={year} className="border-b border-dotted text-center text-gray-600 text-opacity-75 px-2 text-sm font-normal">{year}</th>
   })
 }
 

@@ -4,23 +4,29 @@ import {
   RowHeader,
 } from './components/TableComponents'
 import {
-  LineCharts,
-  TooltipContent,
-} from './components/ChartComponents'
+  ItemTitle
+} from './components/ReportComponents'
 import {
   Line,
-} from 'recharts';
+} from 'react-chartjs-2'
 import { 
   getUnit,
   formatValue,
+  fiscalDateYear
  } from './utils'
+ import { faFlag } from '@fortawesome/free-solid-svg-icons'
 
 function RedFlags({redFlagsItems}) {
   const [unit, setUnit] = React.useState(null)
+  const [pass, setPass] = React.useState(true)
 
   React.useEffect(() => {
     if (redFlagsItems && redFlagsItems[0].totalRevenue) {
       setUnit(getUnit(redFlagsItems[0].totalRevenue))
+      redFlagsItems.forEach((item) => {
+
+        setPass(false)
+      })
     }
   }, [redFlagsItems])
 
@@ -30,11 +36,11 @@ function RedFlags({redFlagsItems}) {
     if (Math.abs(value2 - value1) > 0.2) {
       classColor = 'text-orange-600'
     }
-    return `border-t font-semibold px-8 py-4 ${classColor}`
+    return `text-sm px-2 py-1 ${classColor}`
   }
 
   const displayYears = () => {
-    return <YearsTableHeader years={redFlagsItems.map(item => item.fiscalDate)}/>
+    return <YearsTableHeader years={redFlagsItems.map(item => fiscalDateYear(item.fiscalDate))}/>
   }
 
   const receivablesToSalesChartData = redFlagsItems.map((item) => {
@@ -54,32 +60,32 @@ function RedFlags({redFlagsItems}) {
     })
   }
 
-  const renderReceivablesToSalesTooltip = (props) => {
-    const { active, payload, label} = props
-      if (active) {
-        const sales = {
-          label: 'Sales',
-          value: `${payload[0].payload.totalRevenue} ${unit}`,
-          fontColor: 'text-indigo-400'
-        }
-        const receivables = {
-          label: 'Receivables',
-          value: `${payload[0].payload.receivables} ${unit}`,
-          fontColor: 'text-orange-400'
-        }
-        const receivablesToSales = {
-          label: 'Receivables to Sales',
-          value: `${payload[0].payload.receivablesToSales}`,
-        }
-        return (
-          <TooltipContent
-            label={label}
-            chartItems={[sales, receivables, receivablesToSales]}
-          />
-        )
-      }
-      return null
-  }
+  // const renderReceivablesToSalesTooltip = (props) => {
+  //   const { active, payload, label} = props
+  //     if (active) {
+  //       const sales = {
+  //         label: 'Sales',
+  //         value: `${payload[0].payload.totalRevenue} ${unit}`,
+  //         fontColor: 'text-indigo-400'
+  //       }
+  //       const receivables = {
+  //         label: 'Receivables',
+  //         value: `${payload[0].payload.receivables} ${unit}`,
+  //         fontColor: 'text-orange-400'
+  //       }
+  //       const receivablesToSales = {
+  //         label: 'Receivables to Sales',
+  //         value: `${payload[0].payload.receivablesToSales}`,
+  //       }
+  //       return (
+  //         <TooltipContent
+  //           label={label}
+  //           chartItems={[sales, receivables, receivablesToSales]}
+  //         />
+  //       )
+  //     }
+  //     return null
+  // }
 
   const inventoryToSalesChartData = redFlagsItems.map((item) => {
     return {
@@ -213,108 +219,119 @@ function RedFlags({redFlagsItems}) {
       return null
   }
 
+  const yearLabels = redFlagsItems.map((item) => {
+    return fiscalDateYear(item.fiscalDate)
+  })
+
+  const receivablesToSalesDataset = redFlagsItems.map((item) => {
+    return item.receivablesToSales
+  })
+
+  const inventoryToSalesDataset = redFlagsItems.map((item) => {
+    return item.inventoryToSales
+  })
+
+  const opExToSalesDataset = redFlagsItems.map((item) => {
+    return item.opExToSales
+  })
+
+  const sgaToSalesDataset = redFlagsItems.map((item) => {
+    return item.sgaToSales
+  })
+
+  const redFlagsChartData = () => {
+    return {
+      labels: yearLabels,
+      datasets: [
+        {
+          label: 'Receivables to Sales',
+          data: receivablesToSalesDataset,
+          borderColor: 'rgba(54, 162, 235, 1)',
+          borderWidth: 1,
+          fill: false,
+        },
+        {
+          label: 'Inventory to Sales',
+          data: inventoryToSalesDataset,
+          borderColor: 'rgba(54, 162, 235, 1)',
+          borderWidth: 1,
+          fill: false,
+        },
+        {
+          label: 'OpEx to Sales',
+          data: opExToSalesDataset,
+          borderColor: 'rgba(54, 162, 235, 1)',
+          borderWidth: 1,
+          fill: false,
+        },
+        {
+          label: 'SGA to Sales',
+          data: sgaToSalesDataset,
+          borderColor: 'rgba(54, 162, 235, 1)',
+          borderWidth: 1,
+          fill: false,
+        },
+      ],
+    }
+  }
+
+  const options = {
+    legend: {
+      display: false
+    },
+    scales: {
+      yAxes: [
+        {
+          ticks: {
+            beginAtZero: true,
+          },
+          scaleLabel: {
+            display: true,
+            labelString: `Item / Sales`
+          }
+        },
+      ],
+    },
+  }
+
+  const borderColor = pass ? 'border-green-600' : 'border-orange-600'
+
   return (
-    <div className="w-full p-3">
-      <div className="bg-white border rounded shadow">
-        <div className="border-b p-3">
-            <h5 className="font-bold text-gray-600">Red Flags - Are you financially stable?</h5>
+    <div class="w-full md:w-1/2 xl:w-1/3 p-3">
+      <div class={`h-full border-b-4 bg-white ${borderColor} rounded-md shadow-lg p-5`}>
+        <div className="p-3">
+          <ItemTitle
+            title="Red Flags"
+            subtitle="Are you financially stable?"
+            pass={pass}
+            icon={faFlag}
+          />
         </div>
-        <div className="p-5">
-          <div className="flex flex-row flex-wrap flex-grow mt-2">
-            <div className="w-full md:w-1/2 p-3">
-              <LineCharts
-                data={receivablesToSalesChartData}
-                yAxisLabel={`Receivables / Sales (${unit})`}
-                tooltipRenderer={renderReceivablesToSalesTooltip}
-              >
-                <Line type="monotone" dataKey="receivablesToSales" stroke="#8884d8" />
-              </LineCharts>
-            </div>
-            <div className="w-full md:w-1/2 p-3 self-center">
-              <table className="w-full table-fixed">
-                <tbody>
-                  <tr>
-                    <th className="w-1/5"></th>
-                    {displayYears()}
-                  </tr>
-                  <tr>
-                    <RowHeader itemName='Receivables to Sales' />
-                    {receivablesToSalesData()}
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div className="w-full md:w-1/2 p-3">
-              <LineCharts
-                data={inventoryToSalesChartData}
-                yAxisLabel={`Inventory / Sales (${unit})`}
-                tooltipRenderer={renderInventoryToSalesTooltip}
-              >
-                <Line type="monotone" dataKey="inventoryToSales" stroke="#8884d8" />
-              </LineCharts>
-            </div>
-            <div className="w-full md:w-1/2 p-3 self-center">
-              <table className="w-full table-fixed">
-                <tbody>
-                  <tr>
-                    <th className="w-1/5"></th>
-                    {displayYears()}
-                  </tr>
-                  <tr>
-                    <RowHeader itemName='Inventory to Sales' />
-                    {inventoryToSalesData()}
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div className="w-full md:w-1/2 p-3">
-              <LineCharts
-                data={opExToSalesChartData}
-                yAxisLabel={`Operating Expense / Sales`}
-                tooltipRenderer={renderOpExToSalesTooltip}
-              >
-                <Line type="monotone" dataKey="opExToSales" stroke="#8884d8" />
-              </LineCharts>
-            </div>
-            <div className="w-full md:w-1/2 p-3 self-center">
-              <table className="w-full table-fixed">
-                <tbody>
-                  <tr>
-                    <th className="w-1/5"></th>
-                    {displayYears()}
-                  </tr>
-                  <tr>
-                    <RowHeader itemName='Operating Expense to Sales' />
-                    {opExToSalesData()}
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div className="w-full md:w-1/2 p-3">
-              <LineCharts
-                data={sgaToSalesChartData}
-                yAxisLabel={`SGA / Sales`}
-                tooltipRenderer={renderSgaToSalesTooltip}
-              >
-                <Line type="monotone" dataKey="sgaToSales" stroke="#8884d8" />
-              </LineCharts>
-            </div>
-            <div className="w-full md:w-1/2 p-3 self-center">
-              <table className="w-full table-fixed">
-                <tbody>
-                  <tr>
-                    <th className="w-1/5"></th>
-                    {displayYears()}
-                  </tr>
-                  <tr>
-                    <RowHeader itemName='SGA to Sales' />
-                    {sgaToSalesData()}
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
+        <Line data={redFlagsChartData} options={options} />
+        <table className="w-full table-fixed">
+          <tbody>
+            <tr>
+              <th className="w-1/5"></th>
+              {displayYears()}
+            </tr>
+            <tr>
+              <RowHeader itemName='Receivables to Sales' />
+              {receivablesToSalesData()}
+            </tr>
+            <tr>
+              <RowHeader itemName='Inventory to Sales' />
+              {inventoryToSalesData()}
+            </tr>
+            <tr>
+              <RowHeader itemName='OpEx to Sales' />
+              {opExToSalesData()}
+            </tr>
+            <tr>
+              <RowHeader itemName='SGA to Sales' />
+              {sgaToSalesData()}
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   )

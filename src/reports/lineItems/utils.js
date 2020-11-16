@@ -31,3 +31,5 @@ export const getUnit = (value) => {
     return 'T'
   }
 }
+
+export const fiscalDateYear = (fiscalDate) => fiscalDate.split('-')[0]

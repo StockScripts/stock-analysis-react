@@ -3,100 +3,48 @@ import Modal from '../../components/modal/Modal'
 import {
   Bar,
   Line,
-} from 'recharts';
+} from 'react-chartjs-2'
 import {
   YearsTableHeader,
 } from './components/TableComponents'
-import {
-  Chart,
-  TooltipContent,
-} from './components/ChartComponents'
 import {
   ItemTitle
 } from './components/ReportComponents'
 import { 
   getUnit,
   formatValue,
+  fiscalDateYear,
  } from './utils'
+ import { faFunnelDollar } from '@fortawesome/free-solid-svg-icons'
 
 function ProfitItem({profitItems}) {
   const [unit, setUnit] = React.useState(null)
+  const [pass, setPass] = React.useState(true)
 
   React.useEffect(() => {
     if (profitItems && profitItems[0].netIncome) {
       setUnit(getUnit(profitItems[0].netIncome))
+      profitItems.forEach((item) => {
+        if (item.netIncome < 0 || item.netIncomeYOY < 0) {
+          setPass(false)
+        }
+      })
     }
   }, [profitItems])
 
   const [displayInfo, setDisplayInfo] = React.useState(false);
 
-  const netIncomeChartData = profitItems.map((item) => {
-    return {
-      year: item.fiscalDate.split('-')[0],
-      netIncome: formatValue(item.netIncome, unit),
-      netIncomeYOY: item.netIncomeYOY,
-    }
+  const yearLabels = profitItems.map((item) => {
+    return fiscalDateYear(item.fiscalDate)
   })
 
-  const renderNetIncomeTooltip = (props) => {
-    const { active, payload, label} = props
-      if (active) {
-        const netIncome = {
-          label: 'NetINcome',
-          value: `${payload[0].payload.netIncome} ${unit}`,
-          fontColor: 'text-indigo-400'
-        }
-        const netIncomeYOY = {
-          label: 'Net Income YOY',
-          value: `${payload[0].payload.netIncomeYOY}%`,
-          fontColor: 'text-indigo-400'
-        }
-        return (
-          <TooltipContent
-            label={label}
-            chartItems={[netIncome, netIncomeYOY]}
-          />
-        )
-      }
-      return null
-  }
-
-  const netMarginChartData = profitItems.map((item) => {
-    return {
-      year: item.fiscalDate.split('-')[0],
-      netMargin: item.netMargin,
-      netIncome: formatValue(item.netIncome, unit),
-      revenue: formatValue(item.revenue, unit)
-    }
+  const netIncomeDataset = profitItems.map((item) => {
+    return formatValue(item.netIncome, unit)
   })
-
-  const renderNetMarginTooltip = (props) => {
-    const { active, payload, label} = props
-      if (active) {
-        const netMargin = {
-          label: 'Net Margin',
-          value: `${payload[0].payload.netMargin} ${unit}`,
-          fontColor: 'text-indigo-400'
-        }
-        const netIncome = {
-          label: 'Net Income',
-          value: `${payload[0].payload.netIncome}%`,
-          fontColor: 'text-indigo-400'
-        }
-        const revenue = {
-          label: 'Revenue',
-          value: `${payload[0].payload.revenue}%`,
-          fontColor: 'text-indigo-400'
-        }
-        return (
-          <TooltipContent
-            label={label}
-            chartItems={[netMargin, netIncome, revenue]}
-          />
-        )
-      }
-      return null
-  }
+  
+  const revenueDataset = profitItems.map((item) => {
+    return formatValue(item.revenue, unit)
+  })
 
   const _passFailClass = (value1, value2) => {
     let classColor = 'text-green-600'
@@ -104,11 +52,74 @@ function ProfitItem({profitItems}) {
     if (value1 < 0 || value2 < 0) {
       classColor = 'text-orange-600'
     }
-    return `border-t font-semibold px-8 py-4 ${classColor}`
+    return `text-sm py-1 ${classColor}`
   }
 
   const onClose = () => {
     setDisplayInfo(false)
+  }
+
+  const profitsChartData = () => {
+    return {
+      labels: yearLabels,
+      datasets: [
+        {
+          label: 'Net Income',
+          data: netIncomeDataset,
+          backgroundColor: 'rgba(54, 162, 235, 0.2)',
+          borderColor: 'rgba(54, 162, 235, 1)',
+          borderWidth: 1,
+          barPercentage: .6,
+        },
+        {
+          label: 'Revenue',
+          data: revenueDataset,
+          backgroundColor: "rgba(255, 159, 64, 0.2)",
+          borderColor: "rgb(255, 159, 64)",
+          borderWidth: 1,
+          barPercentage: .6,
+        },
+        // {
+        //   label: 'net income',
+        //   data: netIncomeDataset,
+        //   hidden: true,
+        // },
+        // {
+        //   label: 'equity',
+        //   data: equityDataset,
+        //   hidden: true,
+        // }
+      ],
+    }
+  }
+
+  const options = {
+    // tooltips: {
+    //   callbacks: {
+    //     title: function(tooltipItem, data) {
+    //       return data['labels'][tooltipItem[0]['index']];
+    //     },
+    //     label: function(tooltipItem, data) {
+    //       return `ROE: ${data['datasets'][0]['data'][tooltipItem['index']]}%`;
+    //     },
+    //   }
+    // },
+    legend: {
+      display: false
+    },
+    scales: {
+      yAxes: [
+        {
+          ticks: {
+            beginAtZero: true,
+          },
+          scaleLabel: {
+            display: true,
+            labelString: `Net Income / Revenue (${unit})`
+          }
+        },
+      ],
+    },
   }
 
   const netIncomeData = () => {
@@ -128,7 +139,7 @@ function ProfitItem({profitItems}) {
   }
 
   const displayYears = () => {
-    return <YearsTableHeader years={profitItems.map(item => item.fiscalDate)}/>
+    return <YearsTableHeader years={profitItems.map(item => fiscalDateYear(item.fiscalDate))}/>
   }
 
   const netMarginData = () => {
@@ -139,69 +150,41 @@ function ProfitItem({profitItems}) {
     })
   }
 
+  const borderColor = pass ? 'border-green-600' : 'border-orange-600'
+
   return <>
     {displayInfo ? <Modal onClose={onClose} /> : null}
-
-    <div className="w-full p-3">
-      <div className="bg-white border rounded shadow">
-        <div className="border-b p-3">
-          <ItemTitle title="Profits - Are you keeping the money you're making?" />
+    <div class="w-full md:w-1/2 xl:w-1/3 p-3">
+      <div class={`h-full border-b-4 bg-white ${borderColor} rounded-md shadow-lg p-5`}>
+        <div className="p-3">
+          <ItemTitle
+            title="Profits"
+            subtitle="Are you keeping the money you're making?"
+            pass={pass}
+            icon={faFunnelDollar}
+          />
         </div>
-        <div className="p-5">
-          <div className="flex flex-row flex-wrap flex-grow mt-2">
-            <div className="w-full md:w-1/2 p-3">
-              <Chart
-                data={netIncomeChartData}
-                yAxisLabel={`NetIncome (${unit})`}
-                tooltipRenderer={renderNetIncomeTooltip}
-              >
-                <Bar dataKey="netIncome" barSize={40} fill="#a3bffa" unit={unit} />
-                <Line type="monotone" dataKey="netIncome" stroke="#718096" />
-              </Chart>
-            </div>
-            <div className="w-full md:w-1/2 p-3 self-center">
-              <table className="w-full table-auto">
-                <tbody>
-                  <tr>
-                    <th></th>
-                    {displayYears()}
-                  </tr>
-                  <tr>
-                    <td className="text-indigo-800 text-opacity-75 text-sm text-left">Net Income</td>
-                    {netIncomeData()}
-                  </tr>
-                  <tr>
-                    <td className="text-indigo-800 text-opacity-75 text-sm text-left">YOY Growth</td>
-                    {netIncomeYOYData()}
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div className="w-full md:w-1/2 p-3">
-              <Chart
-                  data={netMarginChartData}
-                  yAxisLabel={`Net Margin (%)`}
-                  tooltipRenderer={renderNetMarginTooltip}
-                >
-                  <Bar dataKey="netMargin" barSize={40} fill="#a3bffa" unit={unit} />
-                </Chart>
-            </div>
-            <div className="w-full md:w-1/2 p-3 self-center">
-              <table className="w-full table-auto">
-                <tbody>
-                  <tr>
-                    <th></th>
-                    {displayYears()}
-                  </tr>
-                  <tr>
-                    <td className="text-indigo-800 text-opacity-75 text-sm text-left">Net Margin</td>
-                    {netMarginData()}
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
+        <Bar data={profitsChartData} options={options} />
+        <table className="w-full table-auto">
+          <tbody>
+            <tr>
+              <th className="w-1/5"></th>
+              {displayYears()}
+            </tr>
+            <tr>
+              <td className="text-indigo-800 text-opacity-75 text-sm text-left">Net Income</td>
+              {netIncomeData()}
+            </tr>
+            <tr>
+              <td className="text-indigo-800 text-opacity-75 text-sm text-left">YOY Growth</td>
+              {netIncomeYOYData()}
+            </tr>
+            <tr>
+              <td className="text-indigo-800 text-opacity-75 text-sm text-left">Net Margin</td>
+              {netMarginData()}
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </>

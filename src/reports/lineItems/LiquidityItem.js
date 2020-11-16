@@ -1,28 +1,33 @@
 import React from 'react';
 import {
   Bar,
-  Legend,
-} from 'recharts';
-import {
-  Chart,
-  TooltipContent,
-  LegendFormatter,
-} from './components/ChartComponents'
+} from 'react-chartjs-2'
 import {
   YearsTableHeader,
   RowHeader,
 } from './components/TableComponents'
+import {
+  ItemTitle
+} from './components/ReportComponents'
 import { 
   getUnit,
   formatValue,
+  fiscalDateYear,
  } from './utils'
+ import { faFileInvoiceDollar } from '@fortawesome/free-solid-svg-icons'
 
 function LiquidityItem({liquidityItems}) {
   const [unit, setUnit] = React.useState(null)
+  const [pass, setPass] = React.useState(true)
 
   React.useEffect(() => {
     if (liquidityItems && liquidityItems[0].currentLiabilities) {
       setUnit(getUnit(liquidityItems[0].currentLiabilities))
+      liquidityItems.forEach((item) => {
+        if (item.quickRatio < 1) {
+          setPass(false)
+        }
+      })
     }
   }, [liquidityItems])
 
@@ -32,20 +37,19 @@ function LiquidityItem({liquidityItems}) {
     if (value < 1) {
       classColor = 'text-orange-600'
     }
-    return `border-t font-semibold px-8 py-4 ${classColor}`
+    return `text-sm py-1 ${classColor}`
   }
 
-  const quickRatioChartData = liquidityItems.map((item) => {
-    return {
-      year: item.fiscalDate.split('-')[0],
-      quickAssets: formatValue(item.quickAssets, unit),
-      currentLiabilities: formatValue(item.currentLiabilities, unit),
-      quickRatio: item.quickRatio,
-    }
+  const yearLabels = liquidityItems.map((item) => {
+    return fiscalDateYear(item.fiscalDate)
+  })
+
+  const quickRatioDataset = liquidityItems.map((item) => {
+    return item.quickRatio
   })
 
   const displayYears = () => {
-    return <YearsTableHeader years={liquidityItems.map(item => item.fiscalDate)}/>
+    return <YearsTableHeader years={liquidityItems.map(item => fiscalDateYear(item.fiscalDate))}/>
   }
 
   const quickRatioData = () => {
@@ -56,49 +60,56 @@ function LiquidityItem({liquidityItems}) {
     })
   }
 
-  const renderQuickRatioTooltip = (props) => {
-    const { active, payload, label} = props
-      if (active) {
-        const quickAssets = {
-          label: 'Quick Assets',
-          value: `${payload[0].payload.quickAssets} ${unit}`,
-          fontColor: 'text-indigo-400'
-        }
-        const currentLiabilities = {
-          label: 'Current Liabilities',
-          value: `${payload[0].payload.currentLiabilities} ${unit}`,
-          fontColor: 'text-orange-400'
-        }
-        const quickRatio = {
+  const quickRatioChartData = () => {
+    return {
+      labels: yearLabels,
+      datasets: [
+        {
           label: 'Quick Ratio',
-          value: `${payload[0].payload.quickRatio}`,
-        }
-        return (
-          <TooltipContent
-            label={label}
-            chartItems={[quickAssets, currentLiabilities, quickRatio]}
-          />
-        )
-      }
-      return null
+          data: quickRatioDataset,
+          backgroundColor: 'rgba(54, 162, 235, 0.2)',
+          borderColor: 'rgba(54, 162, 235, 1)',
+          borderWidth: 1,
+          barPercentage: .6,
+        },
+      ],
+    }
   }
-  
+
+  const options = {
+    legend: {
+      display: false
+    },
+    scales: {
+      yAxes: [
+        {
+          ticks: {
+            beginAtZero: true,
+          },
+          scaleLabel: {
+            display: true,
+            labelString: `Quick Ratio`
+          }
+        },
+      ],
+    },
+  }
+
+  const borderColor = pass ? 'border-green-600' : 'border-orange-600'
+
   return (
-    <div className="w-full h-full md:w-1/2 p-3">
-      <div className="bg-white border rounded shadow">
-        <div className="border-b p-3">
-            <h5 className="font-bold text-indigo-600 text-opacity-75">Liquidity - Can you pay your bills?</h5>
+    <div className="w-full md:w-1/2 xl:w-1/3 p-3">
+      <div class={`h-full border-b-4 bg-white ${borderColor} rounded-md shadow-lg p-5`}>
+        <div className="p-3">
+          <ItemTitle
+            title="Liquidity"
+            subtitle="Can you pay your bills?"
+            pass={pass}
+            icon={faFileInvoiceDollar}
+          />
         </div>
         <div className="p-5">
-          <Chart 
-            data={quickRatioChartData}
-            yAxisLabel='Quick Assets / Current Liabilities'
-            tooltipRenderer={renderQuickRatioTooltip}
-          >
-            <Bar name="Quick Assets" dataKey="quickAssets" barSize={35} fill="#a3bffa" />
-            <Bar name="Current Liabilities" dataKey="currentLiabilities" barSize={35} fill="#fbd38d" />
-            <Legend formatter={LegendFormatter}/>
-          </Chart>
+          <Bar data={quickRatioChartData} options={options} />
           <table className="w-full table-auto">
             <tbody>
               <tr>
