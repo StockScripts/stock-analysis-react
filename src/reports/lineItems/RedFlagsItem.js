@@ -104,32 +104,32 @@ function RedFlags({redFlagsItems}) {
     })
   }
 
-  const renderInventoryToSalesTooltip = (props) => {
-    const { active, payload, label} = props
-      if (active) {
-        const sales = {
-          label: 'Sales',
-          value: `${payload[0].payload.totalRevenue} ${unit}`,
-          fontColor: 'text-indigo-400'
-        }
-        const inventory = {
-          label: 'Inventory',
-          value: `${payload[0].payload.inventory} ${unit}`,
-          fontColor: 'text-orange-400'
-        }
-        const inventoryToSales = {
-          label: 'Inventory to Sales',
-          value: `${payload[0].payload.inventoryToSales}`,
-        }
-        return (
-          <TooltipContent
-            label={label}
-            chartItems={[sales, inventory, inventoryToSales]}
-          />
-        )
-      }
-      return null
-  }
+  // const renderInventoryToSalesTooltip = (props) => {
+  //   const { active, payload, label} = props
+  //     if (active) {
+  //       const sales = {
+  //         label: 'Sales',
+  //         value: `${payload[0].payload.totalRevenue} ${unit}`,
+  //         fontColor: 'text-indigo-400'
+  //       }
+  //       const inventory = {
+  //         label: 'Inventory',
+  //         value: `${payload[0].payload.inventory} ${unit}`,
+  //         fontColor: 'text-orange-400'
+  //       }
+  //       const inventoryToSales = {
+  //         label: 'Inventory to Sales',
+  //         value: `${payload[0].payload.inventoryToSales}`,
+  //       }
+  //       return (
+  //         <TooltipContent
+  //           label={label}
+  //           chartItems={[sales, inventory, inventoryToSales]}
+  //         />
+  //       )
+  //     }
+  //     return null
+  // }
 
   const opExToSalesChartData = redFlagsItems.map((item) => {
     return {
@@ -140,32 +140,32 @@ function RedFlags({redFlagsItems}) {
     }
   })
 
-  const renderOpExToSalesTooltip = (props) => {
-    const { active, payload, label} = props
-      if (active) {
-        const sales = {
-          label: 'Sales',
-          value: `${payload[0].payload.totalRevenue} ${unit}`,
-          fontColor: 'text-indigo-400'
-        }
-        const opEx = {
-          label: 'Operating Expense',
-          value: `${payload[0].payload.opEx} ${unit}`,
-          fontColor: 'text-orange-400'
-        }
-        const opExToSales = {
-          label: 'Op Ex to Sales',
-          value: `${payload[0].payload.opExToSales}`,
-        }
-        return (
-          <TooltipContent
-            label={label}
-            chartItems={[sales, opEx, opExToSales]}
-          />
-        )
-      }
-      return null
-  }
+  // const renderOpExToSalesTooltip = (props) => {
+  //   const { active, payload, label} = props
+  //     if (active) {
+  //       const sales = {
+  //         label: 'Sales',
+  //         value: `${payload[0].payload.totalRevenue} ${unit}`,
+  //         fontColor: 'text-indigo-400'
+  //       }
+  //       const opEx = {
+  //         label: 'Operating Expense',
+  //         value: `${payload[0].payload.opEx} ${unit}`,
+  //         fontColor: 'text-orange-400'
+  //       }
+  //       const opExToSales = {
+  //         label: 'Op Ex to Sales',
+  //         value: `${payload[0].payload.opExToSales}`,
+  //       }
+  //       return (
+  //         <TooltipContent
+  //           label={label}
+  //           chartItems={[sales, opEx, opExToSales]}
+  //         />
+  //       )
+  //     }
+  //     return null
+  // }
 
   const opExToSalesData = () => {
     return redFlagsItems.map((item, index) => {
@@ -192,32 +192,32 @@ function RedFlags({redFlagsItems}) {
     })
   }
 
-  const renderSgaToSalesTooltip = (props) => {
-    const { active, payload, label} = props
-      if (active) {
-        const sales = {
-          label: 'Sales',
-          value: `${payload[0].payload.totalRevenue} ${unit}`,
-          fontColor: 'text-indigo-400'
-        }
-        const sga = {
-          label: 'Operating Expense',
-          value: `${payload[0].payload.sga} ${unit}`,
-          fontColor: 'text-orange-400'
-        }
-        const sgaToSales = {
-          label: 'Op Ex to Sales',
-          value: `${payload[0].payload.sgaToSales}`,
-        }
-        return (
-          <TooltipContent
-            label={label}
-            chartItems={[sales, sga, sgaToSales]}
-          />
-        )
-      }
-      return null
-  }
+  // const renderSgaToSalesTooltip = (props) => {
+  //   const { active, payload, label} = props
+  //     if (active) {
+  //       const sales = {
+  //         label: 'Sales',
+  //         value: `${payload[0].payload.totalRevenue} ${unit}`,
+  //         fontColor: 'text-indigo-400'
+  //       }
+  //       const sga = {
+  //         label: 'Operating Expense',
+  //         value: `${payload[0].payload.sga} ${unit}`,
+  //         fontColor: 'text-orange-400'
+  //       }
+  //       const sgaToSales = {
+  //         label: 'Op Ex to Sales',
+  //         value: `${payload[0].payload.sgaToSales}`,
+  //       }
+  //       return (
+  //         <TooltipContent
+  //           label={label}
+  //           chartItems={[sales, sga, sgaToSales]}
+  //         />
+  //       )
+  //     }
+  //     return null
+  // }
 
   const yearLabels = redFlagsItems.map((item) => {
     return fiscalDateYear(item.fiscalDate)
