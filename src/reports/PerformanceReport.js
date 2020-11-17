@@ -200,10 +200,10 @@ function PerformanceReport() {
   let displayed = null
 
   if (loading) {
-    displayed = <div className="sweet-loading">
+    displayed = <div className="sweet-loading text-center">
       <ScaleLoader
         size={250}
-        color={"#5a67d8"}
+        color={"#57BA98"}
         loading={true}
         height={90}
         width={9}
@@ -229,7 +229,7 @@ function PerformanceReport() {
   }
 
   return (
-    <div className="main-content flex-1 bg-palette-light mt-40 sm:mt-32 md:mt-16 pb-24 md:pb-5">
+    <div className="main-content flex-1 bg-palette-light mt-16 sm:mt-4 pb-24 md:pb-5">
       {displayed}
     </div>
     // <div className="static mt-45 bg-white">

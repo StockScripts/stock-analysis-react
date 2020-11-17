@@ -89,10 +89,10 @@ function App() {
   // })
 
   return (
-    <div className="App">
+    <div className="flex flex-col h-screen">
       {/* <CompanyContext.Provider> */}
-        <NavBar />
         <Router>
+          <NavBar />
           <Switch>
             <Route exact path="/"><Home /></Route>
             {/* <Route path="/report"><PerformanceReport company={company} /></Route> */}

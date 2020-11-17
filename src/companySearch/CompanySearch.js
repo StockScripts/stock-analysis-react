@@ -102,7 +102,7 @@ function CompanySearch(props) {
       <div className="relative">
         <form autoComplete="off" onSubmit={handleSubmit}>
           <input 
-            className="bg-white w-full text-palette-dark focus:outline-none focus:shadow-outline border border-gray-300 rounded shadow py-2 px-4 m-2 appearance-none leading-normal"
+            className="md:w-full bg-white text-palette-dark focus:outline-none focus:shadow-outline border border-gray-300 rounded shadow py-2 px-4 m-2 appearance-none leading-normal"
             placeholder="Enter ticker or company"
             value={ticker}
             onChange={handleChange}

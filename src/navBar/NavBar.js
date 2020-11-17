@@ -13,7 +13,7 @@ function NavBar() {
             <span className="ml-4">GreenDayStocks</span>
           </a>
         </div>
-        <div className="flex flex-1 md:w-1/2 justify-center md:justify-start text-white px-2">
+        <div className="flex flex-1 md:w-1/3 justify-center md:justify-start text-white px-2">
           <span className="relative w-full">
             <CompanySearch />
               {/* <input type="search" placeholder="Search" className="w-full bg-gray-800 text-sm text-white transition border border-transparent focus:outline-none focus:border-gray-700 rounded py-1 px-2 pl-10 appearance-none leading-normal"/> */}
