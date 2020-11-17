@@ -5,6 +5,7 @@ import {
   Route
 } from "react-router-dom";
 import NavBar from './navBar/NavBar'
+import Footer from './footer/Footer'
 import Home from './home/Home'
 import PerformanceReport from './reports/PerformanceReport'
 
@@ -90,14 +91,15 @@ function App() {
   return (
     <div className="App">
       {/* <CompanyContext.Provider> */}
+        <NavBar />
         <Router>
-          <NavBar />
           <Switch>
-            {/* <Route exact path="/"><Home /></Route> */}
+            <Route exact path="/"><Home /></Route>
             {/* <Route path="/report"><PerformanceReport company={company} /></Route> */}
             <Route path="/report/:company"><PerformanceReport /></Route>
           </Switch>
         </Router>
+        <Footer />
       {/* </CompanyContext.Provider> */}
     </div>
   );

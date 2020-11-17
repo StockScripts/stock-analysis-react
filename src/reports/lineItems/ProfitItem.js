@@ -2,7 +2,6 @@ import React from 'react';
 import Modal from '../../components/modal/Modal'
 import {
   Bar,
-  Line,
 } from 'react-chartjs-2'
 import {
   YearsTableHeader,

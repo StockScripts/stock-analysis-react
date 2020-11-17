@@ -212,7 +212,7 @@ function PerformanceReport() {
     </div>
   } else {
     displayed = <>
-        <div className="text-left text-gray-800 text-xl font-bold p-4">
+        <div className="text-left bg-palette-green-med text-palette-light text-xl font-bold p-4">
           {companyInfo ? `${companyInfo.name } (${companyInfo.symbol})` : null}
         </div>
         {/* <div className="flex flex-row flex-wrap flex-grow mt-2">
@@ -229,7 +229,7 @@ function PerformanceReport() {
   }
 
   return (
-    <div className="main-content flex-1 bg-gray-100 mt-40 sm:mt-32 md:mt-16 pb-24 md:pb-5">
+    <div className="main-content flex-1 bg-palette-light mt-40 sm:mt-32 md:mt-16 pb-24 md:pb-5">
       {displayed}
     </div>
     // <div className="static mt-45 bg-white">

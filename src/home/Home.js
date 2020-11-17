@@ -1,9 +1,96 @@
 import React from 'react';
 import CompanySearch from '../companySearch/CompanySearch'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {
+  faMoneyCheckAlt,
+  faHandHoldingUsd,
+  faMoneyBillWave,
+  faFunnelDollar,
+  faFileInvoiceDollar,
+  faCoins,
+  faCreditCard,
+  faFlag
+} from '@fortawesome/free-solid-svg-icons'
+import { ChecklistItem } from './checklistItem'
 
 export default function Home() {
+  // style="background: linear-gradient(90deg, #667eea 0%, #764ba2 100%)
   return (
     <>
+      <div className="py-20 bg-palette-green-med">
+        <div className="container mx-auto px-6">
+          <h2 className="text-4xl font-bold mb-2 text-palette-light">
+            Invest in good companies
+          </h2>
+          <h3 className="text-2xl mb-8 text-palette-light">
+            A simple way to find good investments. Just look for the green.
+          </h3>
+        </div>
+      </div>
+
+      <section className="container mx-auto px-6 p-10">
+        <div className=" text-center text-palette-green-med mb-8">
+          <h2 className="text-4xl font-bold">
+            What should you look for in a stock?
+          </h2>
+          <p className="text-2xl">Let's make this simple. You are the company. What would make you financially successful?</p>
+        </div>
+
+        <div className="main-content flex-1 bg-palette-light pb-24 md:pb-5">
+          <div className="flex flex-row flex-wrap flex-grow mt-2">
+            <ChecklistItem
+              title="Are you getting a raise every year?"
+              subtitle="Revenue"
+              icon={faMoneyCheckAlt}
+              content="Revenue or sales is how much a company is getting paid. Just like how you should be getting a
+                raise at your job every year, a company should be increasing their sales every year."
+            />
+            <ChecklistItem
+              title="Can you manange your money?"
+              subtitle="ROE"
+              icon={faHandHoldingUsd}
+              content=""
+            />
+            <ChecklistItem
+              title="Do you have spending money?"
+              subtitle="Free Cash Flow"
+              icon={faMoneyBillWave}
+              content=""
+            />
+            <ChecklistItem
+              title="Are you keeping the money you're making?"
+              subtitle="Profits"
+              icon={faFunnelDollar}
+              content=""
+            />
+            <ChecklistItem
+              title="Can you pay your bills?"
+              subtitle="Liquidity"
+              icon={faFileInvoiceDollar}
+              content=""
+            />
+            <ChecklistItem
+              title="Do you owe too much?"
+              subtitle="Liabilities"
+              icon={faCoins}
+              content=""
+            />
+            <ChecklistItem
+              title="Can you afford your debt?"
+              subtitle="Debt"
+              icon={faCreditCard}
+              content=""
+            />
+            <ChecklistItem
+              title="Are you financially stable?"
+              subtitle="Red Flags"
+              icon={faFlag}
+              content=""
+            />
+
+          </div>
+        </div>
+      </section>
       {/* <div className="pt-24">
         <div className="container px-3 mx-auto flex flex-wrap flex-col md:flex-row items-center">
           <div className="flex flex-col w-full md:w-2/5 justify-center items-start text-center md:text-left">
