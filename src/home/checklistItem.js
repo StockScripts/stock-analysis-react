@@ -12,8 +12,8 @@ export function ChecklistItem({title, subtitle, icon, content}) {
             </div>
             <div className={`font-bold text-xl ml-6`}>{title}</div>
           </div>
-          <div className={`font-bold text-palette-green-med mt-3 ml-2 text-xl`}>{subtitle}</div>
-          <div className={`text-palette-green-med mt-1 ml-2`}>{content}</div>
+          <div className={`font-bold text-gray-500 mt-3 ml-2 text-xl`}>{subtitle}</div>
+          <div className={`text-gray-500 mt-1 ml-2`}>{content}</div>
         </div>
       </div>
     </div>

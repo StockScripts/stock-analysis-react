@@ -10,7 +10,7 @@ function NavBar() {
         <div class="flex flex-shrink md:w-1/3 justify-center md:justify-start text-white ml-3">
           <a className="text-palette-green-dark no-underline hover:no-underline font-bold text-2xl lg:text-4xl"  href="/"> 
             {/* <FontAwesomeIcon icon={faChartLine} /> */}
-            <span className="ml-4">GreenDayStocks</span>
+            <span className="ml-4">GrasshopperStocks</span>
           </a>
         </div>
         <div className="flex flex-1 md:w-1/3 justify-center md:justify-start text-white px-2">
@@ -28,10 +28,10 @@ function NavBar() {
         <div className="flex w-full pt-2 content-center justify-between md:w-1/3 md:justify-end">
           <ul className="list-reset flex justify-between flex-1 md:flex-none items-center">
             {/* <li className="flex-1 md:flex-none md:mr-3">
-              <a className="inline-block py-2 px-4 text-white no-underline" href="#">Active</a>
-            </li>
+              <a className="inline-block py-2 px-4 text-gray no-underline" href="#">Active</a>
+            </li> */}
             <li className="flex-1 md:flex-none md:mr-3">
-              <a className="inline-block text-gray-600 no-underline hover:text-gray-200 hover:text-underline py-2 px-4" href="#">link</a>
+              <a className="inline-block text-palette-green-dark no-underline hover:text-palette-green-med py-2 px-4" href="http://blog.grasshopperstocks.com">Blog</a>
             </li>
             <li className="flex-1 md:flex-none md:mr-3">
               <div className="relative inline-block">
@@ -43,7 +43,7 @@ function NavBar() {
                     <a href="#" className="p-2 hover:bg-gray-800 text-white text-sm no-underline hover:no-underline block"><i class="fas fa-sign-out-alt fa-fw"></i> Log Out</a>
                 </div>
               </div>
-            </li> */}
+            </li>
           </ul>
         </div>
       </div>

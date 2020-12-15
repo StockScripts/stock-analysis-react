@@ -43,25 +43,28 @@ export default function Home() {
               subtitle="Revenue"
               icon={faMoneyCheckAlt}
               content="Revenue or sales is how much a company is getting paid. Just like how you should be getting a
-                raise at your job every year, a company should be increasing their sales every year."
+                raise at your job every year, a company should be growing their sales every year."
             />
             <ChecklistItem
               title="Can you manange your money?"
               subtitle="ROE"
               icon={faHandHoldingUsd}
+              content="Are you using your money wisely, or are you squandering it? For a company, ROE or Return On Equity tells you how effective the management is at using shareholder money. The number can be different for each industry,
+                but in general, we want this to be at least 15%."
+            />
+            <ChecklistItem
+              title="Are you keeping the money you're making?"
+              subtitle="Net Income and Net Margin"
+              icon={faFunnelDollar}
               content=""
             />
             <ChecklistItem
               title="Do you have spending money?"
               subtitle="Free Cash Flow"
               icon={faMoneyBillWave}
-              content=""
-            />
-            <ChecklistItem
-              title="Are you keeping the money you're making?"
-              subtitle="Profits"
-              icon={faFunnelDollar}
-              content=""
+              content={`Free cash flow is the money left over after a company pays for what it needs to operate.
+                For you, it's what's left after you pay your bills, gas, groceries, and other expenses.
+                It's money you have for the fun stuff. You should have \"fun money\" left over after each paycheck, and so should a company.`}
             />
             <ChecklistItem
               title="Can you pay your bills?"
@@ -79,7 +82,7 @@ export default function Home() {
               title="Can you afford your debt?"
               subtitle="Debt"
               icon={faCreditCard}
-              content=""
+              content="Are you able to pay for your debt with the money you're making? That means net income should be at least five times the amount of debt."
             />
             <ChecklistItem
               title="Are you financially stable?"
