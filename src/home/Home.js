@@ -25,6 +25,11 @@ export default function Home() {
           <h3 className="text-2xl mb-8 text-palette-light">
             A simple way to find good investments. Just look for the green.
           </h3>
+          <div>
+            <h3 className="text-xl font-semibold text-palette-light hover:underline">
+              <a href="https://blog.grasshopperstocks.com/2020/12/18/how-do-i-find-a-good-company-to-invest-in/">How do I use this?</a>
+            </h3>
+          </div>
         </div>
       </div>
 
@@ -41,6 +46,7 @@ export default function Home() {
             <ChecklistItem
               title="Are you getting a raise every year?"
               subtitle="Revenue"
+              link="https://www.investopedia.com/terms/r/revenue.asp"
               icon={faMoneyCheckAlt}
               content="Revenue or sales is how much a company is getting paid. Just like how you should be getting a
                 raise at your job every year, a company should be growing their sales every year."
@@ -48,47 +54,58 @@ export default function Home() {
             <ChecklistItem
               title="Can you manange your money?"
               subtitle="ROE"
+              link="https://www.investopedia.com/terms/r/returnonequity.asp"
               icon={faHandHoldingUsd}
-              content="Are you using your money wisely, or are you squandering it? For a company, ROE or Return On Equity tells you how effective the management is at using shareholder money. The number can be different for each industry,
-                but in general, we want this to be at least 15%."
+              content="Are you using your money wisely? Are you squandering it? ROE tells you how effective a company is at using shareholder money."
             />
             <ChecklistItem
               title="Are you keeping the money you're making?"
               subtitle="Net Income and Net Margin"
+              link="https://www.investopedia.com/terms/n/net_margin.asp"
               icon={faFunnelDollar}
-              content=""
+              content="In order to do your job, you have some basic necessities. Gas to get to work, training courses, maybe some nice work clothes.
+                All this should cost less than what you're making. The remaining money is your net income. The more of it you have, the better."
             />
             <ChecklistItem
               title="Do you have spending money?"
               subtitle="Free Cash Flow"
+              link="https://www.investopedia.com/terms/f/freecashflow.asp"
               icon={faMoneyBillWave}
               content={`Free cash flow is the money left over after a company pays for what it needs to operate.
-                For you, it's what's left after you pay your bills, gas, groceries, and other expenses.
-                It's money you have for the fun stuff. You should have \"fun money\" left over after each paycheck, and so should a company.`}
+                For you, it's what's left after you pay your bills, groceries, and other expenses.
+                It's money you have for the fun stuff. You should have \"fun money\", and so should a company.`}
             />
             <ChecklistItem
               title="Can you pay your bills?"
-              subtitle="Liquidity"
+              subtitle="Liquidity and Quick Ratio"
+              link="https://www.investopedia.com/terms/q/quickratio.asp"
               icon={faFileInvoiceDollar}
-              content=""
+              content="You should have enough cash to pay your bills every month. No borrowing from credit cards or having to sell your Funko Pop collection.
+                A company has the same responsibility, and they should be able to cover all their recurring expenses."
             />
             <ChecklistItem
               title="Do you owe too much?"
-              subtitle="Liabilities"
+              subtitle="Leverage Ratio"
+              link="https://www.investopedia.com/terms/l/leverageratio.asp"
               icon={faCoins}
-              content=""
+              content="This is what you owe vs. what you own. Hint: You should not owe more than you own, and neither should a company."
             />
             <ChecklistItem
               title="Can you afford your debt?"
-              subtitle="Debt"
+              subtitle="Long Term Debt"
+              link="https://www.investopedia.com/terms/l/longtermdebt.asp"
               icon={faCreditCard}
-              content="Are you able to pay for your debt with the money you're making? That means net income should be at least five times the amount of debt."
+              content="You might have car payments, a mortgage, or installments on a ridiculously expensive lifesized stormtrooper. You should have enough
+                income to be able to someday pay it off. The same goes for a company."
             />
             <ChecklistItem
               title="Are you financially stable?"
               subtitle="Red Flags"
+              link="https://www.investopedia.com/terms/r/redflag.asp"
               icon={faFlag}
-              content=""
+              content=" Red flags mean something isn't right. Perhaps you've developed a quarter life crisis, and you're
+                slacking off at work to concentrate on finding yourself. For a company, maybe they're having trouble selling a product,
+                and they've suddenly started selling on credit to increase sales." 
             />
 
           </div>
