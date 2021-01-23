@@ -15,41 +15,41 @@ import {
   formatValue,
   fiscalDateYear,
  } from './utils'
- import { faFunnelDollar } from '@fortawesome/free-solid-svg-icons'
+ import { faFileInvoice } from '@fortawesome/free-solid-svg-icons'
 
-function ProfitItem({profitItems}) {
+function SgaItem({sgaItems}) {
   const [unit, setUnit] = React.useState(null)
   const [pass, setPass] = React.useState(true)
 
   React.useEffect(() => {
-    if (profitItems && profitItems[0].netIncome) {
-      setUnit(getUnit(profitItems[0].netIncome))
-      profitItems.forEach((item) => {
-        if (item.netIncome < 0 || item.netIncomeYOY < 0) {
+    if (sgaItems && sgaItems[0].grossProfit) {
+      setUnit(getUnit(sgaItems[0].grossProfit))
+      sgaItems.forEach((item) => {
+        if (item.sga < 0 || item.sgaYOY < 0) {
           setPass(false)
         }
       })
     }
-  }, [profitItems])
+  }, [sgaItems])
 
   const [displayInfo, setDisplayInfo] = React.useState(false);
 
-  const yearLabels = profitItems.map((item) => {
+  const yearLabels = sgaItems.map((item) => {
     return fiscalDateYear(item.fiscalDate)
   })
 
-  const netIncomeDataset = profitItems.map((item) => {
-    return formatValue(item.netIncome, unit)
+  const grossProfitDataset = sgaItems.map((item) => {
+    return formatValue(item.grossProfit, unit)
   })
   
-  const revenueDataset = profitItems.map((item) => {
-    return formatValue(item.revenue, unit)
+  const sgaDataset = sgaItems.map((item) => {
+    return formatValue(item.sga, unit)
   })
 
-  const _passFailClass = (value1, value2) => {
+  const _passFailClass = (value) => {
     let classColor = 'text-green-600'
 
-    if (value1 < 0 || value2 < 0) {
+    if (value > 80) {
       classColor = 'text-orange-600'
     }
     return `text-sm py-1 ${classColor}`
@@ -59,21 +59,21 @@ function ProfitItem({profitItems}) {
     setDisplayInfo(false)
   }
 
-  const profitsChartData = () => {
+  const sgaChartData = () => {
     return {
       labels: yearLabels,
       datasets: [
         {
-          label: 'Net Income',
-          data: netIncomeDataset,
+          label: 'SGA',
+          data: sgaDataset,
           backgroundColor: 'rgba(54, 162, 235, 0.2)',
           borderColor: 'rgba(54, 162, 235, 1)',
           borderWidth: 1,
           barPercentage: .6,
         },
         {
-          label: 'Revenue',
-          data: revenueDataset,
+          label: 'Gross Profit',
+          data: grossProfitDataset,
           backgroundColor: "rgba(255, 159, 64, 0.2)",
           borderColor: "rgb(255, 159, 64)",
           borderWidth: 1,
@@ -115,37 +115,21 @@ function ProfitItem({profitItems}) {
           },
           scaleLabel: {
             display: true,
-            labelString: `Net Income / Revenue (${unit})`
+            labelString: `SGA / Gross Profit  (${unit})`
           }
         },
       ],
     },
   }
 
-  const netIncomeData = () => {
-    return profitItems.map((item, index) => {
-      return <td className={_passFailClass(item.netIncome, item.netIncomeYOY ? item.netIncomeYOY : null)} key={index}>
-        {formatValue(item.netIncome, unit)}
-      </td>
-    })
-  }
-
-  const netIncomeYOYData = () => {
-    return profitItems.map((item, index) => {
-      return <td className={_passFailClass(item.netIncome, item.netIncomeYOY ? item.netIncomeYOY : null)} key={index}>
-        {item.netIncomeYOY ? `${item.netIncomeYOY}%` : ''}
-      </td>
-    })
-  }
-
   const displayYears = () => {
-    return <YearsTableHeader years={profitItems.map(item => fiscalDateYear(item.fiscalDate))}/>
+    return <YearsTableHeader years={sgaItems.map(item => fiscalDateYear(item.fiscalDate))}/>
   }
 
-  const netMarginData = () => {
-    return profitItems.map((item, index) => {
-      return <td className={_passFailClass(item.netMargin)} key={index}>
-        {item.netMargin}%
+  const sgaToGrossData = () => {
+    return sgaItems.map((item, index) => {
+      return <td className={_passFailClass(item.sgaToGross)} key={index}>
+        {item.sgaToGross}%
       </td>
     })
   }
@@ -160,13 +144,13 @@ function ProfitItem({profitItems}) {
       <div class={`h-full border-b-4 bg-white ${borderColor} rounded-md shadow-lg p-5`}>
         <div className="p-3">
           <ItemTitle
-            title="Net Income"
+            title="SGA"
             pass={pass}
-            icon={faFunnelDollar}
+            icon={faFileInvoice}
             tip={profitsTip}
           />
         </div>
-        <Bar data={profitsChartData} options={options} />
+        <Bar data={sgaChartData} options={options} />
         <table className="w-full table-auto">
           <tbody>
             <tr>
@@ -174,16 +158,8 @@ function ProfitItem({profitItems}) {
               {displayYears()}
             </tr>
             <tr>
-              <RowHeader itemName={`Net Income (${unit})`} />
-              {netIncomeData()}
-            </tr>
-            <tr>
-              <RowHeader itemName='YOY Growth' />
-              {netIncomeYOYData()}
-            </tr>
-            <tr>
-              <RowHeader itemName='Net Margin' />
-              {netMarginData()}
+              <RowHeader itemName='SGA / Gross Profits' />
+              {sgaToGrossData()}
             </tr>
           </tbody>
         </table>
@@ -198,24 +174,27 @@ function ProfitsTip() {
       <div className="text-right font-bold mt-1 mr-1">x</div>
       <div className="font-semibold text-sm ml-1">What is it:</div>
         <div className="text-sm mb-1 ml-1">
-          Net profit margin is the percentage of revenue remaining after expenses have been deducted.
+          Selling, General & Administrative expenses are the costs indirectly related to making the product.
+          It includes salaries, rent, legal fees, commisions, and the like.
         </div>
       <div className="font-semibold text-sm ml-1">Why it's important:</div>
         <div className="text-sm mb-1 ml-1">
-          Net margin measures how good a company is at converting revenue into profits.
+          It has an immense impact on the bottom line. When revenues fall, SGA costs remain and eats into
+          the profits. 
         </div>
       <div className="font-semibold text-sm ml-1">What to look for:</div>
         <div className="text-sm mb-1 ml-1">
-          Net margin should be stable or increasing.
+          Companies with consistently low SGA expenses are at an advantage. SGA to Gross Profits greater
+          than 80% means a company is in a highly competitive industry.
         </div>
       <div className="font-semibold text-sm ml-1">What to watch for:</div>
         <div className="text-sm mb-1 ml-1">
-          If net margin is increasing significantly, it could be due to a decrease in tax rate
-          or from reducing expenses. Constantly cutting costs may not be sustainable in the long term.
+          SGA costs can vary greatly between industries. Conistently low values are ideal, but sometimes a
+          company can have low SGA costs, and high R&D costs or capital expenditures expenses.
         </div>
     </div>
   )
 }
 
 
-export default ProfitItem
+export default SgaItem

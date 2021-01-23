@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 export function ChecklistItem({title, subtitle, link, icon, content}) {
   return (
-    <div className="w-full md:w-1/2 p-3">
+    <div className="w-full md:w-1/3 p-3">
       <div class={`h-full border-b-4 bg-white border-palette-green-dark rounded-md shadow-lg p-5`}>
         <div className="p-3">
           <div className={`text-palette-green-dark flex mb-2`}>

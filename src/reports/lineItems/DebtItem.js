@@ -22,8 +22,12 @@ function DebtItem({debtItems}) {
   const [pass, setPass] = React.useState(true)
 
   React.useEffect(() => {
-    if (debtItems && debtItems[0].longTermDebt) {
-      setUnit(getUnit(debtItems[0].longTermDebt))
+    if (debtItems) {
+      let debts = debtItems.map(debt => debt.longTermDebt)
+      let maxDebt = Math.max(...debts)
+      if (maxDebt) {
+        setUnit(getUnit(maxDebt))
+      }
       debtItems.forEach((item) => {
         if (item.netIncomeToLongTermDebt > 2) {
           setPass(false)
@@ -133,6 +137,7 @@ function DebtItem({debtItems}) {
   }
 
   const borderColor = pass ? 'border-green-600' : 'border-orange-600'
+  const debtTip = <DebtTip />
 
   return <>
     <div className="w-full md:w-1/2 xl:w-1/3 p-3">
@@ -140,9 +145,9 @@ function DebtItem({debtItems}) {
         <div className="p-3">
           <ItemTitle
             title="Debt"
-            subtitle="Can you afford your debt?"
             pass={pass}
             icon={faCreditCard}
+            tip={debtTip}
           />
           <Bar data={debtChartData} options={options} />
           <table className="w-full table-auto">
@@ -152,7 +157,7 @@ function DebtItem({debtItems}) {
             {displayYears()}
           </tr>
           <tr>
-            <RowHeader itemName='Debt' />
+            <RowHeader itemName={`Debt (${unit})`} />
             {longTermDebtData()}
           </tr>
           <tr>
@@ -190,6 +195,33 @@ function DebtItem({debtItems}) {
       </div>
     </div> */}
   </>
+}
+
+function DebtTip() {
+  return (
+    <div>
+      <div className="text-right font-bold mt-1 mr-1">x</div>
+      <div className="font-semibold text-sm ml-1">What is it:</div>
+        <div className="text-sm mb-1 ml-1">
+          Long term debt is debt that matures past a year. 
+        </div>
+      <div className="font-semibold text-sm ml-1">Why it's important:</div>
+        <div className="text-sm mb-1 ml-1">
+          Some think companies should use debt to improve their profitability,
+          but profitable companies shouldn't need large amounts of debt. More importantly,
+          a company should be able to afford their debt.
+        </div>
+      <div className="font-semibold text-sm ml-1">What to look for:</div>
+        <div className="text-sm mb-1 ml-1">
+          A company should have enough earnings to pay off all their long term debt within 5 years.
+          This means net income to long term debt should be greater than 0.2.
+        </div>
+      <div className="font-semibold text-sm ml-1">What to watch for:</div>
+        <div className="text-sm mb-1 ml-1">
+          Increasing ROE may be due to increasing debt.
+        </div>
+    </div>
+  )
 }
 
 export default DebtItem

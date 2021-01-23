@@ -14,7 +14,7 @@ import {
   formatValue,
   fiscalDateYear,
  } from './utils'
- import { faCoins } from '@fortawesome/free-solid-svg-icons'
+ import { faBalanceScale } from '@fortawesome/free-solid-svg-icons'
 
 function LeverageItem({liabilitiesItems}) {
   const [unit, setUnit] = React.useState(null)
@@ -54,15 +54,6 @@ function LeverageItem({liabilitiesItems}) {
     return `text-sm py-1 ${classColor}`
   }
 
-  const _debtRepaymentPassFailClass = (value) => {
-    let classColor = 'text-green-600'
-
-    if (value < 0.2) {
-      classColor = 'text-orange-600'
-    }
-    return `text-sm py-1 ${classColor}`
-  }
-
   const displayYears = () => {
     return <YearsTableHeader years={liabilitiesItems.map(item => fiscalDateYear(item.fiscalDate))}/>
   }
@@ -75,42 +66,34 @@ function LeverageItem({liabilitiesItems}) {
     })
   }
 
-  const liabilitiesData = () => {
-    return liabilitiesItems.map((item, index) => {
-      return <td className={_debtPassFailClass(item.liabilities)} key={index}>
-        {formatValue(item.totalLiabilities, unit)} {unit}
-      </td>
-    })
-  }
+  // const liabilitiesData = () => {
+  //   return liabilitiesItems.map((item, index) => {
+  //     return <td className={_debtPassFailClass(item.liabilities)} key={index}>
+  //       {formatValue(item.totalLiabilities, unit)} {unit}
+  //     </td>
+  //   })
+  // }
 
-  const equityData = () => {
-    return liabilitiesItems.map((item, index) => {
-      return <td className={_debtPassFailClass(item.liabilities)} key={index}>
-        {formatValue(item.shareholderEquity, unit)} {unit}
-      </td>
-    })
-  }
+  // const equityData = () => {
+  //   return liabilitiesItems.map((item, index) => {
+  //     return <td className={_debtPassFailClass(item.liabilities)} key={index}>
+  //       {formatValue(item.shareholderEquity, unit)} {unit}
+  //     </td>
+  //   })
+  // }
 
-  const longTermDebtData = () => {
-    return liabilitiesItems.map((item, index) => {
-      return <td className={_debtPassFailClass(item.liabilities)} key={index}>
-        {formatValue(item.longTermDebt, unit)} {unit}
-      </td>
-    })
-  }
+  // const longTermDebtData = () => {
+  //   return liabilitiesItems.map((item, index) => {
+  //     return <td className={_debtPassFailClass(item.longTermDebt)} key={index}>
+  //       {formatValue(item.longTermDebt, unit)} {unit}
+  //     </td>
+  //   })
+  // }
 
-  const netIncomeData = () => {
+  const longTermDebtToEquityData = () => {
     return liabilitiesItems.map((item, index) => {
-      return <td className={_debtPassFailClass(item.liabilities)} key={index}>
-        {formatValue(item.netIncome, unit)} {unit}
-      </td>
-    })
-  }
-
-  const netIncomeToLongTermDebtData = () => {
-    return liabilitiesItems.map((item, index) => {
-      return <td className={_debtRepaymentPassFailClass(item.netIncomeToLongTermDebt)} key={index}>
-        {item.netIncomeToLongTermDebt}
+      return <td className={_debtPassFailClass(item.longTermDebtToEquity)} key={index}>
+        {item.longTermDebtToEquity}%
       </td>
     })
   }
@@ -119,12 +102,12 @@ function LeverageItem({liabilitiesItems}) {
     return fiscalDateYear(item.fiscalDate)
   })
 
-  const leverageRatioDataset = liabilitiesItems.map((item) => {
-    return item.leverageRatio
+  const longTermDebtDataset = liabilitiesItems.map((item) => {
+    return formatValue(item.longTermDebt, unit)
   })
 
   const liabilitiesDataset = liabilitiesItems.map((item) => {
-    return formatValue(item.totalLiabilities, unit)
+    return formatValue(item.totalLiabilities - item.longTermDebt, unit)
   })
 
   const equityDataset = liabilitiesItems.map((item) => {
@@ -143,21 +126,23 @@ function LeverageItem({liabilitiesItems}) {
     return {
       labels: yearLabels,
       datasets: [
-        // {
-        //   label: 'Leverage Ratio',
-        //   data: leverageRatioDataset,
-        //   backgroundColor: 'rgba(54, 162, 235, 0.2)',
-        //   borderColor: 'rgba(54, 162, 235, 1)',
-        //   borderWidth: 1,
-        //   barPercentage: .6,
-        // },
         {
-          label: 'Liabilities',
+          label: 'Long Term Debt',
+          data: longTermDebtDataset,
+          backgroundColor: 'rgba(255, 159, 64, 0.4)',
+          borderColor: 'rgb(255, 159, 64)',
+          borderWidth: 1,
+          barPercentage: .6,
+          stack: 1,
+        },
+        {
+          label: 'Total Liabilities',
           data: liabilitiesDataset,
           backgroundColor: 'rgba(255, 159, 64, 0.2)',
           borderColor: 'rgb(255, 159, 64)',
           borderWidth: 1,
           barPercentage: .6,
+          stack: 1,
         },
         {
           label: 'Equity',
@@ -166,18 +151,41 @@ function LeverageItem({liabilitiesItems}) {
           borderColor: 'rgba(54, 162, 235, 1)',
           borderWidth: 1,
           barPercentage: .6,
+          stack: 2,
         },
       ],
     }
   }
 
   const options = {
+    tooltips: {
+      callbacks: {
+        title: function(tooltipItem, data) {
+          return data['labels'][tooltipItem[0]['index']];
+        },
+        label: function(tooltipItem, data) {
+          let label = data.datasets[tooltipItem.datasetIndex].label || '';
+          let longTermDebtData = data['datasets'][0]['data'][tooltipItem['index']]
+          let totalLiabilitiesData = parseFloat(data['datasets'][1]['data'][tooltipItem['index']]) + parseFloat(longTermDebtData)
+          let equityData = data['datasets'][2]['data'][tooltipItem['index']]
+          switch (label) {
+            case 'Long Term Debt':
+              return `Long Term Debt: ${longTermDebtData} ${unit}`;
+            case 'Total Liabilities':
+              return `Total Liabilities: ${totalLiabilitiesData} ${unit}`;
+            case 'Equity':
+              return `Equity: ${equityData} ${unit}`;
+          }
+        },
+      }
+    },
     legend: {
       display: false
     },
     scales: {
       yAxes: [
         {
+          stacked: true,
           ticks: {
             beginAtZero: true,
           },
@@ -190,31 +198,8 @@ function LeverageItem({liabilitiesItems}) {
     },
   }
 
-  const debtChartData = () => {
-    return {
-      labels: yearLabels,
-      datasets: [
-        {
-          label: 'Long Term Debt',
-          data: debtDataset,
-          backgroundColor: 'rgba(255, 159, 64, 0.2)',
-          borderColor: 'rgb(255, 159, 64)',
-          borderWidth: 1,
-          barPercentage: .6,
-        },
-        {
-          label: 'Net Income',
-          data: netIncomeDataset,
-          backgroundColor: 'rgba(54, 162, 235, 0.2)',
-          borderColor: 'rgba(54, 162, 235, 1)',
-          borderWidth: 1,
-          barPercentage: .6,
-        },
-      ],
-    }
-  }
-
   const borderColor = pass ? 'border-green-600' : 'border-orange-600'
+  const liabilitiesTip = <LiabilitiesTip />
 
   return (
     <>
@@ -223,9 +208,9 @@ function LeverageItem({liabilitiesItems}) {
         <div className="p-3">
           <ItemTitle
             title="Liabilities "
-            subtitle="Do you owe too much?"
             pass={pass}
-            icon={faCoins}
+            icon={faBalanceScale}
+            tip={liabilitiesTip}
           />
         </div>
         <Bar data={leverageChartData} options={options} />
@@ -235,23 +220,61 @@ function LeverageItem({liabilitiesItems}) {
               <th className="w-1/5"></th>
               {displayYears()}
             </tr>
+            {/* <tr>
+              <RowHeader itemName='Liabilities' />
+              {liabilitiesData()}
+            </tr> */}
             <tr>
               <RowHeader itemName='Leverage Ratio' />
               {leverageRatioData()}
             </tr>
+            {/* <tr>
+              <RowHeader itemName='Long Term Debt' />
+              {longTermDebtData()}
+            </tr> */}
             <tr>
-              <RowHeader itemName='Liabilities' />
-              {liabilitiesData()}
+              <RowHeader itemName='Long Term Debt to Equity' />
+              {longTermDebtToEquityData()}
             </tr>
-            <tr>
+            {/* <tr>
               <RowHeader itemName='Equity' />
               {equityData()}
-            </tr>
+            </tr> */}
           </tbody>
         </table>
       </div>
     </div>
   </>
+  )
+}
+
+function LiabilitiesTip() {
+  return (
+    <div>
+      <div className="text-right font-bold mt-1 mr-1">x</div>
+      <div className="font-semibold text-sm ml-1">What is it:</div>
+        <div className="text-sm mb-1 ml-1">
+          Financial leverage means you're using money to make money. One measure is to
+          divide total liabilities by equity, which we're calling leverage ratio.
+          Another is to focus on long term debt, referred to here as long term
+          debt to equity.
+        </div>
+      <div className="font-semibold text-sm ml-1">Why it's important:</div>
+        <div className="text-sm mb-1 ml-1">
+          Increased leverage can lead to potential profitability, but also potential risk.
+        </div>
+      <div className="font-semibold text-sm ml-1">What to look for:</div>
+        <div className="text-sm mb-1 ml-1">
+          Some industries have high leverage ratios, but in general, a 
+          value greater than 2 is considered risky. This means for every
+          dollar of equity, the company has 2 dollars of liability. When looking at long term
+          debt to equity, a value greater than 50% is considered risky.
+        </div>
+      <div className="font-semibold text-sm ml-1">What to watch for:</div>
+        <div className="text-sm mb-1 ml-1">
+          Increasing ROE may be due to increasing debt.
+        </div>
+    </div>
   )
 }
 

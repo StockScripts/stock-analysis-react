@@ -15,41 +15,41 @@ import {
   formatValue,
   fiscalDateYear,
  } from './utils'
- import { faFunnelDollar } from '@fortawesome/free-solid-svg-icons'
+ import { faCoins } from '@fortawesome/free-solid-svg-icons'
 
-function ProfitItem({profitItems}) {
+function GrossProfitItem({grossProfitItems}) {
   const [unit, setUnit] = React.useState(null)
   const [pass, setPass] = React.useState(true)
 
   React.useEffect(() => {
-    if (profitItems && profitItems[0].netIncome) {
-      setUnit(getUnit(profitItems[0].netIncome))
-      profitItems.forEach((item) => {
-        if (item.netIncome < 0 || item.netIncomeYOY < 0) {
+    if (grossProfitItems && grossProfitItems[0].grossProfit) {
+      setUnit(getUnit(grossProfitItems[0].grossProfit))
+      grossProfitItems.forEach((item) => {
+        if (item.grossMargin < 20) {
           setPass(false)
         }
       })
     }
-  }, [profitItems])
+  }, [grossProfitItems])
 
   const [displayInfo, setDisplayInfo] = React.useState(false);
 
-  const yearLabels = profitItems.map((item) => {
+  const yearLabels = grossProfitItems.map((item) => {
     return fiscalDateYear(item.fiscalDate)
   })
 
-  const netIncomeDataset = profitItems.map((item) => {
-    return formatValue(item.netIncome, unit)
-  })
-  
-  const revenueDataset = profitItems.map((item) => {
+  const revenueDataset = grossProfitItems.map((item) => {
     return formatValue(item.revenue, unit)
   })
+  
+  const grossProfitsDataset = grossProfitItems.map((item) => {
+    return formatValue(item.grossProfit, unit)
+  })
 
-  const _passFailClass = (value1, value2) => {
+  const _passFailClass = (value) => {
     let classColor = 'text-green-600'
 
-    if (value1 < 0 || value2 < 0) {
+    if (value < 20) {
       classColor = 'text-orange-600'
     }
     return `text-sm py-1 ${classColor}`
@@ -59,21 +59,21 @@ function ProfitItem({profitItems}) {
     setDisplayInfo(false)
   }
 
-  const profitsChartData = () => {
+  const grossProfitsChartData = () => {
     return {
       labels: yearLabels,
       datasets: [
         {
-          label: 'Net Income',
-          data: netIncomeDataset,
+          label: 'Revenue',
+          data: revenueDataset,
           backgroundColor: 'rgba(54, 162, 235, 0.2)',
           borderColor: 'rgba(54, 162, 235, 1)',
           borderWidth: 1,
           barPercentage: .6,
         },
         {
-          label: 'Revenue',
-          data: revenueDataset,
+          label: 'Gross Profit',
+          data: grossProfitsDataset,
           backgroundColor: "rgba(255, 159, 64, 0.2)",
           borderColor: "rgb(255, 159, 64)",
           borderWidth: 1,
@@ -115,44 +115,36 @@ function ProfitItem({profitItems}) {
           },
           scaleLabel: {
             display: true,
-            labelString: `Net Income / Revenue (${unit})`
+            labelString: `Gross Profit / Revenue  (${unit})`
           }
         },
       ],
     },
   }
 
-  const netIncomeData = () => {
-    return profitItems.map((item, index) => {
-      return <td className={_passFailClass(item.netIncome, item.netIncomeYOY ? item.netIncomeYOY : null)} key={index}>
-        {formatValue(item.netIncome, unit)}
-      </td>
-    })
-  }
-
-  const netIncomeYOYData = () => {
-    return profitItems.map((item, index) => {
-      return <td className={_passFailClass(item.netIncome, item.netIncomeYOY ? item.netIncomeYOY : null)} key={index}>
-        {item.netIncomeYOY ? `${item.netIncomeYOY}%` : ''}
+  const grossMarginYOYData = () => {
+    return grossProfitItems.map((item, index) => {
+      return <td className={_passFailClass(item.grossMargin)} key={index}>
+        {item.grossMarginYOY ? `${item.grossMarginYOY}%` : ''}
       </td>
     })
   }
 
   const displayYears = () => {
-    return <YearsTableHeader years={profitItems.map(item => fiscalDateYear(item.fiscalDate))}/>
+    return <YearsTableHeader years={grossProfitItems.map(item => fiscalDateYear(item.fiscalDate))}/>
   }
 
-  const netMarginData = () => {
-    return profitItems.map((item, index) => {
-      return <td className={_passFailClass(item.netMargin)} key={index}>
-        {item.netMargin}%
+  const grossMarginData = () => {
+    return grossProfitItems.map((item, index) => {
+      return <td className={_passFailClass(item.grossMargin)} key={index}>
+        {item.grossMargin}%
       </td>
     })
   }
 
   const borderColor = pass ? 'border-green-600' : 'border-orange-600'
 
-  const profitsTip = <ProfitsTip />
+  const grossProfitsTip = <GrossProfitsTip />
 
   return <>
     {displayInfo ? <Modal onClose={onClose} /> : null}
@@ -160,13 +152,13 @@ function ProfitItem({profitItems}) {
       <div class={`h-full border-b-4 bg-white ${borderColor} rounded-md shadow-lg p-5`}>
         <div className="p-3">
           <ItemTitle
-            title="Net Income"
+            title="Gross Profits"
             pass={pass}
-            icon={faFunnelDollar}
-            tip={profitsTip}
+            icon={faCoins}
+            tip={grossProfitsTip}
           />
         </div>
-        <Bar data={profitsChartData} options={options} />
+        <Bar data={grossProfitsChartData} options={options} />
         <table className="w-full table-auto">
           <tbody>
             <tr>
@@ -174,16 +166,8 @@ function ProfitItem({profitItems}) {
               {displayYears()}
             </tr>
             <tr>
-              <RowHeader itemName={`Net Income (${unit})`} />
-              {netIncomeData()}
-            </tr>
-            <tr>
-              <RowHeader itemName='YOY Growth' />
-              {netIncomeYOYData()}
-            </tr>
-            <tr>
-              <RowHeader itemName='Net Margin' />
-              {netMarginData()}
+              <RowHeader itemName='Gross Margin' />
+              {grossMarginData()}
             </tr>
           </tbody>
         </table>
@@ -192,30 +176,33 @@ function ProfitItem({profitItems}) {
   </>
 }
 
-function ProfitsTip() {
+function GrossProfitsTip() {
   return (
     <div>
       <div className="text-right font-bold mt-1 mr-1">x</div>
       <div className="font-semibold text-sm ml-1">What is it:</div>
         <div className="text-sm mb-1 ml-1">
-          Net profit margin is the percentage of revenue remaining after expenses have been deducted.
+          Gross profit is how the amount left after subtracting the cost to make products from the revenue.
+          Gross margin is the percentage of revenue remaining.
         </div>
       <div className="font-semibold text-sm ml-1">Why it's important:</div>
         <div className="text-sm mb-1 ml-1">
-          Net margin measures how good a company is at converting revenue into profits.
+          A company that can make products at a low cost is at an advantage.
         </div>
       <div className="font-semibold text-sm ml-1">What to look for:</div>
         <div className="text-sm mb-1 ml-1">
-          Net margin should be stable or increasing.
+          If a company that keeps less than 20% of its profits after subtracting the cost of goods, it
+          usually means it's in a very competitive industry where it may be hard to sustain a competitive
+          advantage.
         </div>
       <div className="font-semibold text-sm ml-1">What to watch for:</div>
         <div className="text-sm mb-1 ml-1">
-          If net margin is increasing significantly, it could be due to a decrease in tax rate
-          or from reducing expenses. Constantly cutting costs may not be sustainable in the long term.
+          Gross margin can vary greatly between different companies, but another thing to 
+          look out for is consistency.
         </div>
     </div>
   )
 }
 
 
-export default ProfitItem
+export default GrossProfitItem

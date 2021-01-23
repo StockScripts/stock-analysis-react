@@ -13,3 +13,10 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.tooltip .tooltip-text {
+  padding: 2px 6px;
+  position: absolute;
+  z-index: 100;
+  max-width: 325px;
+}

@@ -1,15 +1,14 @@
 import React from 'react';
-import CompanySearch from '../companySearch/CompanySearch'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faMoneyCheckAlt,
   faHandHoldingUsd,
   faMoneyBillWave,
   faFunnelDollar,
   faFileInvoiceDollar,
+  faFileInvoice,
   faCoins,
   faCreditCard,
-  faFlag
+  faBalanceScale
 } from '@fortawesome/free-solid-svg-icons'
 import { ChecklistItem } from './checklistItem'
 
@@ -34,9 +33,9 @@ export default function Home() {
       </div>
 
       <section className="container mx-auto px-6 p-10">
-        <div className=" text-center text-palette-green-med mb-8">
+        <div className="text-center text-palette-green-med mb-8">
           <h2 className="text-4xl font-bold">
-            What should you look for in a stock?
+            <a className="cursor-default"  href="#what-to-look-for">What should you look for in a stock?</a>
           </h2>
           <p className="text-2xl">Let's make this simple. You are the company. What would make you financially successful?</p>
         </div>
@@ -59,53 +58,60 @@ export default function Home() {
               content="Are you using your money wisely? Are you squandering it? ROE tells you how effective a company is at using shareholder money."
             />
             <ChecklistItem
+              title="How much do you spend to make money?"
+              subtitle="Gross Profit"
+              link="https://www.investopedia.com/terms/g/grossprofit.asp"
+              icon={faCoins}
+              content="In order to do your job, you have basic necessities. Gas to get to work, training courses, maybe some nice work clothes.
+                This should cost less than what you're making. For a company, this is the cost of making their product. The more
+                profit they keep, the better."
+            />
+            <ChecklistItem
+              title="How much bills do you have?"
+              subtitle="SGA"
+              link="https://www.investopedia.com/terms/s/sga.asp"
+              icon={faFileInvoice}
+              content="This is the general administrative expenses for a company. It's the cost of things like salary, advertising,
+              and office supplies. For you, it's the utility bills, gas, rent, etc. The cost for these items should be manageable."
+            />
+            <ChecklistItem
               title="Are you keeping the money you're making?"
-              subtitle="Net Income and Net Margin"
+              subtitle="Net Income"
               link="https://www.investopedia.com/terms/n/net_margin.asp"
               icon={faFunnelDollar}
-              content="In order to do your job, you have some basic necessities. Gas to get to work, training courses, maybe some nice work clothes.
-                All this should cost less than what you're making. The remaining money is your net income. The more of it you have, the better."
+              content="You make money, and you use money. You pay bills, taxes, buy groceries, go out to eat, and buy toys.
+                The money you have left over is your net income. The more of it you have, the better."
             />
             <ChecklistItem
               title="Do you have spending money?"
               subtitle="Free Cash Flow"
               link="https://www.investopedia.com/terms/f/freecashflow.asp"
               icon={faMoneyBillWave}
-              content={`Free cash flow is the money left over after a company pays for what it needs to operate.
-                For you, it's what's left after you pay your bills, groceries, and other expenses.
-                It's money you have for the fun stuff. You should have \"fun money\", and so should a company.`}
+              content={`This is the actual cash you have on hand after you pay your credit card bills, groceries, and other expenses.
+                It's money you can use for the fun stuff. You should have \"fun money\", and so should a company.`}
             />
             <ChecklistItem
               title="Can you pay your bills?"
-              subtitle="Liquidity and Quick Ratio"
-              link="https://www.investopedia.com/terms/q/quickratio.asp"
+              subtitle="Liquidity and Current Ratio"
+              link="https://www.investopedia.com/terms/c/currentratio.asp"
               icon={faFileInvoiceDollar}
               content="You should have enough cash to pay your bills every month. No borrowing from credit cards or having to sell your Funko Pop collection.
-                A company has the same responsibility, and they should be able to cover all their recurring expenses."
+                A company has the same responsibilities."
             />
+            <ChecklistItem
+                title="Can you afford your debt?"
+                subtitle="Long Term Debt"
+                link="https://www.investopedia.com/terms/l/longtermdebt.asp"
+                icon={faCreditCard}
+                content="You might have a mortgage or installments on a ridiculously expensive lifesized stormtrooper.
+                  You should have enough income to be able to someday pay it off at a reasonable amount of time. The same goes for a company."
+              />
             <ChecklistItem
               title="Do you owe too much?"
-              subtitle="Leverage Ratio"
+              subtitle="Leverage"
               link="https://www.investopedia.com/terms/l/leverageratio.asp"
-              icon={faCoins}
-              content="This is what you owe vs. what you own. Hint: You should not owe more than you own, and neither should a company."
-            />
-            <ChecklistItem
-              title="Can you afford your debt?"
-              subtitle="Long Term Debt"
-              link="https://www.investopedia.com/terms/l/longtermdebt.asp"
-              icon={faCreditCard}
-              content="You might have car payments, a mortgage, or installments on a ridiculously expensive lifesized stormtrooper. You should have enough
-                income to be able to someday pay it off. The same goes for a company."
-            />
-            <ChecklistItem
-              title="Are you financially stable?"
-              subtitle="Red Flags"
-              link="https://www.investopedia.com/terms/r/redflag.asp"
-              icon={faFlag}
-              content=" Red flags mean something isn't right. Perhaps you've developed a quarter life crisis, and you're
-                slacking off at work to concentrate on finding yourself. For a company, maybe they're having trouble selling a product,
-                and they've suddenly started selling on credit to increase sales." 
+              icon={faBalanceScale}
+              content="This is what you owe vs. what you own. Hint: You should not owe way more than you own, and neither should a company."
             />
 
           </div>

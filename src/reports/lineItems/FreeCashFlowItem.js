@@ -64,7 +64,7 @@ const freeCashFlowChartData = () => {
       labels: yearLabels,
       datasets: [
         {
-          label: 'freeCashFlow',
+          label: 'Free Cash Flow',
           data: freeCashFlowDataset,
           backgroundColor: 'rgba(54, 162, 235, 0.2)',
           borderColor: 'rgba(54, 162, 235, 1)',
@@ -76,6 +76,16 @@ const freeCashFlowChartData = () => {
   }
 
   const options = {
+    tooltips: {
+      callbacks: {
+        title: function(tooltipItem, data) {
+          return data['labels'][tooltipItem[0]['index']];
+        },
+        label: function(tooltipItem, data) {
+          return `Free Cash Flow: ${data['datasets'][0]['data'][tooltipItem['index']]} ${unit}`;
+        },
+      }
+    },
     legend: {
       display: false
     },
@@ -104,15 +114,16 @@ const freeCashFlowChartData = () => {
 
   const borderColor = pass ? 'border-green-600' : 'border-orange-600'
 
+  const freeCashFlowTip = <FreeCashFlowTip />
   return <>
     <div class="w-full md:w-1/2 xl:w-1/3 p-3">
       <div class={`h-full border-b-4 bg-white ${borderColor} rounded-md shadow-lg p-5`}>
         <div className="p-3">
           <ItemTitle
             title='Free Cash Flow'
-            subtitle='Do you have spending money?'
             icon={faMoneyBillWave}
             pass={pass}
+            tip={freeCashFlowTip}
           />
         </div>
         <Bar data={freeCashFlowChartData} options={options} />
@@ -132,6 +143,32 @@ const freeCashFlowChartData = () => {
     </div>
     {displayInfo ? <Modal onClose={onClose} /> : null}
   </>
+}
+
+function FreeCashFlowTip() {
+  return (
+    <div>
+      <div className="text-right font-bold mt-1 mr-1">x</div>
+      <div className="font-semibold text-sm ml-1">What is it:</div>
+        <div className="text-sm mb-1 ml-1">
+          This is cash that a company generates after paying expenses.
+        </div>
+      <div className="font-semibold text-sm ml-1">Why it's important:</div>
+        <div className="text-sm mb-1 ml-1">
+          It can allow a company to develop new products, make
+          acquisitions, pay dividends, or reduce debt. Growing free cash flows frequently
+          leads to increased earnings.
+        </div>
+      <div className="font-semibold text-sm ml-1">What to look for:</div>
+        <div className="text-sm mb-1 ml-1">
+          It should be increasing or consistent, and the recent year should be positive.
+        </div>
+      <div className="font-semibold text-sm ml-1">What to watch for:</div>
+        <div className="text-sm mb-1 ml-1">
+          It should not be continuously decreasing.
+        </div>
+    </div>
+  )
 }
 
 export default FreeCashFlowItem

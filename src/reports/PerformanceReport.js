@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom'
 import {
   getPerformanceReportBySymbol
@@ -6,6 +6,8 @@ import {
 import ScaleLoader from "react-spinners/ScaleLoader";
 import RevenueItem from './lineItems/RevenueItem'
 import ProfitItem from './lineItems/ProfitItem'
+import GrossProfitItem from './lineItems/GrossProfitItem'
+import SgaItem from './lineItems/SgaItem'
 import ReturnsItem from './lineItems/ReturnsItem'
 import FreeCashFlowItem from './lineItems/FreeCashFlowItem'
 import LiabilitiesItem from './lineItems/LiabilitiesItem'
@@ -13,21 +15,30 @@ import DebtItem from './lineItems/DebtItem'
 import LiquidityItem from './lineItems/LiquidityItem'
 // import DividendItem from './lineItems/DividendItem'
 import RedFlagsItem from './lineItems/RedFlagsItem'
+import Notification from '../components/modal/Notification'
 
 function PerformanceReport() {
   let { company } = useParams()
 
-  const [reportData, setReportData] = React.useState(null)
-  const [companyInfo, setCompanyInfo] = React.useState(null)
-  const [loading, setLoading] = React.useState(false)
+  const [reportData, setReportData] = useState(null)
+  const [companyInfo, setCompanyInfo] = useState(null)
+  const [loading, setLoading] = useState(false)
+  const  [error, setError] = useState()
 
-  React.useEffect(() => {
+  const errorMessage = "We couldn't find data for this company."
+  useEffect(() => {
     if (!!company) {
       if (typeof company === 'string') {
         setLoading(true)
         getPerformanceReportBySymbol(company).then(reportData => {
-          setReportData(reportData.report.items)
-          setCompanyInfo(reportData.report.company)
+          let report = reportData.report
+          if (report.items.length > 0) {
+            setReportData(report.items)
+            setCompanyInfo(report.company)
+            setError(null)
+          } else {
+            setError(errorMessage)
+          }
           setLoading(false)
         })
       } 
@@ -75,6 +86,37 @@ function PerformanceReport() {
     })
     return (
       <ReturnsItem returnsItems={returnsItems} />
+    )
+  }
+
+  const renderGrossProfitItem = () => {
+    const grossProfitItems = reportData.map((data) => {
+      return {
+        fiscalDate: data.fiscal_date,
+        grossProfit: data.gross_profit,
+        grossMarginYOY: data.gross_margin_yoy,
+        grossMargin: data.gross_margin,
+        revenue: data.revenue
+        
+      }
+    })
+    return (
+      <GrossProfitItem grossProfitItems={grossProfitItems} />
+    )
+  }
+
+  const renderSgaItem = () => {
+    const sgaItems = reportData.map((data) => {
+      return {
+        fiscalDate: data.fiscal_date,
+        grossProfit: data.gross_profit,
+        sga: data.sga,
+        sgaToGross: data.sga_to_gross,
+        
+      }
+    })
+    return (
+      <SgaItem sgaItems={sgaItems} />
     )
   }
 
@@ -126,9 +168,9 @@ function PerformanceReport() {
     const liquidityItems = reportData.map((data) => {
       return {
         fiscalDate: data.fiscal_date,
-        quickAssets: data.quick_assets,
+        currentAssets: data.current_assets,
         currentLiabilities: data.current_liabilities,
-        quickRatio: data.quick_ratio,
+        currentRatio: data.current_ratio,
       }
     })
     return (
@@ -185,11 +227,13 @@ function PerformanceReport() {
           {renderRevenueItem()}
           {renderReturnsItem()}
           {renderFreeCashFlowItem()}
+          {renderGrossProfitItem()}
+          {renderSgaItem()}
           {renderProfitItem()}
           {renderLiquidityItem()}
           {renderLiabilitiesItem()}
           {renderDebtItem()}
-          {renderRedFlagsItem()}
+          {/* {renderRedFlagsItem()} */}
           {/* {renderDividendItem()} */}
         </>
       )
@@ -197,10 +241,14 @@ function PerformanceReport() {
     return null
   }
 
+  const onClose = () => {
+    setError(null)
+  }
+  
   let displayed = null
 
   if (loading) {
-    displayed = <div className="sweet-loading text-center">
+    displayed = <div className="sweet-loading text-center mt-5">
       <ScaleLoader
         size={250}
         color={"#57BA98"}
@@ -228,8 +276,10 @@ function PerformanceReport() {
       </>
   }
 
+  let displayError = error ? 'Error' : null
   return (
-    <div className="main-content flex-1 bg-palette-light mt-16 sm:mt-4 pb-24 md:pb-5">
+    <div className="main-content flex-1 bg-palette-light mt-24 sm:mt-16 md:mt-4 pb-24 md:pb-5">
+      {displayError ? <Notification title='Oops' notification={error} onClose={onClose} /> : null}
       {displayed}
     </div>
     // <div className="static mt-45 bg-white">

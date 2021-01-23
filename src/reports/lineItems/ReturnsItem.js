@@ -137,6 +137,8 @@ function Returns({returnsItems}) {
 
   const borderColor = pass ? 'border-green-600' : 'border-orange-600'
 
+  const roeTip = <ROETip />
+
   return <>
     {/* {displayInfo ? <Modal onClose={onClose} /> : null} */}
     <div class="w-full md:w-1/2 xl:w-1/3 p-3">
@@ -144,9 +146,9 @@ function Returns({returnsItems}) {
         <div className="p-3">
           <ItemTitle
             title='ROE'
-            subtitle='Can you manage your money?'
             pass={pass}
             icon={faHandHoldingUsd}
+            tip={roeTip}
           />
         </div>
         <Bar data={roeChartData} options={options} />
@@ -165,6 +167,34 @@ function Returns({returnsItems}) {
       </div>
     </div>
   </>
+}
+
+function ROETip() {
+  return (
+    <div>
+      <div className="text-right font-bold mt-1 mr-1">x</div>
+      <div className="font-semibold text-sm ml-1">What is it:</div>
+        <div className="text-sm mb-1 ml-1">
+          Return on Equity is the net income divided by shareholders equity.
+          It tells you how much the shareholders get for their investment in the company.
+        </div>
+      <div className="font-semibold text-sm ml-1">Why it's important:</div>
+        <div className="text-sm mb-1 ml-1">
+          Companies with high ROE and little debt are able to raise money for growth. 
+          It means they can invest back into the business without needing more capital.
+        </div>
+      <div className="font-semibold text-sm ml-1">What to look for:</div>
+        <div className="text-sm mb-1 ml-1">
+          ROE should be at least 10% and should not be decreasing.
+        </div>
+      <div className="font-semibold text-sm ml-1">What to watch for:</div>
+        <div className="text-sm mb-1 ml-1">
+          ROE can increase if the company is acquiring more debt. If liabilities increase,
+          equity decreases, which boosts ROE. Check the Liabilities item and see if the company
+          is becoming too leveraged.
+        </div>
+    </div>
+  )
 }
 
 export default Returns

@@ -7,7 +7,7 @@ function NavBar() {
   return (
     <nav className="bg-white pt-2 md:pt-1 pb-1 px-1 mt-0 h-auto fixed w-full z-20 top-0">
       <div className="flex flex-wrap items-center">
-        <div class="flex flex-shrink md:w-1/3 justify-center md:justify-start text-white ml-3">
+        <div className="flex flex-shrink md:w-1/3 justify-center md:justify-start text-white ml-3">
           <a className="text-palette-green-dark no-underline hover:no-underline font-bold text-2xl lg:text-4xl"  href="/"> 
             {/* <FontAwesomeIcon icon={faChartLine} /> */}
             <span className="ml-4">GrasshopperStocks</span>
@@ -33,17 +33,17 @@ function NavBar() {
             <li className="flex-1 md:flex-none md:mr-3">
               <a className="inline-block text-palette-green-dark no-underline hover:text-palette-green-med py-2 px-4" href="http://blog.grasshopperstocks.com">Blog</a>
             </li>
-            <li className="flex-1 md:flex-none md:mr-3">
+            {/* <li className="flex-1 md:flex-none md:mr-3">
               <div className="relative inline-block">
                 <div id="myDropdown" className="dropdownlist absolute bg-gray-900 text-white right-0 mt-3 p-3 overflow-auto z-30 invisible">
-                    <input type="text" className="drop-search p-2 text-gray-600" placeholder="Search.." id="myInput" onkeyup="filterDD('myDropdown','myInput')"/>
+                    <input type="text" className="drop-search p-2 text-gray-600" placeholder="Search.." id="myInput" onKeyUp="filterDD('myDropdown','myInput')"/>
                     <a href="#" className="p-2 hover:bg-gray-800 text-white text-sm no-underline hover:no-underline block"><i className="fa fa-user fa-fw"></i> Profile</a>
                     <a href="#" className="p-2 hover:bg-gray-800 text-white text-sm no-underline hover:no-underline block"><i className="fa fa-cog fa-fw"></i> Settings</a>
                     <div className="border border-gray-800"></div>
-                    <a href="#" className="p-2 hover:bg-gray-800 text-white text-sm no-underline hover:no-underline block"><i class="fas fa-sign-out-alt fa-fw"></i> Log Out</a>
+                    <a href="#" className="p-2 hover:bg-gray-800 text-white text-sm no-underline hover:no-underline block"><i className="fas fa-sign-out-alt fa-fw"></i> Log Out</a>
                 </div>
               </div>
-            </li>
+            </li> */}
           </ul>
         </div>
       </div>
