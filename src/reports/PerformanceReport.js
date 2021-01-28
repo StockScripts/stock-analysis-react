@@ -5,23 +5,23 @@ import {
 } from './performanceReportAPI'
 import ScaleLoader from "react-spinners/ScaleLoader";
 import RevenueItem from './lineItems/RevenueItem'
-import ProfitItem from './lineItems/ProfitItem'
+import NetIncomeItem from './lineItems/NetIncomeItem'
 import GrossProfitItem from './lineItems/GrossProfitItem'
 import SgaItem from './lineItems/SgaItem'
-import ReturnsItem from './lineItems/ReturnsItem'
+import RoeItem from './lineItems/RoeItem'
 import FreeCashFlowItem from './lineItems/FreeCashFlowItem'
 import LiabilitiesItem from './lineItems/LiabilitiesItem'
 import DebtItem from './lineItems/DebtItem'
 import LiquidityItem from './lineItems/LiquidityItem'
-// import DividendItem from './lineItems/DividendItem'
-import RedFlagsItem from './lineItems/RedFlagsItem'
 import Notification from '../components/modal/Notification'
+import { getDisplayedUnit } from './utils'
 
 function PerformanceReport() {
   let { company } = useParams()
 
   const [reportData, setReportData] = useState(null)
   const [companyInfo, setCompanyInfo] = useState(null)
+  const [unit, setUnit] = useState(null)
   const [loading, setLoading] = useState(false)
   const  [error, setError] = useState()
 
@@ -33,6 +33,7 @@ function PerformanceReport() {
         getPerformanceReportBySymbol(company).then(reportData => {
           let report = reportData.report
           if (report.items.length > 0) {
+            setUnit(getDisplayedUnit(report.items[0].unit))
             setReportData(report.items)
             setCompanyInfo(report.company)
             setError(null)
@@ -51,41 +52,37 @@ function PerformanceReport() {
       return {
         fiscalDate: data.fiscal_date,
         totalRevenue: data.revenue,
-        totalRevenueYOY: data.revenue_yoy
+        totalRevenueYOY: data.revenue_yoy,
       }
     })
     return (
-      <RevenueItem revenueItems={revenueItems} />
+      <RevenueItem unit={unit} revenueItems={revenueItems} />
     )
   }
 
-  const renderProfitItem = () => {
-    const profitItems = reportData.map((data) => {
-      return {
-        fiscalDate: data.fiscal_date,
-        netIncome: data.net_income,
-        netIncomeYOY: data.net_income_yoy,
-        netMargin: data.net_margin,
-        revenue: data.revenue
-      }
-    })
-    return (
-      <ProfitItem profitItems={profitItems} />
-    )
-  }
-
-  const renderReturnsItem = () => {
-    const returnsItems = reportData.map((data) => {
+  const renderROEItem = () => {
+    const roeItems = reportData.map((data) => {
       return {
         fiscalDate: data.fiscal_date,
         roe: data.roe,
         netIncome: data.net_income,
         equity: data.equity,
-        
       }
     })
     return (
-      <ReturnsItem returnsItems={returnsItems} />
+      <RoeItem unit={unit} roeItems={roeItems} />
+    )
+  }
+
+  const renderFreeCashFlowItem = () => {
+    const freeCashFlowItems = reportData.map((data) => {
+      return {
+        fiscalDate: data.fiscal_date,
+        freeCashFlow: data.free_cash_flow,
+      }
+    })
+    return (
+      <FreeCashFlowItem unit={unit} freeCashFlowItems={freeCashFlowItems} />
     )
   }
 
@@ -101,7 +98,7 @@ function PerformanceReport() {
       }
     })
     return (
-      <GrossProfitItem grossProfitItems={grossProfitItems} />
+      <GrossProfitItem unit={unit} grossProfitItems={grossProfitItems} />
     )
   }
 
@@ -116,51 +113,22 @@ function PerformanceReport() {
       }
     })
     return (
-      <SgaItem sgaItems={sgaItems} />
+      <SgaItem unit={unit} sgaItems={sgaItems} />
     )
   }
 
-  const renderFreeCashFlowItem = () => {
-    const freeCashFlowItems = reportData.map((data) => {
+  const renderNetIncomeItem = () => {
+    const netIncomeItems = reportData.map((data) => {
       return {
         fiscalDate: data.fiscal_date,
-        freeCashFlow: data.free_cash_flow,
-      }
-    })
-    return (
-      <FreeCashFlowItem freeCashFlowItems={freeCashFlowItems} />
-    )
-  }
-
-  const renderLiabilitiesItem = () => {
-    const liabilitiesItems = reportData.map((data) => {
-      return {
-        fiscalDate: data.fiscal_date,
-        totalLiabilities: data.total_liabilities,
-        shareholderEquity: data.equity,
-        leverageRatio: data.leverage_ratio,
-        longTermDebt: data.long_term_debt,
-        longTermDebtToEquity: data.long_term_debt_to_equity,
         netIncome: data.net_income,
-        netIncomeToLongTermDebt: data.net_income_to_long_term_debt,
+        netIncomeYOY: data.net_income_yoy,
+        netMargin: data.net_margin,
+        revenue: data.revenue
       }
     })
     return (
-      <LiabilitiesItem liabilitiesItems={liabilitiesItems} />
-    )
-  }
-
-  const renderDebtItem = () => {
-    const debtItems = reportData.map((data) => {
-      return {
-        fiscalDate: data.fiscal_date,
-        longTermDebt: data.long_term_debt,
-        netIncome: data.net_income,
-        netIncomeToLongTermDebt: data.net_income_to_long_term_debt,
-      }
-    })
-    return (
-      <DebtItem debtItems={debtItems} />
+      <NetIncomeItem unit={unit} netIncomeItems={netIncomeItems} />
     )
   }
 
@@ -174,49 +142,37 @@ function PerformanceReport() {
       }
     })
     return (
-      <LiquidityItem liquidityItems={liquidityItems} />
+      <LiquidityItem unit={unit} liquidityItems={liquidityItems} />
     )
   }
 
-  // const renderDividendItem = () => {
-  //   const dividendItems = sortedReportData.map((report) => {
-  //     return {
-  //       fiscalDate: report.fiscal_date,
-  //       dividendsPerShare: report.dividends_per_share,
-  //       dividendsPerShareYOY: report.dividends_per_share_yoy,
-  //       dividendPayoutRatio: report.dividend_payout_ratio,
-  //       dividendsPaid: report.dividends_paid,
-  //       netIncome: report.net_income,
-  //     }
-  //   })
-  //   if (sortedDividendData.length > 0) {
-  //     return (
-  //       <DividendItem 
-  //         dividendItems={dividendItems}
-  //         dividends={sortedDividendData}
-  //       />
-  //     )
-  //   }
-  //   return null
-  // }
-
-  const renderRedFlagsItem = () => {
-    const redFlagsItems = reportData.map((data) => {
+  const renderLiabilitiesItem = () => {
+    const liabilitiesItems = reportData.map((data) => {
       return {
         fiscalDate: data.fiscal_date,
-        totalRevenue: data.revenue,
-        receivables: data.receivables,
-        receivablesToSales: data.receivables_to_sales,
-        inventory: data.inventory,
-        inventoryToSales: data.inventory_to_sales,
-        opEx: data.operating_expense,
-        opExToSales: data.operating_expense_to_sales,
-        sga: data.sga,
-        sgaToSales: data.sga_to_sales,
+        totalLiabilities: data.total_liabilities,
+        shareholderEquity: data.equity,
+        leverageRatio: data.leverage_ratio,
+        longTermDebt: data.long_term_debt,
+        longTermDebtToEquity: data.long_term_debt_to_equity,
       }
     })
     return (
-      <RedFlagsItem redFlagsItems={redFlagsItems} />
+      <LiabilitiesItem unit={unit} liabilitiesItems={liabilitiesItems} />
+    )
+  }
+
+  const renderDebtItem = () => {
+    const debtItems = reportData.map((data) => {
+      return {
+        fiscalDate: data.fiscal_date,
+        longTermDebt: data.long_term_debt,
+        netIncome: data.net_income,
+        netIncomeToLongTermDebt: data.net_income_to_long_term_debt,
+      }
+    })
+    return (
+      <DebtItem unit={unit} debtItems={debtItems} />
     )
   }
 
@@ -225,16 +181,14 @@ function PerformanceReport() {
       return (
         <>
           {renderRevenueItem()}
-          {renderReturnsItem()}
+          {renderROEItem()}
           {renderFreeCashFlowItem()}
           {renderGrossProfitItem()}
           {renderSgaItem()}
-          {renderProfitItem()}
+          {renderNetIncomeItem()}
           {renderLiquidityItem()}
           {renderLiabilitiesItem()}
           {renderDebtItem()}
-          {/* {renderRedFlagsItem()} */}
-          {/* {renderDividendItem()} */}
         </>
       )
     }

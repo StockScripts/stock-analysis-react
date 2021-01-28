@@ -7,69 +7,56 @@ import {
   RowHeader,
 } from './components/TableComponents'
 import {
-  ItemTitle
+  ItemTitle,
+  ItemTip
 } from './components/ReportComponents'
 import { 
-  getUnit,
-  formatValue,
+  getBorderColor,
+  getPassFailClass,
   fiscalDateYear,
+  chartProps as chart,
  } from './utils'
-import Modal from '../../components/modal/Modal'
 import { faMoneyBillWave } from '@fortawesome/free-solid-svg-icons'
 
-function FreeCashFlowItem({freeCashFlowItems}) {
-  const [displayInfo, setDisplayInfo] = React.useState(false);
+function FreeCashFlowItem({unit, freeCashFlowItems}) {
   const [pass, setPass] = React.useState(true)
-
-  const [unit, setUnit] = React.useState(null)
 
   React.useEffect(() => {
     if (freeCashFlowItems && freeCashFlowItems[0]) {
-      setUnit(getUnit(freeCashFlowItems[0]))
       freeCashFlowItems.forEach((item) => {
-        if (item.freeCashFlow < 0) {
+        let fail = item.freeCashFlow < 0
+        if (fail) {
           setPass(false)
         }
       })
     }
   }, [freeCashFlowItems])
 
-  const onClose = () => {
-    setDisplayInfo(false)
+  const passFailClass = (freeCashFlow) => {
+    const fail = freeCashFlow < 0
+    return getPassFailClass(fail)
   }
 
-  const displayYears = () => {
-    return <YearsTableHeader years={freeCashFlowItems.map(item => fiscalDateYear(item.fiscalDate))}/>
-  }
-
-  const _passFailClass = (value) => {
-    let classColor = 'text-green-600'
-
-    if (value < 0) {
-      classColor = 'text-orange-600'
-    }
-    return `text-sm py-1 ${classColor}`
-  }
-
+  // Begin chart data
   const yearLabels = freeCashFlowItems.map((item) => {
     return fiscalDateYear(item.fiscalDate)
   })
 
   const freeCashFlowDataset = freeCashFlowItems.map((item) => {
-    return formatValue(item.freeCashFlow, unit)
+    return item.freeCashFlow
   })
 
-const freeCashFlowChartData = () => {
+  const freeCashFlowChartData = () => {
     return {
       labels: yearLabels,
       datasets: [
         {
           label: 'Free Cash Flow',
           data: freeCashFlowDataset,
-          backgroundColor: 'rgba(54, 162, 235, 0.2)',
-          borderColor: 'rgba(54, 162, 235, 1)',
-          borderWidth: 1,
-          barPercentage: .6,
+          backgroundColor: chart.color.blue,
+          borderColor: chart.color.blueBorder,
+          borderWidth: chart.bar.borderWidth,
+          barPercentage: chart.bar.percentage,
         },
       ],
     }
@@ -103,21 +90,36 @@ const freeCashFlowChartData = () => {
       ],
     },
   }
+  // End chart data
+
+  // Begin table data
+  const displayYears = () => {
+    return <YearsTableHeader years={freeCashFlowItems.map(item => fiscalDateYear(item.fiscalDate))}/>
+  }
 
   const freeCashFlowData = () => {
     return freeCashFlowItems.map((item, index) => {
-      return <td className={_passFailClass(item.freeCashFlow)} key={index}>
-        {formatValue(item.freeCashFlow, unit)}
+      return <td className={passFailClass(item.freeCashFlow)} key={index}>
+        {item.freeCashFlow}
       </td>
     })
   }
+  // End table data
 
-  const borderColor = pass ? 'border-green-600' : 'border-orange-600'
+  const borderColor = getBorderColor(pass)
 
-  const freeCashFlowTip = <FreeCashFlowTip />
+  const freeCashFlowTip = <ItemTip
+    guidance="Free cash flow should be increasing or consistent, and the recent year should be positive."
+    definition="This is cash that a company generates after paying expenses."
+    importance="It can allow a company to develop new products, make
+    acquisitions, pay dividends, or reduce debt. Growing free cash flows frequently
+    leads to increased earnings."
+    caution="It should not be continuously decreasing."
+  />
+
   return <>
-    <div class="w-full md:w-1/2 xl:w-1/3 p-3">
-      <div class={`h-full border-b-4 bg-white ${borderColor} rounded-md shadow-lg p-5`}>
+    <div className="w-full md:w-1/2 xl:w-1/3 p-3">
+      <div className={`h-full border-b-4 bg-white ${borderColor} rounded-md shadow-lg p-5`}>
         <div className="p-3">
           <ItemTitle
             title='Free Cash Flow'
@@ -141,34 +143,7 @@ const freeCashFlowChartData = () => {
         </table>
       </div>
     </div>
-    {displayInfo ? <Modal onClose={onClose} /> : null}
   </>
-}
-
-function FreeCashFlowTip() {
-  return (
-    <div>
-      <div className="text-right font-bold mt-1 mr-1">x</div>
-      <div className="font-semibold text-sm ml-1">What is it:</div>
-        <div className="text-sm mb-1 ml-1">
-          This is cash that a company generates after paying expenses.
-        </div>
-      <div className="font-semibold text-sm ml-1">Why it's important:</div>
-        <div className="text-sm mb-1 ml-1">
-          It can allow a company to develop new products, make
-          acquisitions, pay dividends, or reduce debt. Growing free cash flows frequently
-          leads to increased earnings.
-        </div>
-      <div className="font-semibold text-sm ml-1">What to look for:</div>
-        <div className="text-sm mb-1 ml-1">
-          It should be increasing or consistent, and the recent year should be positive.
-        </div>
-      <div className="font-semibold text-sm ml-1">What to watch for:</div>
-        <div className="text-sm mb-1 ml-1">
-          It should not be continuously decreasing.
-        </div>
-    </div>
-  )
 }
 
 export default FreeCashFlowItem

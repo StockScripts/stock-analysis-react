@@ -22,3 +22,27 @@ export function ItemTitle({title, subtitle, pass, tip, icon}) {
     </div>
   )
 }
+
+export function ItemTip({definition, importance, guidance, caution}) {
+  return (
+    <div>
+      <div className="text-right font-bold mt-1 mr-1">x</div>
+      <div className="text-md font-bold mb-1 ml-1">
+        {guidance}
+      </div>
+      <br></br>
+      <div className="font-semibold text-sm ml-1">What is it:</div>
+      <div className="text-sm mb-1 ml-1">
+        {definition}
+      </div>
+      <div className="font-semibold text-sm ml-1">Why it's important:</div>
+      <div className="text-sm mb-1 ml-1">
+        {importance}
+      </div>
+      <div className="font-semibold text-sm ml-1">What to watch for:</div>
+      <div className="text-sm mb-1 ml-1">
+        {caution}
+      </div>
+    </div>
+  )
+}

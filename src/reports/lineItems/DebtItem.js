@@ -3,8 +3,9 @@ import {
   Bar
 } from 'react-chartjs-2'
 import { 
-  getUnit,
-  formatValue,
+  getBorderColor,
+  getPassFailClass,
+  chartProps as chart,
   fiscalDateYear,
  } from './utils'
  import {
@@ -13,84 +14,50 @@ import {
 } from './components/TableComponents'
  import {
   ItemTitle
+  ,
+  ItemTip
 } from './components/ReportComponents'
 import { faCreditCard } from '@fortawesome/free-solid-svg-icons'
 
-function DebtItem({debtItems}) {
-  const [unit, setUnit] = React.useState(null)
-  const [displayInfo, setDisplayInfo] = React.useState(false);
+function DebtItem({unit, debtItems}) {
   const [pass, setPass] = React.useState(true)
 
   React.useEffect(() => {
     if (debtItems) {
-      let debts = debtItems.map(debt => debt.longTermDebt)
-      let maxDebt = Math.max(...debts)
-      if (maxDebt) {
-        setUnit(getUnit(maxDebt))
-      }
       debtItems.forEach((item) => {
-        if (item.netIncomeToLongTermDebt > 2) {
+        if (checkFail(item.netIncomeToLongTermDebt, item.longTermDebt)) {
           setPass(false)
         }
       })
     }
   }, [debtItems])
 
-  const _passFailClass = (value) => {
-    let classColor = 'text-green-600'
-
-    if (value < 0.2) {
-      classColor = 'text-orange-600'
+  const checkFail = (netIncomeToLongTermDebt, longTermDebt) => {
+    if (longTermDebt == 0) {
+      return false
     }
-    return `text-sm py-1 ${classColor}`
+    return (netIncomeToLongTermDebt < 0.2)
   }
 
-  // const netIncomeToLongTermDebtData = () => {
-  //   return debtRepaymentItems.map((item) => {
-  //     return <td className={_passFailClass(item.netIncomeToLongTermDebt)}>
-  //       {item.netIncomeToLongTermDebt}%
-  //     </td>
-  //   })
-  // }
-
-  const displayYears = () => {
-    return <YearsTableHeader years={debtItems.map(item => fiscalDateYear(item.fiscalDate))}/>
+  const passFailClass = (netIncomeToLongTermDebt, longTermDebt) => {
+    return getPassFailClass(checkFail(netIncomeToLongTermDebt, longTermDebt))
   }
 
-  const longTermDebtData = () => {
-    return debtItems.map((item, index) => {
-      return <td className={_passFailClass(item.netIncomeToLongTermDebt)} key={index}>
-        {formatValue(item.longTermDebt, unit)} {unit}
-      </td>
-    })
-  }
-
-  const netIncomeData = () => {
-    return debtItems.map((item, index) => {
-      return <td className={_passFailClass(item.netIncomeToLongTermDebt)} key={index}>
-        {formatValue(item.netIncome, unit)} {unit}
-      </td>
-    })
-  }
-
-  const netIncomeToLongTermDebtData = () => {
-    return debtItems.map((item, index) => {
-      return <td className={_passFailClass(item.netIncomeToLongTermDebt)} key={index}>
-        {item.netIncomeToLongTermDebt}
-      </td>
-    })
-  }
-
+  // Begin chart data
   const yearLabels = debtItems.map((item) => {
     return fiscalDateYear(item.fiscalDate)
   })
 
   const debtDataset = debtItems.map((item) => {
-    return formatValue(item.longTermDebt, unit)
+    return item.longTermDebt
   })
 
   const netIncomeDataset = debtItems.map((item) => {
-    return formatValue(item.netIncome, unit)
+    return item.netIncome
+  })
+
+  const netIncometoDebtDataset = debtItems.map((item) => {
+    return item.netIncomeToLongTermDebt
   })
 
   const debtChartData = () => {
@@ -98,20 +65,25 @@ function DebtItem({debtItems}) {
       labels: yearLabels,
       datasets: [
         {
-          label: 'Long Term Debt',
-          data: debtDataset,
-          backgroundColor: 'rgba(255, 159, 64, 0.2)',
-          borderColor: 'rgb(255, 159, 64)',
-          borderWidth: 1,
-          barPercentage: .6,
-        },
-        {
           label: 'Net Income',
           data: netIncomeDataset,
-          backgroundColor: 'rgba(54, 162, 235, 0.2)',
-          borderColor: 'rgba(54, 162, 235, 1)',
-          borderWidth: 1,
-          barPercentage: .6,
+          backgroundColor: chart.color.blue,
+          borderColor: chart.color.blueBorder,
+          borderWidth: chart.bar.borderWidth,
+          barPercentage: chart.bar.percentage,
+        },
+        {
+          label: 'Long Term Debt',
+          data: debtDataset,
+          backgroundColor: chart.color.orange,
+          borderColor: chart.color.orangeBorder,
+          borderWidth: chart.bar.borderWidth,
+          barPercentage: chart.bar.percentage,
+        },
+        {
+          label: 'Net Income to Long Term Debt',
+          hidden: true,
+          data: netIncometoDebtDataset,
         },
       ],
     }
@@ -120,6 +92,30 @@ function DebtItem({debtItems}) {
   const options = {
     legend: {
       display: false
+    },
+    tooltips: {
+      callbacks: {
+        title: function(tooltipItem, data) {
+          return data['labels'][tooltipItem[0]['index']];
+        },
+        label: function(tooltipItem, data) {
+          let label = data.datasets[tooltipItem.datasetIndex].label || '';
+          let netIncomeData = data['datasets'][0]['data'][tooltipItem['index']]
+          let longTermDebtData = data['datasets'][1]['data'][tooltipItem['index']]
+          switch (label) {
+            case 'Net Income':
+              return `Net Income: ${netIncomeData} ${unit}`
+            case 'Long Term Debt':
+              return `Long Term Debt: ${longTermDebtData} ${unit}`
+            default:
+              return 'n/a'
+          }
+        },
+        afterLabel: function(tooltipItem, data) {
+          let incomeToDebt = data['datasets'][2]['data'][tooltipItem['index']]
+          return `Net Income to Debt: ${incomeToDebt || '--'}`
+        }
+      }
     },
     scales: {
       yAxes: [
@@ -135,9 +131,49 @@ function DebtItem({debtItems}) {
       ],
     },
   }
+  // End chart data
 
-  const borderColor = pass ? 'border-green-600' : 'border-orange-600'
-  const debtTip = <DebtTip />
+  // Begin table data
+  const displayYears = () => {
+    return <YearsTableHeader years={debtItems.map(item => fiscalDateYear(item.fiscalDate))}/>
+  }
+
+  const longTermDebtData = () => {
+    return debtItems.map((item, index) => {
+      return <td className={passFailClass(item.netIncomeToLongTermDebt, item.longTermDebt)} key={index}>
+        {item.longTermDebt} {unit}
+      </td>
+    })
+  }
+
+  const netIncomeData = () => {
+    return debtItems.map((item, index) => {
+      return <td className={passFailClass(item.netIncomeToLongTermDebt, item.longTermDebt)} key={index}>
+        {item.netIncome} {unit}
+      </td>
+    })
+  }
+
+  const netIncomeToLongTermDebtData = () => {
+    return debtItems.map((item, index) => {
+      return <td className={passFailClass(item.netIncomeToLongTermDebt, item.longTermDebt)} key={index}>
+        {item.netIncomeToLongTermDebt || '--'}
+      </td>
+    })
+  }
+  // End table data
+
+  const borderColor = getBorderColor(pass)
+  const debtTip = <ItemTip
+    guidance="A company should have enough earnings to pay off all their long term debt within 5 years.
+      This means net income to long term debt should be greater than 0.2."
+    definition="Long term debt is debt that matures past a year. Long term debt to net income is
+      a measure of how long it would take a company to pay off debt based on its income."
+    importance="Companies can use debt to improve profitability,
+    but profitable companies shouldn't need large amounts of debt. More importantly,
+    a company should be able to afford their debt."
+    caution="Increasing ROE may be due to increasing debt."
+  />
 
   return <>
     <div className="w-full md:w-1/2 xl:w-1/3 p-3">
@@ -157,7 +193,7 @@ function DebtItem({debtItems}) {
             {displayYears()}
           </tr>
           <tr>
-            <RowHeader itemName={`Debt (${unit})`} />
+            <RowHeader itemName={`Long Term Debt (${unit})`} />
             {longTermDebtData()}
           </tr>
           <tr>
@@ -173,55 +209,7 @@ function DebtItem({debtItems}) {
         </div>
       </div>
     </div>
-    {/* <div className="w-full h-full md:w-1/2 p-3">
-      <div className="bg-white border rounded shadow">
-        <div className="border-b p-3">
-            <h5 className="font-bold text-indigo-600 text-opacity-75">Debt - Can you afford your debt?</h5>
-        </div>
-        <div className="p-5">
-          <table className="shadow-lg bg-white mb-10">
-            <tbody>
-              <tr>
-                <th className="bg-indigo-100 border-t border-l border-r-0 text-left px-8 py-4"></th>
-                {displayYears()}
-              </tr>
-              <tr>
-                <td className="border-t border-l border-r-0 px-8 py-4 font-bold text-left pl-12 text-indigo-800 text-opacity-75">Net Income to Long Term Debt</td>
-                {netIncomeToLongTermDebtData()}
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div> */}
   </>
-}
-
-function DebtTip() {
-  return (
-    <div>
-      <div className="text-right font-bold mt-1 mr-1">x</div>
-      <div className="font-semibold text-sm ml-1">What is it:</div>
-        <div className="text-sm mb-1 ml-1">
-          Long term debt is debt that matures past a year. 
-        </div>
-      <div className="font-semibold text-sm ml-1">Why it's important:</div>
-        <div className="text-sm mb-1 ml-1">
-          Some think companies should use debt to improve their profitability,
-          but profitable companies shouldn't need large amounts of debt. More importantly,
-          a company should be able to afford their debt.
-        </div>
-      <div className="font-semibold text-sm ml-1">What to look for:</div>
-        <div className="text-sm mb-1 ml-1">
-          A company should have enough earnings to pay off all their long term debt within 5 years.
-          This means net income to long term debt should be greater than 0.2.
-        </div>
-      <div className="font-semibold text-sm ml-1">What to watch for:</div>
-        <div className="text-sm mb-1 ml-1">
-          Increasing ROE may be due to increasing debt.
-        </div>
-    </div>
-  )
 }
 
 export default DebtItem

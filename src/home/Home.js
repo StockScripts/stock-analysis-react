@@ -88,7 +88,7 @@ export default function Home() {
               link="https://www.investopedia.com/terms/f/freecashflow.asp"
               icon={faMoneyBillWave}
               content={`This is the actual cash you have on hand after you pay your credit card bills, groceries, and other expenses.
-                It's money you can use for the fun stuff. You should have \"fun money\", and so should a company.`}
+                It's money you can use for the fun stuff. You should have "fun money", and so should a company.`}
             />
             <ChecklistItem
               title="Can you pay your bills?"
