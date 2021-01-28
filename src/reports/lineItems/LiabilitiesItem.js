@@ -4,6 +4,7 @@ import {
   RowHeader,
 } from './components/TableComponents'
 import {
+  ReportItem,
   ItemTitle,
   ItemTip
 } from './components/ReportComponents'
@@ -116,7 +117,16 @@ function LeverageItem({unit, liabilitiesItems}) {
       }
     },
     legend: {
-      display: false
+      display: chart.legend.display,
+      position: chart.legend.position,
+      labels: {
+        boxWidth: chart.legend.boxWidth,
+        fontSize: chart.legend.fontSize,
+        padding: chart.legend.padding,
+        filter: function(legendItem, _) {
+          return legendItem.datasetIndex != 0 
+        }
+      }
     },
     scales: {
       yAxes: [
@@ -157,11 +167,17 @@ function LeverageItem({unit, liabilitiesItems}) {
   }
   // End table data
 
-  const borderColor = getBorderColor(pass)
+  const guidance = (pass) => {
+    if (pass) {
+      return "Some industries have high leverage ratios, but in general, a leverage ratio of less \
+        than 2 and a debt to equity of less than 50% is a good sign."
+    }
+    return "Some industries have high leverage ratios, but in general, a leverage ratio greater \
+      than 2 and a debt to equity greater than 50% is considered risky."
+  }
+
   const liabilitiesTip = <ItemTip
-    guidance="Some industries have high leverage ratios, but in general, a 
-      value greater than 2 is considered risky. When looking at long term
-      debt to equity, a value greater than 50% is considered risky."
+    guidance={guidance(pass)}
     definition="Financial leverage means you're using money to make money. One measure is to
       divide total liabilities by equity, which we're calling leverage ratio. For example,
       a leverage ratio of 2 means for every dollar of equity, the company has 2 dollars of
@@ -171,39 +187,36 @@ function LeverageItem({unit, liabilitiesItems}) {
     caution="Increasing ROE may be due to increasing debt."
   />
 
-  return (
-    <>
-    <div className="w-full md:w-1/2 xl:w-1/3 p-3">
-      <div class={`h-full border-b-4 bg-white ${borderColor} rounded-md shadow-lg p-5`}>
-        <div className="p-3">
-          <ItemTitle
-            title="Liabilities "
-            pass={pass}
-            icon={faBalanceScale}
-            tip={liabilitiesTip}
-          />
-        </div>
-        <Bar data={leverageChartData} options={options} />
-        <table className="w-full table-auto">
-          <tbody>
-            <tr>
-              <th className="w-1/5"></th>
-              {displayYears()}
-            </tr>
-            <tr>
-              <RowHeader itemName='Leverage Ratio' />
-              {leverageRatioData()}
-            </tr>
-            <tr>
-              <RowHeader itemName='Long Term Debt to Equity' />
-              {longTermDebtToEquityData()}
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </>
-  )
+  let itemTitle = <ItemTitle
+    title="Liabilities "
+    pass={pass}
+    icon={faBalanceScale}
+    tip={liabilitiesTip}
+  />
+
+  let itemChart = <Bar data={leverageChartData} options={options} />
+
+  let tableBody = <tbody>
+      <tr>
+        <th className="w-1/5"></th>
+        {displayYears()}
+      </tr>
+      <tr>
+        <RowHeader itemName='Leverage Ratio' />
+        {leverageRatioData()}
+      </tr>
+      <tr>
+        <RowHeader itemName='Long Term Debt to Equity' />
+        {longTermDebtToEquityData()}
+      </tr>
+    </tbody>
+
+  return <ReportItem 
+    itemTitle={itemTitle}
+    borderColor={getBorderColor(pass)}
+    itemChart={itemChart}
+    tableBody={tableBody}
+  />
 }
 
 export default LeverageItem

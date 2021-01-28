@@ -1,9 +1,28 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
+export function ReportItem({itemTitle, borderColor, itemChart, tableBody}) {
+  return (
+    <div className="w-full md:w-1/2 xl:w-1/3 p-3">
+      <div class={`h-full border-b-4 bg-white ${borderColor} rounded-md shadow-lg p-5`}>
+        <div className="p-3">
+          {itemTitle}
+          <div className="mt-4">
+            {itemChart}
+          </div>
+          <table className="w-full table-auto mt-2">
+            {tableBody}
+          </table>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export function ItemTitle({title, subtitle, pass, tip, icon}) {
   const textColor = pass ? 'text-green-600' : 'text-orange-600'
   const tipBg = pass ? 'bg-palette-green-med' : 'bg-orange-500'
+  const textHover = pass ? 'hover:text-palette-green-med' : 'hover:text-orange-500'
   let help = tip ? <span className={`${tipBg} tooltip-text text-white p-3 -mt-1 -ml-0 ml-1 rounded opacity-85`}>{tip}</span> : null
   const [displayHelp, setDisplayHelp] = React.useState(false)
 
@@ -12,7 +31,7 @@ export function ItemTitle({title, subtitle, pass, tip, icon}) {
   }
 
   return (
-    <div className={`${textColor} flex mb-2 cursor-pointer`} onClick={toggleHelp}>
+    <div className={`${textColor} flex mb-2 cursor-pointer ${textHover}`} onClick={toggleHelp}>
       <div className="text-opacity-75 tooltip">
         <FontAwesomeIcon icon={icon} size="3x"/>
         {displayHelp ? help : null}

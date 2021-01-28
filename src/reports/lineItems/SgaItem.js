@@ -7,6 +7,7 @@ import {
   RowHeader,
 } from './components/TableComponents'
 import {
+  ReportItem,
   ItemTitle,
   ItemTip
 } from './components/ReportComponents'
@@ -84,6 +85,18 @@ function SgaItem({unit, sgaItems}) {
   }
 
   const options = {
+    legend: {
+      display: chart.legend.display,
+      position: chart.legend.position,
+      labels: {
+        boxWidth: chart.legend.boxWidth,
+        fontSize: chart.legend.fontSize,
+        padding: chart.legend.padding,
+        filter: function(legendItem, _) {
+          return legendItem.datasetIndex != 2 
+        }
+      }
+    },
     tooltips: {
       callbacks: {
         title: function(tooltipItem, data) {
@@ -108,9 +121,6 @@ function SgaItem({unit, sgaItems}) {
           }
         }
       }
-    },
-    legend: {
-      display: false
     },
     scales: {
       yAxes: [
@@ -142,11 +152,16 @@ function SgaItem({unit, sgaItems}) {
   }
   // End table data
 
-  const borderColor = getBorderColor(pass)
+  const guidance = (pass) => {
+    if (pass) {
+      return "SGA as a percentage of gross profits is less than 80% which is fairly reasonable."
+    }
+    return "SGA is greater than 80% of Gross Profits which means a company is in a highly competitive industry and \
+      may be at a disadvantage."
+  }
 
   const profitsTip = <ItemTip
-    guidance="SGA to Gross Profits greater than 80% means a company is in a highly competitive industry and
-      may be at a disadvantage."
+    guidance={guidance(pass)}
     definition="Selling, General & Administrative expenses are the costs indirectly related to making the product.
       It includes salaries, rent, legal fees, commisions, and the like. SGA to gross profits tells you how much of
       the gross profits are used for these types of expenses." 
@@ -156,33 +171,32 @@ function SgaItem({unit, sgaItems}) {
       company can have low SGA costs, and high R&D costs or capital expenditures expenses."
   />
 
-  return <>
-    <div className="w-full md:w-1/2 xl:w-1/3 p-3">
-      <div className={`h-full border-b-4 bg-white ${borderColor} rounded-md shadow-lg p-5`}>
-        <div className="p-3">
-          <ItemTitle
-            title="SGA"
-            pass={pass}
-            icon={faFileInvoice}
-            tip={profitsTip}
-          />
-        </div>
-        <Bar data={sgaChartData} options={options} />
-        <table className="w-full table-auto">
-          <tbody>
-            <tr>
-              <th className="w-1/5"></th>
-              {displayYears()}
-            </tr>
-            <tr>
-              <RowHeader itemName='SGA / Gross Profit' />
-              {sgaToGrossData()}
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </>
+  let itemTitle = <ItemTitle
+    title="SGA"
+    pass={pass}
+    icon={faFileInvoice}
+    tip={profitsTip}
+  />
+
+  let itemChart = <Bar data={sgaChartData} options={options} />
+
+  let tableBody = <tbody>
+    <tr>
+      <th className="w-1/5"></th>
+      {displayYears()}
+    </tr>
+    <tr>
+      <RowHeader itemName='SGA / Gross Profit' />
+      {sgaToGrossData()}
+    </tr>
+  </tbody>
+
+  return <ReportItem 
+    itemTitle={itemTitle}
+    borderColor={getBorderColor(pass)}
+    itemChart={itemChart}
+    tableBody={tableBody}
+  />
 }
 
 export default SgaItem

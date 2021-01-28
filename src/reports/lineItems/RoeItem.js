@@ -7,6 +7,7 @@ import {
   RowHeader,
 } from './components/TableComponents'
 import {
+  ReportItem,
   ItemTitle,
   ItemTip
 } from './components/ReportComponents'
@@ -59,7 +60,7 @@ function ROE({unit, roeItems}) {
       labels: yearLabels,
       datasets: [
         {
-          label: 'roe',
+          label: 'ROE',
           data: roeDataset,
           backgroundColor: chart.color.blue,
           borderColor: chart.color.blueBorder,
@@ -81,6 +82,18 @@ function ROE({unit, roeItems}) {
   }
 
   const options = {
+    legend: {
+      display: chart.legend.display,
+      position: chart.legend.position,
+      labels: {
+        boxWidth: chart.legend.boxWidth,
+        fontSize: chart.legend.fontSize,
+        padding: chart.legend.padding,
+        filter: function(legendItem, _) {
+          return legendItem.datasetIndex < 1
+        }
+      }
+    },
     tooltips: {
       callbacks: {
         title: function(tooltipItem, data) {
@@ -94,9 +107,6 @@ function ROE({unit, roeItems}) {
           \nEquity: ${data['datasets'][2]['data'][tooltipItem['index']]} ${unit}`
         }
       }
-    },
-    legend: {
-      display: false
     },
     scales: {
       yAxes: [
@@ -128,10 +138,15 @@ function ROE({unit, roeItems}) {
   }
   // End table data
 
-  const borderColor = getBorderColor(pass)
+  const guidance = (pass) => {
+    if (pass) {
+      return "An ROE of at least 10% is a sign of a strong company."
+    }
+    return "ROE should be at least 10% and should not be trending down."
+  }
 
   const roeTip = <ItemTip
-    guidance="ROE should be at least 10% and should not be continuously decreasing."
+    guidance={guidance(pass)}
     definition="Return on Equity is the net income divided by shareholders equity.
       It tells you how much the shareholders get for their investment."
     importance="Companies with high ROE and low debt are able to raise money for growth. 
@@ -141,33 +156,32 @@ function ROE({unit, roeItems}) {
       is becoming too leveraged."
   />
 
-  return <>
-    <div className="w-full md:w-1/2 xl:w-1/3 p-3">
-      <div className={`h-full border-b-4 bg-white ${borderColor} rounded-md shadow-lg p-5`}>
-        <div className="p-3">
-          <ItemTitle
-            title='ROE'
-            pass={pass}
-            icon={faHandHoldingUsd}
-            tip={roeTip}
-          />
-        </div>
-        <Bar data={roeChartData} options={options} />
-        <table className="w-full table-auto">
-          <tbody>
-            <tr>
-              <th></th>
-              {displayYears()}
-            </tr>
-            <tr>
-              <RowHeader itemName='ROE' />
-              {roeData()}
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </>
+  let itemTitle = <ItemTitle
+    title='ROE'
+    pass={pass}
+    icon={faHandHoldingUsd}
+    tip={roeTip}
+  />
+
+  let itemChart = <Bar data={roeChartData} options={options} />
+
+  let tableBody = <tbody>
+    <tr>
+      <th></th>
+      {displayYears()}
+    </tr>
+    <tr>
+      <RowHeader itemName='ROE' />
+      {roeData()}
+    </tr>
+  </tbody>
+
+  return <ReportItem 
+    itemTitle={itemTitle}
+    borderColor={getBorderColor(pass)}
+    itemChart={itemChart}
+    tableBody={tableBody}
+  />
 }
 
 export default ROE

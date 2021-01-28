@@ -30,5 +30,12 @@ export const chartProps = {
   bar: {
     borderWidth: 1,
     percentage: 0.6
+  },
+  legend: {
+    display: true,
+    position: 'bottom',
+    boxWidth: 18,
+    fontSize: 11,
+    padding: 5,
   }
 }

@@ -13,8 +13,8 @@ import {
   RowHeader,
 } from './components/TableComponents'
  import {
-  ItemTitle
-  ,
+  ReportItem,
+  ItemTitle,
   ItemTip
 } from './components/ReportComponents'
 import { faCreditCard } from '@fortawesome/free-solid-svg-icons'
@@ -91,7 +91,16 @@ function DebtItem({unit, debtItems}) {
 
   const options = {
     legend: {
-      display: false
+      display: chart.legend.display,
+      position: chart.legend.position,
+      labels: {
+        boxWidth: chart.legend.boxWidth,
+        fontSize: chart.legend.fontSize,
+        padding: chart.legend.padding,
+        filter: function(legendItem, _) {
+          return legendItem.datasetIndex != 2 
+        }
+      }
     },
     tooltips: {
       callbacks: {
@@ -141,7 +150,7 @@ function DebtItem({unit, debtItems}) {
   const longTermDebtData = () => {
     return debtItems.map((item, index) => {
       return <td className={passFailClass(item.netIncomeToLongTermDebt, item.longTermDebt)} key={index}>
-        {item.longTermDebt} {unit}
+        {item.longTermDebt}
       </td>
     })
   }
@@ -149,7 +158,7 @@ function DebtItem({unit, debtItems}) {
   const netIncomeData = () => {
     return debtItems.map((item, index) => {
       return <td className={passFailClass(item.netIncomeToLongTermDebt, item.longTermDebt)} key={index}>
-        {item.netIncome} {unit}
+        {item.netIncome}
       </td>
     })
   }
@@ -163,10 +172,17 @@ function DebtItem({unit, debtItems}) {
   }
   // End table data
 
-  const borderColor = getBorderColor(pass)
+  const guidance = (pass) => {
+    if (pass) {
+      return "Net income to long term debt is consistently greater than 0.2, which means the \
+      company has enough earnings to pay off all their long term debt within 5 years. "
+    }
+    return "A company should have enough earnings to pay off all their long term debt within 5 \
+    years. This means net income to long term debt should be greater than 0.2."
+  }
+
   const debtTip = <ItemTip
-    guidance="A company should have enough earnings to pay off all their long term debt within 5 years.
-      This means net income to long term debt should be greater than 0.2."
+    guidance={guidance(pass)}
     definition="Long term debt is debt that matures past a year. Long term debt to net income is
       a measure of how long it would take a company to pay off debt based on its income."
     importance="Companies can use debt to improve profitability,
@@ -175,41 +191,40 @@ function DebtItem({unit, debtItems}) {
     caution="Increasing ROE may be due to increasing debt."
   />
 
-  return <>
-    <div className="w-full md:w-1/2 xl:w-1/3 p-3">
-      <div class={`h-full border-b-4 bg-white ${borderColor} rounded-md shadow-lg p-5`}>
-        <div className="p-3">
-          <ItemTitle
-            title="Debt"
-            pass={pass}
-            icon={faCreditCard}
-            tip={debtTip}
-          />
-          <Bar data={debtChartData} options={options} />
-          <table className="w-full table-auto">
-        <tbody>
-          <tr>
-            <th className="w-1/5"></th>
-            {displayYears()}
-          </tr>
-          <tr>
-            <RowHeader itemName={`Long Term Debt (${unit})`} />
-            {longTermDebtData()}
-          </tr>
-          <tr>
-            <RowHeader itemName='Net Income' />
-            {netIncomeData()}
-          </tr>
-          <tr>
-            <RowHeader itemName='Net Income to Debt' />
-            {netIncomeToLongTermDebtData()}
-          </tr>
-        </tbody>
-      </table>
-        </div>
-      </div>
-    </div>
-  </>
+  let itemTitle = <ItemTitle
+    title="Debt"
+    pass={pass}
+    icon={faCreditCard}
+    tip={debtTip}
+  />
+
+  let itemChart = <Bar data={debtChartData} options={options} />
+
+  let tableBody = <tbody>
+    <tr>
+      <th className="w-1/5"></th>
+      {displayYears()}
+    </tr>
+    <tr>
+      <RowHeader itemName={`Long Term Debt (${unit})`} />
+      {longTermDebtData()}
+    </tr>
+    <tr>
+      <RowHeader itemName={`Net Income (${unit})`} />
+      {netIncomeData()}
+    </tr>
+    <tr>
+      <RowHeader itemName='Net Income to Debt' />
+      {netIncomeToLongTermDebtData()}
+    </tr>
+  </tbody>
+
+  return <ReportItem 
+    itemTitle={itemTitle}
+    borderColor={getBorderColor(pass)}
+    itemChart={itemChart}
+    tableBody={tableBody}
+  />
 }
 
 export default DebtItem

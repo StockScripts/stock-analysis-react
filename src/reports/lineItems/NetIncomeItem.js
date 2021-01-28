@@ -7,6 +7,7 @@ import {
   RowHeader,
 } from './components/TableComponents'
 import {
+  ReportItem,
   ItemTitle,
   ItemTip
 } from './components/ReportComponents'
@@ -84,6 +85,18 @@ function NetIncomeItem({unit, netIncomeItems}) {
   }
 
   const options = {
+    legend: {
+      display: chart.legend.display,
+      position: chart.legend.position,
+      labels: {
+        boxWidth: chart.legend.boxWidth,
+        fontSize: chart.legend.fontSize,
+        padding: chart.legend.padding,
+        filter: function(legendItem, _) {
+          return legendItem.datasetIndex != 2 
+        }
+      }
+    },
     tooltips: {
       callbacks: {
         title: function(tooltipItem, data) {
@@ -106,9 +119,6 @@ function NetIncomeItem({unit, netIncomeItems}) {
           return `Net Margin: ${data['datasets'][2]['data'][tooltipItem['index']]}%`
         }
       }
-    },
-    legend: {
-      display: false
     },
     scales: {
       yAxes: [
@@ -156,52 +166,57 @@ function NetIncomeItem({unit, netIncomeItems}) {
   }
   // End table data
 
-  const borderColor = getBorderColor(pass)
+  const guidance = (pass) => {
+    if (pass) {
+      return "YOY growth values are positive which means net income has been increasing each year."
+    }
+    return "Net income has decreased. Ideally, it should be increasing every year."
+  }
 
   const profitsTip = <ItemTip
-    guidance="Net income should be increasing and net margin should be stable or increasing. "
+    guidance={guidance(pass)}
     definition="Net income is known as the bottom line, and it's what's left of the revenue after a
       company pays off all the expenses. Net profit margin is the percentage of revenue remaining."
-    importance="Net margin measures how good a company is at converting revenue into profits."
+    importance="Net income indicates whether a company is profitable and it's used to calculate the EPS,
+      which can drive the stock price. Net margin measures how good a company is at converting revenue into profits."
     caution="If net margin is increasing significantly, it could be due to a decrease in tax rate
       or from reducing expenses. Constantly cutting costs may not be sustainable in the long term."
   />
 
-  return <>
-    <div class="w-full md:w-1/2 xl:w-1/3 p-3">
-      <div class={`h-full border-b-4 bg-white ${borderColor} rounded-md shadow-lg p-5`}>
-        <div className="p-3">
-          <ItemTitle
-            title="Net Income"
-            pass={pass}
-            icon={faFunnelDollar}
-            tip={profitsTip}
-          />
-        </div>
-        <Bar data={netIncomeChartData} options={options} />
-        <table className="w-full table-auto">
-          <tbody>
-            <tr>
-              <th className="w-1/5"></th>
-              {displayYears()}
-            </tr>
-            <tr>
-              <RowHeader itemName='Net Margin' />
-              {netMarginData()}
-            </tr>
-            <tr>
-              <RowHeader itemName={`Net Income (${unit})`} />
-              {netIncomeData()}
-            </tr>
-            <tr>
-              <RowHeader itemName='YOY Growth' />
-              {netIncomeYOYData()}
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </>
+  let itemTitle = <ItemTitle
+    title="Net Income"
+    pass={pass}
+    icon={faFunnelDollar}
+    tip={profitsTip}
+  />
+
+  let itemChart = <Bar data={netIncomeChartData} options={options} />
+
+  let tableBody = <tbody>
+    <tr>
+      <th className="w-1/5"></th>
+      {displayYears()}
+    </tr>
+    <tr>
+      <RowHeader itemName='Net Margin' />
+      {netMarginData()}
+    </tr>
+    <tr>
+      <RowHeader itemName={`Net Income (${unit})`} />
+      {netIncomeData()}
+    </tr>
+    <tr>
+      <RowHeader itemName='YOY Growth' />
+      {netIncomeYOYData()}
+    </tr>
+  </tbody>
+
+  return <ReportItem 
+    itemTitle={itemTitle}
+    borderColor={getBorderColor(pass)}
+    itemChart={itemChart}
+    tableBody={tableBody}
+  />
 }
 
 export default NetIncomeItem

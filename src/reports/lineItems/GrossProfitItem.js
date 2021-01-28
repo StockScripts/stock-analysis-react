@@ -7,6 +7,7 @@ import {
   RowHeader,
 } from './components/TableComponents'
 import {
+  ReportItem,
   ItemTitle,
   ItemTip
 } from './components/ReportComponents'
@@ -84,6 +85,18 @@ function GrossProfitItem({unit, grossProfitItems}) {
   }
 
   const options = {
+    legend: {
+      display: chart.legend.display,
+      position: chart.legend.position,
+      labels: {
+        boxWidth: chart.legend.boxWidth,
+        fontSize: chart.legend.fontSize,
+        padding: chart.legend.padding,
+        filter: function(legendItem, _) {
+          return legendItem.datasetIndex != 2 
+        }
+      }
+    },
     tooltips: {
       callbacks: {
         title: function(tooltipItem, data) {
@@ -106,9 +119,6 @@ function GrossProfitItem({unit, grossProfitItems}) {
           return `Gross Margin: ${data['datasets'][2]['data'][tooltipItem['index']]}%`
         }
       }
-    },
-    legend: {
-      display: false
     },
     scales: {
       yAxes: [
@@ -140,11 +150,17 @@ function GrossProfitItem({unit, grossProfitItems}) {
   }
   // End table data
 
-  const borderColor = getBorderColor(pass)
+  const guidance = (pass) => {
+    if (pass) {
+      return "Gross margin is consistently above 20% which means the company can make its products \
+        at a reasonable cost."
+    }
+    return "A gross margin of less than 20% usually means the company is in a very \
+    competitive industry where it may be hard to sustain a competitive advantage."
+  }
 
   const grossProfitsTip = <ItemTip
-    guidance="A gross margin of less than 20% usually means a company is in a very
-      competitive industry where it may be hard to sustain a competitive advantage."
+    guidance={guidance(pass)}
     definition="Gross profit is the amount left after subtracting the cost to make products
       from the revenue. Gross margin is the percentage of revenue remaining."
     importance="A company that can make products at a low cost is at an advantage."
@@ -152,33 +168,32 @@ function GrossProfitItem({unit, grossProfitItems}) {
       for each company."
   />
 
-  return <>
-    <div className="w-full md:w-1/2 xl:w-1/3 p-3">
-      <div className={`h-full border-b-4 bg-white ${borderColor} rounded-md shadow-lg p-5`}>
-        <div className="p-3">
-          <ItemTitle
-            title="Gross Profits"
-            pass={pass}
-            icon={faCoins}
-            tip={grossProfitsTip}
-          />
-        </div>
-        <Bar data={grossProfitsChartData} options={options} />
-        <table className="w-full table-auto">
-          <tbody>
-            <tr>
-              <th className="w-1/5"></th>
-              {displayYears()}
-            </tr>
-            <tr>
-              <RowHeader itemName='Gross Margin' />
-              {grossMarginData()}
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </>
+  let itemTitle = <ItemTitle
+    title="Gross Profits"
+    pass={pass}
+    icon={faCoins}
+    tip={grossProfitsTip}
+  />
+
+  let itemChart = <Bar data={grossProfitsChartData} options={options} />
+
+  let tableBody = <tbody>
+      <tr>
+        <th className="w-1/5"></th>
+        {displayYears()}
+      </tr>
+      <tr>
+        <RowHeader itemName='Gross Margin' />
+        {grossMarginData()}
+      </tr>
+    </tbody>
+
+  return <ReportItem 
+    itemTitle={itemTitle}
+    borderColor={getBorderColor(pass)}
+    itemChart={itemChart}
+    tableBody={tableBody}
+  />
 }
 
 export default GrossProfitItem

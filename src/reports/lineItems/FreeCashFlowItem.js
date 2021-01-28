@@ -7,6 +7,7 @@ import {
   RowHeader,
 } from './components/TableComponents'
 import {
+  ReportItem,
   ItemTitle,
   ItemTip
 } from './components/ReportComponents'
@@ -63,6 +64,15 @@ function FreeCashFlowItem({unit, freeCashFlowItems}) {
   }
 
   const options = {
+    legend: {
+      display: chart.legend.display,
+      position: chart.legend.position,
+      labels: {
+        boxWidth: chart.legend.boxWidth,
+        fontSize: chart.legend.fontSize,
+        padding: chart.legend.padding,
+      }
+    },
     tooltips: {
       callbacks: {
         title: function(tooltipItem, data) {
@@ -72,9 +82,6 @@ function FreeCashFlowItem({unit, freeCashFlowItems}) {
           return `Free Cash Flow: ${data['datasets'][0]['data'][tooltipItem['index']]} ${unit}`;
         },
       }
-    },
-    legend: {
-      display: false
     },
     scales: {
       yAxes: [
@@ -106,10 +113,17 @@ function FreeCashFlowItem({unit, freeCashFlowItems}) {
   }
   // End table data
 
-  const borderColor = getBorderColor(pass)
+  const guidance = (pass) => {
+    if (pass) {
+      return "Free cash flow is consistently positive, which means the company can reinvest back into the \
+      company."
+    }
+    return "Negative free cash flow is not necessarily bad, but ideally, it should be consistently \
+      positive, which means the company can reinvest back into the company."
+  }
 
   const freeCashFlowTip = <ItemTip
-    guidance="Free cash flow should be increasing or consistent, and the recent year should be positive."
+    guidance={guidance(pass)}
     definition="This is cash that a company generates after paying expenses."
     importance="It can allow a company to develop new products, make
     acquisitions, pay dividends, or reduce debt. Growing free cash flows frequently
@@ -117,33 +131,32 @@ function FreeCashFlowItem({unit, freeCashFlowItems}) {
     caution="It should not be continuously decreasing."
   />
 
-  return <>
-    <div className="w-full md:w-1/2 xl:w-1/3 p-3">
-      <div className={`h-full border-b-4 bg-white ${borderColor} rounded-md shadow-lg p-5`}>
-        <div className="p-3">
-          <ItemTitle
-            title='Free Cash Flow'
-            icon={faMoneyBillWave}
-            pass={pass}
-            tip={freeCashFlowTip}
-          />
-        </div>
-        <Bar data={freeCashFlowChartData} options={options} />
-        <table className="w-full table-auto">
-          <tbody>
-            <tr>
-              <th></th>
-              {displayYears()}
-            </tr>
-            <tr>
-              <RowHeader itemName={`Free Cash Flow (${unit})`} />
-              {freeCashFlowData()}
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </>
+  let itemTitle = <ItemTitle
+    title='Free Cash Flow'
+    icon={faMoneyBillWave}
+    pass={pass}
+    tip={freeCashFlowTip}
+  />
+
+  let itemChart = <Bar data={freeCashFlowChartData} options={options} />
+
+  let tableBody = <tbody>
+    <tr>
+      <th></th>
+      {displayYears()}
+    </tr>
+    <tr>
+      <RowHeader itemName={`Free Cash Flow (${unit})`} />
+      {freeCashFlowData()}
+    </tr>
+  </tbody>
+
+  return <ReportItem 
+    itemTitle={itemTitle}
+    borderColor={getBorderColor(pass)}
+    itemChart={itemChart}
+    tableBody={tableBody}
+  />
 }
 
 export default FreeCashFlowItem

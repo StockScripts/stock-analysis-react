@@ -7,6 +7,7 @@ import {
   RowHeader,
 } from './components/TableComponents'
 import {
+  ReportItem,
   ItemTitle,
   ItemTip
 } from './components/ReportComponents'
@@ -85,7 +86,16 @@ function LiquidityItem({unit, liquidityItems}) {
 
   const options = {
     legend: {
-      display: false
+      display: chart.legend.display,
+      position: chart.legend.position,
+      labels: {
+        boxWidth: chart.legend.boxWidth,
+        fontSize: chart.legend.fontSize,
+        padding: chart.legend.padding,
+        filter: function(legendItem, _) {
+          return legendItem.datasetIndex != 2 
+        }
+      }
     },
     tooltips: {
       callbacks: {
@@ -118,7 +128,7 @@ function LiquidityItem({unit, liquidityItems}) {
           },
           scaleLabel: {
             display: true,
-            labelString: `Current Assets / Liabilities (${unit})`
+            labelString: `Assets / Liabilities (${unit})`
           }
         },
       ],
@@ -156,10 +166,16 @@ function LiquidityItem({unit, liquidityItems}) {
   }
   // End table data
 
-  const borderColor = getBorderColor(pass)
+  const guidance = (pass) => {
+    if (pass) {
+      return "Current ratio is consistently greater than 1, which means the company has \
+       enough capital on hand to pay for its short term obligations."
+    }
+    return "Current ratio has dropped below 1. Ideally, this should consistently be above 1."
+  }
+  
   const liquidityTip = <ItemTip
-    guidance="A current ratio of 1 or greater means has enough capital on hand to pay for its short term
-      obligations."
+    guidance={guidance(pass)}
     definition="It's a measure of the current assets against the current liabilities of a company. It
       indicates the company's abilities to meet its obligations, aka pay the bills."
     importance="It helps determine a company's financial strength and gives an idea of whether it has too
@@ -168,35 +184,33 @@ function LiquidityItem({unit, liquidityItems}) {
       but a high liquidity ratio can also indicate that the company isn't investing their cash
       efficiently."
   />
-  return (
-    <div className="w-full md:w-1/2 xl:w-1/3 p-3">
-      <div class={`h-full border-b-4 bg-white ${borderColor} rounded-md shadow-lg p-5`}>
-        <div className="p-3">
-          <ItemTitle
-            title="Liquidity"
-            pass={pass}
-            icon={faFileInvoiceDollar}
-            tip={liquidityTip}
-          />
-        </div>
-        <div className="p-5">
-          <Bar data={currentRatioChartData} options={options} />
-          <table className="w-full table-auto">
-            <tbody>
-              <tr>
-                <th></th>
-                {displayYears()}
-              </tr>
-              <tr>
-                <RowHeader itemName='Current Ratio' />
-                {currentRatioData()}
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  )
+
+  let itemTitle = <ItemTitle
+    title="Liquidity"
+    pass={pass}
+    icon={faFileInvoiceDollar}
+    tip={liquidityTip}
+  />
+
+  let itemChart = <Bar data={currentRatioChartData} options={options} />
+
+  let tableBody = <tbody>
+    <tr>
+      <th></th>
+      {displayYears()}
+    </tr>
+    <tr>
+      <RowHeader itemName='Current Ratio' />
+      {currentRatioData()}
+    </tr>
+  </tbody>
+
+  return <ReportItem 
+    itemTitle={itemTitle}
+    borderColor={getBorderColor(pass)}
+    itemChart={itemChart}
+    tableBody={tableBody}
+  />
 }
 
 export default LiquidityItem
