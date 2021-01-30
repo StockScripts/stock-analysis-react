@@ -21,21 +21,97 @@ export default function Home() {
           <h2 className="text-4xl font-bold mb-2 text-palette-light">
             Invest in good companies
           </h2>
-          <h3 className="text-2xl mb-8 text-palette-light">
+          {/* <h3 className="text-2xl mb-8 text-palette-light"> */}
+          <h3 className="text-2xl text-palette-light">
             A simple way to find good investments. Just look for the green.
           </h3>
-          <div>
+          {/* <div>
             <h3 className="text-xl font-semibold text-palette-light hover:underline">
-              <a href="https://blog.grasshopperstocks.com/2020/12/18/how-do-i-find-a-good-company-to-invest-in/">How do I use this?</a>
+              <a href="https://blog.grasshopperstocks.com/2020/12/18/how-do-i-find-a-good-company-to-invest-in/">Tell me more</a>
             </h3>
-          </div>
+          </div> */}
         </div>
       </div>
+
+      <section className=" bg-white mx-auto px-10 p-10">
+        {/* <div className="container max-w-5xl mx-auto m-8"> */}
+          <h1 className="w-full my-2 text-4xl font-bold leading-tight text-center text-gray-600">How do I use this?</h1>
+          <div className="w-full mb-4">	
+            <div className="h-1 mx-auto gradient w-64 opacity-25 my-0 py-0 rounded-t"></div>
+          </div>
+        
+          <div className="flex flex-wrap sm:flex-row ">
+            <div className="w-full sm:w-1/2 p-6 mt-24">
+              <h3 className="text-2xl text-gray-600 font-bold leading-none mb-3">Find a stock you're interested in</h3>
+              <p className="text-gray-600 mb-8">
+                Don't know what to invest in? Start with companies you already use. Enter the ticker symbol or company name.
+              </p>
+            </div>
+            <div className="w-full md:w-1/2 p-12">
+              <div className="shadow-xl">
+                <img className="w-full ml-auto rounded-sm shadow-lg" alt='demo' src={require('./enter-ticker.gif')} />
+              </div>
+            </div>
+          </div>
+          
+          <div className="flex flex-wrap flex-col-reverse sm:flex-row">	
+            <div className="w-full sm:w-1/2 p-6 mt-6">
+              <div className="shadow-xl">
+                <img className="w-full ml-auto rounded-sm" alt='demo' src={require('./report.gif')} />
+              </div>
+              {/* <svg className="w-5/6 sm:h-64 mx-auto" viewBox="0 0 1176.60617 873.97852" xmlns="http://www.w3.org/2000/svg"> */}
+            </div>
+            <div className="w-full sm:w-1/2 p-6 mt-24">
+              <div className="align-middle">
+                <h3 className="text-2xl text-gray-600 font-bold leading-none mb-3">Look for the Green</h3>
+                <p className="text-gray-600 mb-8">
+                  The company financials are evaluated for characteristics of a successful company. It shows a green icon if
+                  it meets a requirement and orange if it doesn't. Orange doesn't necessarily mean
+                  it's bad, but you may need to look into it and use your own discretion.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap sm:flex-row">
+            <div className="w-full sm:w-1/2 p-6 mt-24 text-right">
+              <h3 className="text-2xl text-gray-600 font-bold leading-none mb-3">Be informed</h3>
+              <p className="text-gray-600 mb-8">
+                Click on the icon to learn more about the item. You'll get information on what it is, why it's important,
+                and what to watch for.
+              </p>
+            </div>
+            <div className="w-full md:w-1/2 p-12">
+              <div className="shadow-2xl">
+                <img className="w-full ml-auto rounded-sm" alt='demo' src={require('./icon-click.gif')} />
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap flex-col-reverse sm:flex-row">	
+            <div className="w-full sm:w-1/2 p-6 mt-6">
+              <div className="shadow-xl">
+                <img className="w-full ml-auto rounded-sm" alt='demo' src={require('./graph.gif')} />
+              {/* <svg className="w-5/6 sm:h-64 mx-auto" viewBox="0 0 1176.60617 873.97852" xmlns="http://www.w3.org/2000/svg"> */}
+              </div>
+            </div>
+            <div className="w-full sm:w-1/2 p-6 mt-24">
+              <div className="align-middle">
+                <h3 className="text-2xl text-gray-600 font-bold leading-none mb-3">Examine data</h3>
+                <p className="text-gray-600 mb-8">
+                  View data in table form and hover over the graph to view the numbers. Focus on specific data by clicking
+                  on the graph legends.
+                </p>
+              </div>
+            </div>
+          </div>
+        {/* </div> */}
+      </section>
 
       <section className="container mx-auto px-6 p-10">
         <div className="text-center text-palette-green-med mb-8">
           <h2 className="text-4xl font-bold">
-            <a className="cursor-default"  href="#what-to-look-for">What should you look for in a stock?</a>
+            <a className="cursor-default" href="#what-to-look-for">What should you look for in a stock?</a>
           </h2>
           <p className="text-2xl">Let's make this simple. You are the company. What would make you financially successful?</p>
         </div>
@@ -117,6 +193,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      
       {/* <div className="pt-24">
         <div className="container px-3 mx-auto flex flex-wrap flex-col md:flex-row items-center">
           <div className="flex flex-col w-full md:w-2/5 justify-center items-start text-center md:text-left">
