@@ -200,7 +200,7 @@ function PerformanceReport() {
   }
   
   let displayed = null
-
+  
   if (loading) {
     displayed = <div className="sweet-loading text-center mt-5">
       <ScaleLoader
@@ -232,7 +232,7 @@ function PerformanceReport() {
 
   let displayError = error ? 'Error' : null
   return (
-    <div className="main-content flex-1 bg-palette-light mt-24 sm:mt-16 md:mt-4 pb-24 md:pb-5">
+    <div className="flex-1 bg-palette-light mt-24 sm:mt-16 md:mt-4 pb-24 md:pb-5">
       {displayError ? <Notification title='Oops' notification={error} onClose={onClose} /> : null}
       {displayed}
     </div>

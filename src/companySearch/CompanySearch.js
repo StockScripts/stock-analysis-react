@@ -9,6 +9,7 @@ function CompanySearch(props) {
   const  [companies, setCompanies] = useState()
   const  [error, setError] = useState()
   const  [selectedCompany, setSelectedCompany] = useState()
+  const  [displayDropdown, setDisplayDropdown] = useState(false)
 
   const errorMessage = "Something went wrong and we couldn't process your request."
   useEffect(() => {
@@ -34,14 +35,27 @@ function CompanySearch(props) {
 
   useEffect(() => {
     if (selectedCompany) {
-      getCompany(selectedCompany).then(data => {
-        history.push(`/report/${data.company.symbol}`)
+      getCompany(selectedCompany).then(response => {
+        if (response.hasOwnProperty('errors')) {
+          setError(response.errors)
+        } else {
+          history.push(`/report/${response.company.symbol}`)
+        }
       })
     }
   }, [selectedCompany, history])
 
   const handleChange = (e) => {
+    setDisplayDropdown(true)
     setTicker(e.target.value)
+  }
+
+  const handleInputClick = (e) => {
+    e.preventDefault()
+    if (ticker) {
+      return
+    }
+    setDisplayDropdown(false)
   }
   
   const handleSubmit = (e) => {
@@ -71,6 +85,7 @@ function CompanySearch(props) {
 
   const onClose = () => {
     setError(null)
+    setSelectedCompany(null)
   }
 
   const renderDropdown = () => {
@@ -106,9 +121,10 @@ function CompanySearch(props) {
             placeholder="Enter ticker or company"
             value={ticker}
             onChange={handleChange}
+            onClick={handleInputClick}
             type="text"
           />
-          {renderDropdown()}
+          {displayDropdown ? renderDropdown() : null}
           {/* <button
             id="navAction"
             className="mx-auto lg:mx-0 hover:underline bg-white text-gray-800 font-bold rounded-full mt-4 lg:mt-0 py-4 px-8 shadow opacity-75"

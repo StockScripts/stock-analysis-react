@@ -13,9 +13,6 @@ export const getCompanies = (identifier) => {
 export const getCompany = (symbol) => {
   return fetch(`${baseUrl}/${symbol}`)
     .then(response => {
-      if (!response.ok) {
-        throw Error(response)
-      }
       return response.json()
     })
 }
