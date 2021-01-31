@@ -25,17 +25,17 @@ function SgaItem({unit, sgaItems}) {
   React.useEffect(() => {
     if (sgaItems && sgaItems[0].grossProfit) {
       sgaItems.forEach((item) => {
-        let fail = item.sga_to_gross > 80
-        if (fail) {
+        if (checkFail(item.sgaToGross)) {
           setPass(false)
         }
       })
     }
   }, [sgaItems])
 
+  const checkFail = (sgaToGross) => (sgaToGross > 80)
+
   const passFailClass = (sgaToGross) => {
-    const fail = sgaToGross > 80
-    return getPassFailClass(fail)
+    return getPassFailClass(checkFail(sgaToGross))
   }
 
   // Begin chart data
@@ -60,7 +60,7 @@ function SgaItem({unit, sgaItems}) {
       labels: yearLabels,
       datasets: [
         {
-          label: 'SGA',
+          label: `SGA (${unit})`,
           data: sgaDataset,
           backgroundColor: chart.color.green,
           borderColor: chart.color.greenBorder,
@@ -68,7 +68,7 @@ function SgaItem({unit, sgaItems}) {
           barPercentage: chart.bar.percentage,
         },
         {
-          label: 'Gross Profit',
+          label: `Gross Profit (${unit})`,
           data: grossProfitDataset,
           backgroundColor: chart.color.blue,
           borderColor: chart.color.blueBorder,
@@ -122,19 +122,19 @@ function SgaItem({unit, sgaItems}) {
         }
       }
     },
-    scales: {
-      yAxes: [
-        {
-          ticks: {
-            beginAtZero: true,
-          },
-          scaleLabel: {
-            display: true,
-            labelString: `SGA / Gross Profit (${unit})`
-          }
-        },
-      ],
-    },
+    // scales: {
+    //   yAxes: [
+    //     {
+    //       ticks: {
+    //         beginAtZero: true,
+    //       },
+    //       scaleLabel: {
+    //         display: true,
+    //         labelString: `SGA / Gross Profit (${unit})`
+    //       }
+    //     },
+    //   ],
+    // },
   }
   // End chart data
 
@@ -163,8 +163,9 @@ function SgaItem({unit, sgaItems}) {
   const profitsTip = <ItemTip
     guidance={guidance(pass)}
     definition="Selling, General & Administrative expenses are the costs indirectly related to making the product.
-      It includes salaries, rent, legal fees, commisions, and the like. SGA to gross profits tells you how much of
-      the gross profits are used for these types of expenses." 
+      It includes salaries, rent, legal fees, commisions, and the like. It's subtracted from gross profits so SGA 
+      to gross profits tells you how much of the gross profits are used for these types of expenses. A high value means
+      they're using a lot of their profits for these expenses." 
     importance="It has an immense impact on the bottom line. When revenues fall, SGA costs remain and eats into
       the profits. Companies with consistently low SGA expenses are at an advantage."
     caution="SGA costs can vary greatly between industries. Conistently low values are ideal, but sometimes a

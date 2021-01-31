@@ -60,7 +60,7 @@ function NetIncomeItem({unit, netIncomeItems}) {
       labels: yearLabels,
       datasets: [
         {
-          label: 'Net Income',
+          label: `Net Income (${unit})`,
           data: netIncomeDataset,
           backgroundColor:chart.color.green,
           borderColor: chart.color.greenBorder,
@@ -68,7 +68,7 @@ function NetIncomeItem({unit, netIncomeItems}) {
           barPercentage: chart.bar.percentage,
         },
         {
-          label: 'Revenue',
+          label: `Revenue (${unit})`,
           data: revenueDataset,
           backgroundColor: chart.color.blue,
           borderColor: chart.color.blueBorder,
@@ -120,19 +120,19 @@ function NetIncomeItem({unit, netIncomeItems}) {
         }
       }
     },
-    scales: {
-      yAxes: [
-        {
-          ticks: {
-            beginAtZero: true,
-          },
-          scaleLabel: {
-            display: true,
-            labelString: `Net Income / Revenue (${unit})`
-          }
-        },
-      ],
-    },
+    // scales: {
+    //   yAxes: [
+    //     {
+    //       ticks: {
+    //         beginAtZero: true,
+    //       },
+    //       scaleLabel: {
+    //         display: true,
+    //         labelString: `Net Income / Revenue (${unit})`
+    //       }
+    //     },
+    //   ],
+    // },
   }
   // End chart data
 

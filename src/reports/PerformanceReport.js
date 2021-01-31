@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom'
+import { useParams, useHistory } from 'react-router-dom'
 import {
   getPerformanceReportBySymbol
 } from './performanceReportAPI'
@@ -18,6 +18,7 @@ import { getDisplayedUnit } from './utils'
 
 function PerformanceReport() {
   let { company } = useParams()
+  let history = useHistory()
 
   const [reportData, setReportData] = useState(null)
   const [companyInfo, setCompanyInfo] = useState(null)
@@ -30,22 +31,26 @@ function PerformanceReport() {
     if (!!company) {
       if (typeof company === 'string') {
         setLoading(true)
-        getPerformanceReportBySymbol(company).then(reportData => {
-          let report = reportData.report
-          if (report.items.length > 0) {
-            setUnit(getDisplayedUnit(report.items[0].unit))
-            setReportData(report.items)
-            setCompanyInfo(report.company)
-            setError(null)
+        getPerformanceReportBySymbol(company).then(response => {
+          if (response.hasOwnProperty('errors')) {
+            setError(response.errors)
           } else {
-            setError(errorMessage)
+            let report = response.report
+            if (report.items.length > 0) {
+              setUnit(getDisplayedUnit(report.items[0].unit))
+              setReportData(report.items)
+              setCompanyInfo(report.company)
+              setError(null)
+            } else {
+              setError(errorMessage)
+            }
           }
           setLoading(false)
         })
       } 
       return
     }
-  }, [company])
+  }, [company, history])
 
   const renderRevenueItem = () => {
     const revenueItems = reportData.map((data) => {
@@ -197,6 +202,8 @@ function PerformanceReport() {
 
   const onClose = () => {
     setError(null)
+    history.push(`/report`)
+    setReportData(null)
   }
   
   let displayed = null
@@ -230,7 +237,7 @@ function PerformanceReport() {
       </>
   }
 
-  let displayError = error ? 'Error' : null
+  let displayError = error ? true : false
   return (
     <div className="flex-1 bg-palette-light mt-24 sm:mt-16 md:mt-4 pb-24 md:pb-5">
       {displayError ? <Notification title='Oops' notification={error} onClose={onClose} /> : null}

@@ -56,7 +56,7 @@ function RevenueItem({unit, revenueItems}) {
       labels: yearLabels,
       datasets: [
         {
-          label: 'Revenue',
+          label: `Revenue (${unit})`,
           type: 'bar',
           data: revenueDataset,
           backgroundColor: chart.color.blue,
@@ -109,19 +109,19 @@ function RevenueItem({unit, revenueItems}) {
         }
       }
     },
-    scales: {
-      yAxes: [
-        {
-          ticks: {
-            beginAtZero: true,
-          },
-          scaleLabel: {
-            display: true,
-            labelString: `Revenue (${unit})`
-          }
-        },
-      ],
-    },
+    // scales: {
+    //   yAxes: [
+    //     {
+    //       ticks: {
+    //         beginAtZero: true,
+    //       },
+    //       scaleLabel: {
+    //         display: true,
+    //         labelString: `Revenue (${unit})`
+    //       }
+    //     },
+    //   ],
+    // },
   }
   // End chart data
 

@@ -52,7 +52,7 @@ function FreeCashFlowItem({unit, freeCashFlowItems}) {
       labels: yearLabels,
       datasets: [
         {
-          label: 'Free Cash Flow',
+          label: `Free Cash Flow (${unit})`,
           data: freeCashFlowDataset,
           backgroundColor: chart.color.blue,
           borderColor: chart.color.blueBorder,
@@ -83,19 +83,19 @@ function FreeCashFlowItem({unit, freeCashFlowItems}) {
         },
       }
     },
-    scales: {
-      yAxes: [
-        {
-          ticks: {
-            beginAtZero: true,
-          },
-          scaleLabel: {
-            display: true,
-            labelString: `Free Cash Flow (${unit})`
-          }
-        },
-      ],
-    },
+    // scales: {
+    //   yAxes: [
+    //     {
+    //       ticks: {
+    //         beginAtZero: true,
+    //       },
+    //       scaleLabel: {
+    //         display: true,
+    //         labelString: `Free Cash Flow (${unit})`
+    //       }
+    //     },
+    //   ],
+    // },
   }
   // End chart data
 

@@ -65,7 +65,7 @@ function DebtItem({unit, debtItems}) {
       labels: yearLabels,
       datasets: [
         {
-          label: 'Net Income',
+          label: `Net Income (${unit})`,
           data: netIncomeDataset,
           backgroundColor: chart.color.blue,
           borderColor: chart.color.blueBorder,
@@ -73,7 +73,7 @@ function DebtItem({unit, debtItems}) {
           barPercentage: chart.bar.percentage,
         },
         {
-          label: 'Long Term Debt',
+          label: `Long Term Debt (${unit})`,
           data: debtDataset,
           backgroundColor: chart.color.orange,
           borderColor: chart.color.orangeBorder,
@@ -126,19 +126,19 @@ function DebtItem({unit, debtItems}) {
         }
       }
     },
-    scales: {
-      yAxes: [
-        {
-          ticks: {
-            beginAtZero: true,
-          },
-          scaleLabel: {
-            display: true,
-            labelString: `Net Income /  Debt (${unit})`
-          }
-        },
-      ],
-    },
+    // scales: {
+    //   yAxes: [
+    //     {
+    //       ticks: {
+    //         beginAtZero: true,
+    //       },
+    //       scaleLabel: {
+    //         display: true,
+    //         labelString: `Net Income /  Debt (${unit})`
+    //       }
+    //     },
+    //   ],
+    // },
   }
   // End chart data
 

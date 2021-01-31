@@ -28,7 +28,7 @@ function CompanySearch(props) {
           setError(errorMessage)
         }
       })
-      .catch(error => {
+      .catch(_error => {
         setError(errorMessage)
       })
   }, [ticker])
@@ -40,6 +40,7 @@ function CompanySearch(props) {
           setError(response.errors)
         } else {
           history.push(`/report/${response.company.symbol}`)
+          setSelectedCompany(null)
         }
       })
     }
@@ -85,7 +86,6 @@ function CompanySearch(props) {
 
   const onClose = () => {
     setError(null)
-    setSelectedCompany(null)
   }
 
   const renderDropdown = () => {
@@ -110,7 +110,7 @@ function CompanySearch(props) {
     }
   }
 
-  let displayError = error ? 'Error' : null
+  let displayError = error ? true : false
   return (
     <>
       {displayError ? <Notification title='Oops' notification={error} onClose={onClose} /> : null}

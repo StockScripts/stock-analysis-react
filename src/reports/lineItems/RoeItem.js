@@ -60,7 +60,7 @@ function ROE({unit, roeItems}) {
       labels: yearLabels,
       datasets: [
         {
-          label: 'ROE',
+          label: 'ROE (%)',
           data: roeDataset,
           backgroundColor: chart.color.blue,
           borderColor: chart.color.blueBorder,
@@ -108,19 +108,19 @@ function ROE({unit, roeItems}) {
         }
       }
     },
-    scales: {
-      yAxes: [
-        {
-          ticks: {
-            beginAtZero: true,
-          },
-          scaleLabel: {
-            display: true,
-            labelString: `ROE (%)`
-          }
-        },
-      ],
-    },
+    // scales: {
+    //   yAxes: [
+    //     {
+    //       ticks: {
+    //         beginAtZero: true,
+    //       },
+    //       scaleLabel: {
+    //         display: true,
+    //         labelString: `ROE (%)`
+    //       }
+    //     },
+    //   ],
+    // },
   }
   // End chart data
 

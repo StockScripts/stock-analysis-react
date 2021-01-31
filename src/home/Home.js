@@ -130,6 +130,14 @@ export default function Home() {
               content="Are you using your money wisely? Are you squandering it? ROE tells you how effective a company is at using shareholder money."
             />
             <ChecklistItem
+              title="Do you have spending money?"
+              subtitle="Free Cash Flow"
+              link="https://www.investopedia.com/terms/f/freecashflow.asp"
+              icon={faMoneyBillWave}
+              content={`This is the actual cash you have on hand after you pay your credit card bills, groceries, and other expenses.
+                It's money you can use for the fun stuff. You should have "fun money", and so should a company.`}
+            />
+            <ChecklistItem
               title="How much do you spend to make money?"
               subtitle="Gross Profit"
               link="https://www.investopedia.com/terms/g/grossprofit.asp"
@@ -153,14 +161,6 @@ export default function Home() {
               icon={faFunnelDollar}
               content="You make money, and you use money. You pay bills, taxes, buy groceries, go out to eat, and buy toys.
                 The money you have left over is your net income. The more of it you have, the better."
-            />
-            <ChecklistItem
-              title="Do you have spending money?"
-              subtitle="Free Cash Flow"
-              link="https://www.investopedia.com/terms/f/freecashflow.asp"
-              icon={faMoneyBillWave}
-              content={`This is the actual cash you have on hand after you pay your credit card bills, groceries, and other expenses.
-                It's money you can use for the fun stuff. You should have "fun money", and so should a company.`}
             />
             <ChecklistItem
               title="Can you pay your bills?"

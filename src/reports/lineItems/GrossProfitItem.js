@@ -60,7 +60,7 @@ function GrossProfitItem({unit, grossProfitItems}) {
       labels: yearLabels,
       datasets: [
         {
-          label: 'Gross Profit',
+          label: `Gross Profit (${unit})`,
           data: grossProfitsDataset,
           backgroundColor: chart.color.green,
           borderColor: chart.color.greenBorder,
@@ -68,7 +68,7 @@ function GrossProfitItem({unit, grossProfitItems}) {
           barPercentage: chart.bar.percentage,
         },
         {
-          label: 'Revenue',
+          label: `Revenue (${unit})`,
           data: revenueDataset,
           backgroundColor: chart.color.blue,
           borderColor: chart.color.blueBorder,
@@ -120,19 +120,19 @@ function GrossProfitItem({unit, grossProfitItems}) {
         }
       }
     },
-    scales: {
-      yAxes: [
-        {
-          ticks: {
-            beginAtZero: true,
-          },
-          scaleLabel: {
-            display: true,
-            labelString: `Gross Profit / Revenue (${unit})`
-          }
-        },
-      ],
-    },
+    // scales: {
+    //   yAxes: [
+    //     {
+    //       ticks: {
+    //         beginAtZero: true,
+    //       },
+    //       scaleLabel: {
+    //         display: true,
+    //         labelString: `Gross Profit / Revenue (${unit})`
+    //       }
+    //     },
+    //   ],
+    // },
   }
   // End chart data
 
@@ -155,14 +155,17 @@ function GrossProfitItem({unit, grossProfitItems}) {
       return "Gross margin is consistently above 20% which means the company can make its products \
         at a reasonable cost."
     }
-    return "A gross margin of less than 20% usually means the company is in a very \
-    competitive industry where it may be hard to sustain a competitive advantage."
+    return "A gross margin of less than 20% usually means the company is in a \
+    competitive industry where it may be hard to keep a competitive advantage, \
+    but consistency is also key."
   }
 
   const grossProfitsTip = <ItemTip
     guidance={guidance(pass)}
     definition="Gross profit is the amount left after subtracting the cost to make products
-      from the revenue. Gross margin is the percentage of revenue remaining."
+      from the revenue. It's how much of the revenue they're keeping after making the product.
+      Gross margin is the percentage of revenue remaining. The higher the value, the more profit
+      they're keeping."
     importance="A company that can make products at a low cost is at an advantage."
     caution="Gross margin can vary greatly between different companies, but the value should be consistent
       for each company."

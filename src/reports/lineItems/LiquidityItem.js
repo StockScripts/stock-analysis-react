@@ -60,7 +60,7 @@ function LiquidityItem({unit, liquidityItems}) {
       labels: yearLabels,
       datasets: [
         {
-          label: 'Current Assets',
+          label: `Current Assets (${unit})`,
           data: currentAssetsDataset,
           backgroundColor: chart.color.blue,
           borderColor: chart.color.blueBorder,
@@ -68,7 +68,7 @@ function LiquidityItem({unit, liquidityItems}) {
           barPercentage: chart.bar.percentage,
         },
         {
-          label: 'Current Liabilities',
+          label: `Current Liabilities (${unit})`,
           data: currentLiabilitiesDataset,
           backgroundColor: chart.color.orange,
           borderColor: chart.color.orangeBorder,
@@ -120,19 +120,19 @@ function LiquidityItem({unit, liquidityItems}) {
         }
       }
     },
-    scales: {
-      yAxes: [
-        {
-          ticks: {
-            beginAtZero: true,
-          },
-          scaleLabel: {
-            display: true,
-            labelString: `Assets / Liabilities (${unit})`
-          }
-        },
-      ],
-    },
+    // scales: {
+    //   yAxes: [
+    //     {
+    //       ticks: {
+    //         beginAtZero: true,
+    //       },
+    //       scaleLabel: {
+    //         display: true,
+    //         labelString: `Assets / Liabilities (${unit})`
+    //       }
+    //     },
+    //   ],
+    // },
   }
   // End chart data
 

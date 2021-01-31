@@ -25,19 +25,22 @@ function LeverageItem({unit, liabilitiesItems}) {
   React.useEffect(() => {
     if (liabilitiesItems && liabilitiesItems[0].totalLiabilities) {
       liabilitiesItems.forEach((item) => {
-        if (checkFail(item.leverageRatio, item.longTermDebtToEquity)) {
+        if (leverageCheckFail(item.leverageRatio) || longTermDebtCheckFail(item.longTermDebtToEquity)) {
           setPass(false)
         }
       })
     }
   }, [liabilitiesItems])
+  
+  const leverageCheckFail = (leverageRatio) => (leverageRatio > 2 || leverageRatio < 0)
+  const longTermDebtCheckFail = (longTermDebtToEquity) => (longTermDebtToEquity > 50 || longTermDebtToEquity < 0)
 
-  const checkFail = (leverageRatio, longTermDebtToEquity) => {
-    return (leverageRatio > 2 && longTermDebtToEquity > 50) 
-  } 
+  const leveragePassFailClass = (leverageRatio) => {
+    return getPassFailClass(leverageCheckFail(leverageRatio))
+  }
 
-  const passFailClass = (leverageRatio, longTermDebtToEquity) => {
-    return getPassFailClass(checkFail(leverageRatio, longTermDebtToEquity))
+  const longTermDebtPassFailClass = (leverageRatio) => {
+    return getPassFailClass(longTermDebtCheckFail(leverageRatio))
   }
 
   // Begin chart data
@@ -71,7 +74,7 @@ function LeverageItem({unit, liabilitiesItems}) {
           stack: 1,
         },
         {
-          label: 'Total Liabilities',
+          label: `Total Liabilities (${unit})`,
           data: liabilitiesDataset,
           backgroundColor: chart.color.orange,
           borderColor: chart.color.orangeBorder,
@@ -80,7 +83,7 @@ function LeverageItem({unit, liabilitiesItems}) {
           stack: 1,
         },
         {
-          label: 'Equity',
+          label: `Equity (${unit})`,
           data: equityDataset,
           backgroundColor: chart.color.blue,
           borderColor: chart.color.blueBorder,
@@ -128,20 +131,20 @@ function LeverageItem({unit, liabilitiesItems}) {
         }
       }
     },
-    scales: {
-      yAxes: [
-        {
-          stacked: true,
-          ticks: {
-            beginAtZero: true,
-          },
-          scaleLabel: {
-            display: true,
-            labelString: `Liabilities / Equity (${unit})`
-          }
-        },
-      ],
-    },
+    // scales: {
+    //   yAxes: [
+    //     {
+    //       stacked: true,
+    //       ticks: {
+    //         beginAtZero: true,
+    //       },
+    //       scaleLabel: {
+    //         display: true,
+    //         labelString: `Liabilities / Equity (${unit})`
+    //       }
+    //     },
+    //   ],
+    // },
   }
   // End chart data
 
@@ -152,7 +155,7 @@ function LeverageItem({unit, liabilitiesItems}) {
 
   const leverageRatioData = () => {
     return liabilitiesItems.map((item, index) => {
-      return <td className={passFailClass(item.leverageRatio, item.longTermdebtToEquity)} key={index}>
+      return <td className={leveragePassFailClass(item.leverageRatio)} key={index}>
         {item.leverageRatio}
       </td>
     })
@@ -160,7 +163,7 @@ function LeverageItem({unit, liabilitiesItems}) {
 
   const longTermDebtToEquityData = () => {
     return liabilitiesItems.map((item, index) => {
-      return <td className={passFailClass(item.leverageRatio, item.longTermDebtToEquity)} key={index}>
+      return <td className={longTermDebtPassFailClass(item.longTermDebtToEquity)} key={index}>
         {item.longTermDebtToEquity}%
       </td>
     })
