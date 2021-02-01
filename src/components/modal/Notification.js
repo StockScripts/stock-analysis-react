@@ -1,25 +1,27 @@
-import React from "react";
-import Transition from "./Transition";
+import React from 'react'
+import Modal from 'react-modal';
 
 export default function Notification({title, notification, onClose}) {
+  const customStyles = {
+    content : {
+      top                   : '50%',
+      left                  : '50%',
+      right                 : 'auto',
+      bottom                : 'auto',
+      marginRight           : '-50%',
+    }
+  };
+
   return (
-  <Transition
-      show={true}
-      enter="transition ease-out duration-100 transform"
-      enterFrom="opacity-0 scale-95"
-      enterTo="opacity-100 scale-100"
-      leave="transition ease-in duration-75 transform"
-      leaveFrom="opacity-100 scale-100"
-      leaveTo="opacity-0 scale-95"
+    <Modal
+      isOpen={true}
+      onRequestClose={onClose}
+      style={customStyles}
     >
-    <>
-      <div
-        className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none w-screen"
-        onClick={() => onClose()}
-      >
+      <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none w-screen" >
         <div className="relative w-auto my-6 mx-auto max-w-3xl">
           {/*content*/}
-          <div className="border-0 rounded-lg shadow-lg relative flex flex-col min-w-full w-1/2 bg-white outline-none focus:outline-none">
+          <div className="modal border-0 rounded-lg shadow-lg relative flex flex-col min-w-full w-1/2 bg-white outline-none focus:outline-none">
             {/*header*/}
             <div className="flex items-start justify-between p-5 border-b border-solid border-gray-300 rounded-t">
               <h3 className="text-3xl font-semibold">
@@ -55,7 +57,6 @@ export default function Notification({title, notification, onClose}) {
         </div>
       </div>
       <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
-    </>
-    </Transition>
-  );
+    </Modal>
+  )
 }

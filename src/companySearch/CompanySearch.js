@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { getCompanies, getCompany } from './companyAPI'
 import Notification from '../components/modal/Notification'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSearch } from '@fortawesome/free-solid-svg-icons'
 
 function CompanySearch(props) {
   let history = useHistory()
@@ -24,7 +26,6 @@ function CompanySearch(props) {
           setCompanies(response.companies)
           setError(null)
         } else {
-          // setError(response.status)
           setError(errorMessage)
         }
       })
@@ -93,7 +94,7 @@ function CompanySearch(props) {
       let companyItems = companies.map(company =>
         <option
           key={company.symbol}
-          className="block px-4 py-2 text-md leading-5 text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:bg-gray-100 focus:text-gray-900 whitespace-normal"
+          className="block px-4 py-2 text-md leading-5 text-gray-700 hover:bg-gray-100 hover:text-palette-green-dark focus:outline-none focus:bg-gray-100 focus:text-gray-900 whitespace-normal"
           value={company.id || company.symbol} onClick={selectCompany}
         >
           {company.symbol} - {company.name || company.securityName}
@@ -102,7 +103,7 @@ function CompanySearch(props) {
       companyItems.unshift(<option key='hidden' hidden></option>)  //first option is automatically selected when user presses enter
       return (
         <div
-          className="absolute left-0 mt-2 w-56 shadow-lg rounded bg-white"
+          className="absolute left-0 mt-2 w-56 shadow-lg rounded bg-white cursor-pointer"
         >
           {companyItems}
         </div>
@@ -115,30 +116,23 @@ function CompanySearch(props) {
     <>
       {displayError ? <Notification title='Oops' notification={error} onClose={onClose} /> : null}
       <div className="relative">
-        <form autoComplete="off" onSubmit={handleSubmit}>
+        <form className="flex w-full" autoComplete="off" onSubmit={handleSubmit}>
           <input 
-            className="md:w-full bg-white text-palette-dark focus:outline-none focus:shadow-outline border border-gray-300 rounded shadow py-2 px-4 m-2 appearance-none leading-normal"
+            className="flex-grow bg-white text-palette-dark focus:outline-none focus:shadow-outline border border-gray-300 rounded shadow py-2 px-4 m-2 mr-0 appearance-none leading-normal"
             placeholder="Enter ticker or company"
             value={ticker}
             onChange={handleChange}
             onClick={handleInputClick}
             type="text"
           />
-          {displayDropdown ? renderDropdown() : null}
-          {/* <button
-            id="navAction"
-            className="mx-auto lg:mx-0 hover:underline bg-white text-gray-800 font-bold rounded-full mt-4 lg:mt-0 py-4 px-8 shadow opacity-75"
+          <button
+            className="py-2 px-4 text-palette-green-dark border rounded shadow m-2 ml-0"
             type="submit"
           >
-            Search
-          </button> */}
-          {/* <button
-            className="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-2 px-4 border border-indigo-400 rounded shadow m-2"
-            type="submit"
-          >
-            Search
-          </button> */}
+            <FontAwesomeIcon icon={faSearch} size="lg"/>
+          </button>
         </form>
+        {displayDropdown ? renderDropdown() : null}
       </div>
     </>
   )
