@@ -27,12 +27,22 @@ function NavBar() {
 
         <div className="flex w-full pt-2 content-center justify-between md:w-1/3 md:justify-end">
           <ul className="list-reset flex justify-between flex-1 md:flex-none items-center">
+            {/* <li className="flex-1 md:flex-none mr-4 pb-2">
+              <a className="inline-block text-palette-green-dark no-underline hover:text-palette-green-med py-2 px-4" href="http://blog.grasshopperstocks.com">Blog</a>
+            </li> */}
+            <li>
+              <a href="https://www.buymeacoffee.com/janicelaset" target="_blank">
+                <img 
+                  className="h-8 pb-2 mx-4"
+                  src={require('./bmc-logo.png')}
+                  alt="Buy Me A Coffee" 
+                  />
+              </a>
+            </li>
             {/* <li className="flex-1 md:flex-none md:mr-3">
               <a className="inline-block py-2 px-4 text-gray no-underline" href="#">Active</a>
             </li> */}
-            {/* <li className="flex-1 md:flex-none md:mr-3">
-              <a className="inline-block text-palette-green-dark no-underline hover:text-palette-green-med py-2 px-4" href="http://blog.grasshopperstocks.com">Blog</a>
-            </li> */}
+            
             {/* <li className="flex-1 md:flex-none md:mr-3">
               <div className="relative inline-block">
                 <div id="myDropdown" className="dropdownlist absolute bg-gray-900 text-white right-0 mt-3 p-3 overflow-auto z-30 invisible">
@@ -84,7 +94,6 @@ function NavBar() {
          </div>
        </div>
 
-       <hr className="border-b border-gray-100 opacity-25 my-0 py-0" />
      </nav>
 
      <nav className="flex items-center justify-between flex-wrap bg-indigo-600 p-6">

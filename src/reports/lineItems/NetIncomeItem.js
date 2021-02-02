@@ -55,12 +55,15 @@ function NetIncomeItem({unit, netIncomeItems}) {
     return item.netMargin
   })
 
+  const netIncomeLabel = `Net Income (${unit})`
+  const revenueLabel = `Revenue (${unit})`
+
   const netIncomeChartData = () => {
     return {
       labels: yearLabels,
       datasets: [
         {
-          label: `Net Income (${unit})`,
+          label: netIncomeLabel,
           data: netIncomeDataset,
           backgroundColor:chart.color.green,
           borderColor: chart.color.greenBorder,
@@ -68,7 +71,7 @@ function NetIncomeItem({unit, netIncomeItems}) {
           barPercentage: chart.bar.percentage,
         },
         {
-          label: `Revenue (${unit})`,
+          label: revenueLabel,
           data: revenueDataset,
           backgroundColor: chart.color.blue,
           borderColor: chart.color.blueBorder,
@@ -107,9 +110,9 @@ function NetIncomeItem({unit, netIncomeItems}) {
           let netIncomeData = data['datasets'][0]['data'][tooltipItem['index']]
           let revenueData = data['datasets'][1]['data'][tooltipItem['index']]
           switch (label) {
-            case 'Net Income':
+            case netIncomeLabel:
               return `Net Income: ${netIncomeData} ${unit}`
-            case 'Revenue':
+            case revenueLabel:
               return `Revenue: ${revenueData} ${unit}`
             default:
               break

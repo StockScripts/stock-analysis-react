@@ -60,12 +60,16 @@ function LeverageItem({unit, liabilitiesItems}) {
     return item.shareholderEquity
   })
 
+  const totalLiabilitiesLabel = `Total Liabilities (${unit})`
+  const longTermDebtLabel = 'Long Term Debt'
+  const equityLabel = `Equity (${unit})`
+
   const leverageChartData = () => {
     return {
       labels: yearLabels,
       datasets: [
         {
-          label: 'Long Term Debt',
+          label: longTermDebtLabel,
           data: longTermDebtDataset,
           backgroundColor: chart.color.darkOrange,
           borderColor: chart.color.orangeBorder,
@@ -74,7 +78,7 @@ function LeverageItem({unit, liabilitiesItems}) {
           stack: 1,
         },
         {
-          label: `Total Liabilities (${unit})`,
+          label: totalLiabilitiesLabel,
           data: liabilitiesDataset,
           backgroundColor: chart.color.orange,
           borderColor: chart.color.orangeBorder,
@@ -83,7 +87,7 @@ function LeverageItem({unit, liabilitiesItems}) {
           stack: 1,
         },
         {
-          label: `Equity (${unit})`,
+          label: equityLabel,
           data: equityDataset,
           backgroundColor: chart.color.blue,
           borderColor: chart.color.blueBorder,
@@ -107,11 +111,11 @@ function LeverageItem({unit, liabilitiesItems}) {
           let totalLiabilitiesData = parseFloat(data['datasets'][1]['data'][tooltipItem['index']]) + parseFloat(longTermDebtData)
           let equityData = data['datasets'][2]['data'][tooltipItem['index']]
           switch (label) {
-            case 'Long Term Debt':
+            case longTermDebtLabel:
               return `Long Term Debt: ${longTermDebtData} ${unit}`
-            case 'Total Liabilities':
+            case totalLiabilitiesLabel:
               return `Total Liabilities: ${totalLiabilitiesData} ${unit}`
-            case 'Equity':
+            case equityLabel:
               return `Equity: ${equityData} ${unit}`
             default:
               return null

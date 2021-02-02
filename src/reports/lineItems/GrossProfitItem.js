@@ -55,12 +55,15 @@ function GrossProfitItem({unit, grossProfitItems}) {
     return item.grossMargin
   })
 
+  const grossProfitLabel = `Gross Profit (${unit})`
+  const revenueLabel = `Revenue (${unit})`
+
   const grossProfitsChartData = () => {
     return {
       labels: yearLabels,
       datasets: [
         {
-          label: `Gross Profit (${unit})`,
+          label: grossProfitLabel,
           data: grossProfitsDataset,
           backgroundColor: chart.color.green,
           borderColor: chart.color.greenBorder,
@@ -107,9 +110,9 @@ function GrossProfitItem({unit, grossProfitItems}) {
           let grossProfitData = data['datasets'][0]['data'][tooltipItem['index']]
           let revenueData = data['datasets'][1]['data'][tooltipItem['index']]
           switch (label) {
-            case 'Gross Profit':
+            case grossProfitLabel:
               return `Gross Profit: ${grossProfitData} ${unit}`
-            case 'Revenue':
+            case revenueLabel:
               return `Revenue: ${revenueData} ${unit}`
             default:
               break

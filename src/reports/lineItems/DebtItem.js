@@ -60,12 +60,15 @@ function DebtItem({unit, debtItems}) {
     return item.netIncomeToLongTermDebt
   })
 
+  const netIncomeLabel = `Net Income (${unit})`
+  const longTermDebtLabel = `Long Term Debt (${unit})`
+
   const debtChartData = () => {
     return {
       labels: yearLabels,
       datasets: [
         {
-          label: `Net Income (${unit})`,
+          label: netIncomeLabel,
           data: netIncomeDataset,
           backgroundColor: chart.color.blue,
           borderColor: chart.color.blueBorder,
@@ -73,7 +76,7 @@ function DebtItem({unit, debtItems}) {
           barPercentage: chart.bar.percentage,
         },
         {
-          label: `Long Term Debt (${unit})`,
+          label: longTermDebtLabel,
           data: debtDataset,
           backgroundColor: chart.color.orange,
           borderColor: chart.color.orangeBorder,
@@ -112,9 +115,9 @@ function DebtItem({unit, debtItems}) {
           let netIncomeData = data['datasets'][0]['data'][tooltipItem['index']]
           let longTermDebtData = data['datasets'][1]['data'][tooltipItem['index']]
           switch (label) {
-            case 'Net Income':
+            case netIncomeLabel:
               return `Net Income: ${netIncomeData} ${unit}`
-            case 'Long Term Debt':
+            case longTermDebtLabel:
               return `Long Term Debt: ${longTermDebtData} ${unit}`
             default:
               return 'n/a'

@@ -55,12 +55,15 @@ function LiquidityItem({unit, liquidityItems}) {
     return item.currentRatio
   })
 
+  const currentAssetsLabel = `Current Assets (${unit})`
+  const currentLiabilitiesLabel = `Current Liabilities (${unit})`
+
   const currentRatioChartData = () => {
     return {
       labels: yearLabels,
       datasets: [
         {
-          label: `Current Assets (${unit})`,
+          label: currentAssetsLabel,
           data: currentAssetsDataset,
           backgroundColor: chart.color.blue,
           borderColor: chart.color.blueBorder,
@@ -68,7 +71,7 @@ function LiquidityItem({unit, liquidityItems}) {
           barPercentage: chart.bar.percentage,
         },
         {
-          label: `Current Liabilities (${unit})`,
+          label: currentLiabilitiesLabel,
           data: currentLiabilitiesDataset,
           backgroundColor: chart.color.orange,
           borderColor: chart.color.orangeBorder,
@@ -107,9 +110,9 @@ function LiquidityItem({unit, liquidityItems}) {
           let currentAssets = data['datasets'][0]['data'][tooltipItem['index']]
           let currentLiabilitiesData = data['datasets'][1]['data'][tooltipItem['index']]
           switch (label) {
-            case 'Current Assets':
+            case currentAssetsLabel:
               return `Current Assets: ${currentAssets} ${unit}`
-            case 'Current Liabilities':
+            case currentLiabilitiesLabel:
               return `Current Liabilities: ${currentLiabilitiesData} ${unit}`
             default:
               break

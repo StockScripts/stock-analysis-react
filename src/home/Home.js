@@ -16,7 +16,7 @@ export default function Home() {
   // style="background: linear-gradient(90deg, #667eea 0%, #764ba2 100%)
   return (
     <>
-      <div className="py-20 bg-palette-green-med">
+      <div className="sm:py-20 pt-32 bg-palette-green-med">
         <div className="container mx-auto px-6">
           <h2 className="text-4xl font-bold mb-2 text-palette-light">
             Invest in good companies
@@ -38,13 +38,13 @@ export default function Home() {
           <h1 className="w-full my-2 mb-8 text-4xl font-bold leading-tight text-center text-gray-600">How do I use this?</h1>
         
           <div className="flex flex-wrap sm:flex-row ">
-            <div className="w-full sm:w-1/2 p-6 mt-24">
+            <div className="w-full sm:w-1/2 md:p-6 mt-24 text-right">
               <h3 className="text-2xl text-gray-600 font-bold leading-none mb-3">Find a stock you're interested in</h3>
               <p className="text-gray-600 mb-8">
                 Don't know what to invest in? Start with companies you already use. Enter the ticker symbol or company name.
               </p>
             </div>
-            <div className="w-full sm:w-1/2 p-6">
+            <div className="w-full sm:w-1/2 md:p-6">
               <div className="shadow-xl">
                 <img className="w-full ml-auto rounded-sm shadow-lg" alt='demo' src={require('./enter-ticker.gif')} />
               </div>
@@ -52,13 +52,13 @@ export default function Home() {
           </div>
           
           <div className="flex flex-wrap flex-col-reverse sm:flex-row">	
-            <div className="w-full sm:w-1/2 p-6 mt-6">
+            <div className="w-full sm:w-1/2 md:p-6 mt-6">
               <div className="shadow-xl">
                 <img className="w-full ml-auto rounded-sm" alt='demo' src={require('./report.gif')} />
               </div>
               {/* <svg className="w-5/6 sm:h-64 mx-auto" viewBox="0 0 1176.60617 873.97852" xmlns="http://www.w3.org/2000/svg"> */}
             </div>
-            <div className="w-full sm:w-1/2 p-6 mt-24">
+            <div className="w-full sm:w-1/2 md:p-6 mt-24">
               <div className="align-middle">
                 <h3 className="text-2xl text-gray-600 font-bold leading-none mb-3">Look for the Green</h3>
                 <p className="text-gray-600 mb-8">
@@ -71,14 +71,14 @@ export default function Home() {
           </div>
 
           <div className="flex flex-wrap sm:flex-row">
-            <div className="w-full sm:w-1/2 p-6 mt-24 text-right">
+            <div className="w-full sm:w-1/2 md:p-6 mt-24 text-right">
               <h3 className="text-2xl text-gray-600 font-bold leading-none mb-3">Be informed</h3>
               <p className="text-gray-600 mb-8">
                 Click on the icon to learn more about the item. You'll get information on what it is, why it's important,
                 and what to watch for.
               </p>
             </div>
-            <div className="w-full sm:w-1/2 p-6">
+            <div className="w-full sm:w-1/2 md:p-6">
               <div className="shadow-2xl">
                 <img className="w-full ml-auto rounded-sm" alt='demo' src={require('./icon-click.gif')} />
               </div>
@@ -86,12 +86,12 @@ export default function Home() {
           </div>
 
           <div className="flex flex-wrap flex-col-reverse sm:flex-row">	
-            <div className="w-full sm:w-1/2 p-6 mt-6">
+            <div className="w-full sm:w-1/2 mdp-6 mt-6">
               <div className="shadow-xl">
                 <img className="w-full ml-auto rounded-sm" alt='demo' src={require('./graph.gif')} />
               </div>
             </div>
-            <div className="w-full sm:w-1/2 p-6 mt-24">
+            <div className="w-full sm:w-1/2 md:p-6 mt-24">
               <div className="align-middle">
                 <h3 className="text-2xl text-gray-600 font-bold leading-none mb-3">Examine data</h3>
                 <p className="text-gray-600 mb-8">

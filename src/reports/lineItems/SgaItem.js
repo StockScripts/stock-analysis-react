@@ -55,12 +55,15 @@ function SgaItem({unit, sgaItems}) {
     return item.sgaToGross
   })
 
+  const sgaLabel = `SGA (${unit})`
+  const grossProfitLabel = `Gross Profit (${unit})`
+
   const sgaChartData = () => {
     return {
       labels: yearLabels,
       datasets: [
         {
-          label: `SGA (${unit})`,
+          label: sgaLabel,
           data: sgaDataset,
           backgroundColor: chart.color.green,
           borderColor: chart.color.greenBorder,
@@ -68,7 +71,7 @@ function SgaItem({unit, sgaItems}) {
           barPercentage: chart.bar.percentage,
         },
         {
-          label: `Gross Profit (${unit})`,
+          label: grossProfitLabel,
           data: grossProfitDataset,
           backgroundColor: chart.color.blue,
           borderColor: chart.color.blueBorder,
@@ -107,9 +110,9 @@ function SgaItem({unit, sgaItems}) {
           let sgaData = data['datasets'][0]['data'][tooltipItem['index']]
           let grossProfitData = data['datasets'][1]['data'][tooltipItem['index']]
           switch (label) {
-            case 'Gross Profit':
+            case grossProfitLabel:
               return `Gross Profit: ${grossProfitData} ${unit}`
-            case 'SGA':
+            case sgaLabel:
               return `SGA: ${sgaData} ${unit}`
             default:
               break
