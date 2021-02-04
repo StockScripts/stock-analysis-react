@@ -163,7 +163,7 @@ function NetIncomeItem({unit, netIncomeItems}) {
   const netIncomeYOYData = () => {
     return netIncomeItems.map((item, index) => {
       return <td className={passFailClass(item.netIncome, item.netIncomeYOY ? item.netIncomeYOY : null)} key={index}>
-        {item.netIncomeYOY ? `${item.netIncomeYOY}%` : ''}
+        {item.netIncomeYOY != null ? `${item.netIncomeYOY}%` : ''}
       </td>
     })
   }

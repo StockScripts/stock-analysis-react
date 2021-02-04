@@ -141,7 +141,7 @@ function RevenueItem({unit, revenueItems}) {
   const revenueYOYData = () => {
     return revenueItems.map((item, index) => {
       return <td className={passFailClass(item.totalRevenue, item.totalRevenueYOY ? item.totalRevenueYOY : null)} key={index}>
-        {item.totalRevenueYOY ? `${item.totalRevenueYOY}%` : ''}
+        {item.totalRevenueYOY != null ? `${item.totalRevenueYOY}%` : ''}
       </td>
     })
   }
