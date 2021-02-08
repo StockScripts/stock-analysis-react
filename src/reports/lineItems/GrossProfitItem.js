@@ -21,6 +21,7 @@ import {
 
 function GrossProfitItem({unit, grossProfitItems}) {
   const [pass, setPass] = React.useState(true)
+  const [tipDisplay, setTipDisplay] = React.useState(false)
 
   React.useEffect(() => {
     if (grossProfitItems && grossProfitItems[0].grossProfit) {
@@ -151,6 +152,14 @@ function GrossProfitItem({unit, grossProfitItems}) {
       </td>
     })
   }
+
+  const grossProfitData = () => {
+    return grossProfitItems.map((item, index) => {
+      return <td className={passFailClass(item.grossMargin)} key={index}>
+        {item.grossProfit}
+      </td>
+    })
+  }
   // End table data
 
   const guidance = (pass) => {
@@ -163,6 +172,10 @@ function GrossProfitItem({unit, grossProfitItems}) {
     but consistency is also key."
   }
 
+  const closeTip = () => {
+    setTipDisplay(false)
+  }
+
   const grossProfitsTip = <ItemTip
     guidance={guidance(pass)}
     definition="Gross profit is the amount left after subtracting the cost to make products
@@ -172,6 +185,7 @@ function GrossProfitItem({unit, grossProfitItems}) {
     importance="A company that can make products at a low cost is at an advantage."
     caution="Gross margin can vary greatly between different companies, but the value should be consistent
       for each company."
+    onClose={closeTip}
   />
 
   let itemTitle = <ItemTitle
@@ -179,6 +193,8 @@ function GrossProfitItem({unit, grossProfitItems}) {
     pass={pass}
     icon={faCoins}
     tip={grossProfitsTip}
+    setDisplay={setTipDisplay}
+    tipDisplay={tipDisplay}
   />
 
   let itemChart = <Bar data={grossProfitsChartData} options={options} />
@@ -191,6 +207,10 @@ function GrossProfitItem({unit, grossProfitItems}) {
       <tr>
         <RowHeader itemName='Gross Margin' />
         {grossMarginData()}
+      </tr>
+      <tr>
+        <RowHeader itemName={`Gross Profit (${unit})`} />
+        {grossProfitData()}
       </tr>
     </tbody>
 

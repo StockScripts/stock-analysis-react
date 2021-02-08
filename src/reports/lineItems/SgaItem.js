@@ -21,6 +21,7 @@ import {
 
 function SgaItem({unit, sgaItems}) {
   const [pass, setPass] = React.useState(true)
+  const [tipDisplay, setTipDisplay] = React.useState(false)
 
   React.useEffect(() => {
     if (sgaItems && sgaItems[0].grossProfit) {
@@ -153,6 +154,14 @@ function SgaItem({unit, sgaItems}) {
       </td>
     })
   }
+
+  const sgaData = () => {
+    return sgaItems.map((item, index) => {
+      return <td className={passFailClass(item.sgaToGross)} key={index}>
+        {item.sga}
+      </td>
+    })
+  }
   // End table data
 
   const guidance = (pass) => {
@@ -161,6 +170,10 @@ function SgaItem({unit, sgaItems}) {
     }
     return "SGA is greater than 80% of Gross Profits which means a company is in a highly competitive industry and \
       may be at a disadvantage."
+  }
+
+  const closeTip = () => {
+    setTipDisplay(false)
   }
 
   const profitsTip = <ItemTip
@@ -173,6 +186,7 @@ function SgaItem({unit, sgaItems}) {
       the profits. Companies with consistently low SGA expenses are at an advantage."
     caution="SGA costs can vary greatly between industries. Conistently low values are ideal, but sometimes a
       company can have low SGA costs, and high R&D costs or capital expenditures expenses."
+    onClose={closeTip}
   />
 
   let itemTitle = <ItemTitle
@@ -180,6 +194,8 @@ function SgaItem({unit, sgaItems}) {
     pass={pass}
     icon={faFileInvoice}
     tip={profitsTip}
+    setDisplay={setTipDisplay}
+    tipDisplay={tipDisplay}
   />
 
   let itemChart = <Bar data={sgaChartData} options={options} />
@@ -192,6 +208,10 @@ function SgaItem({unit, sgaItems}) {
     <tr>
       <RowHeader itemName='SGA / Gross Profit' />
       {sgaToGrossData()}
+    </tr>
+    <tr>
+      <RowHeader itemName={`SGA (${unit})`} />
+      {sgaData()}
     </tr>
   </tbody>
 

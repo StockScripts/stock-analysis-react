@@ -21,6 +21,7 @@ import {
 
 function NetIncomeItem({unit, netIncomeItems}) {
   const [pass, setPass] = React.useState(true)
+  const [tipDisplay, setTipDisplay] = React.useState(false)
 
   React.useEffect(() => {
     if (netIncomeItems && netIncomeItems[0].netIncome) {
@@ -176,6 +177,10 @@ function NetIncomeItem({unit, netIncomeItems}) {
     return "Net income has decreased. Ideally, it should be increasing every year."
   }
 
+  const closeTip = () => {
+    setTipDisplay(false)
+  }
+
   const profitsTip = <ItemTip
     guidance={guidance(pass)}
     definition="Net income is known as the bottom line, and it's what's left of the revenue after a
@@ -184,6 +189,7 @@ function NetIncomeItem({unit, netIncomeItems}) {
       which can drive the stock price. Net margin measures how good a company is at converting revenue into profits."
     caution="If net margin is increasing significantly, it could be due to a decrease in tax rate
       or from reducing expenses. Constantly cutting costs may not be sustainable in the long term."
+    onClose={closeTip}
   />
 
   let itemTitle = <ItemTitle
@@ -191,6 +197,8 @@ function NetIncomeItem({unit, netIncomeItems}) {
     pass={pass}
     icon={faFunnelDollar}
     tip={profitsTip}
+    setDisplay={setTipDisplay}
+    tipDisplay={tipDisplay}
   />
 
   let itemChart = <Bar data={netIncomeChartData} options={options} />

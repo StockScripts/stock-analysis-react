@@ -21,6 +21,7 @@ import { faHandHoldingUsd } from '@fortawesome/free-solid-svg-icons'
 
 function ROE({unit, roeItems}) {
   const [pass, setPass] = React.useState(true)
+  const [tipDisplay, setTipDisplay] = React.useState(false)
 
   React.useEffect(() => {
     if (roeItems && roeItems[0].netIncome) {
@@ -145,6 +146,10 @@ function ROE({unit, roeItems}) {
     return "ROE should be at least 10% and should not be trending down."
   }
 
+  const closeTip = () => {
+    setTipDisplay(false)
+  }
+
   const roeTip = <ItemTip
     guidance={guidance(pass)}
     definition="Return on Equity is the net income divided by shareholders equity.
@@ -154,6 +159,7 @@ function ROE({unit, roeItems}) {
     caution="ROE can increase if the company is acquiring more debt. If liabilities increase,
       equity decreases, which boosts ROE. Check the Liabilities item and see if the company
       is becoming too leveraged."
+    onClose={closeTip}
   />
 
   let itemTitle = <ItemTitle
@@ -161,6 +167,8 @@ function ROE({unit, roeItems}) {
     pass={pass}
     icon={faHandHoldingUsd}
     tip={roeTip}
+    setDisplay={setTipDisplay}
+    tipDisplay={tipDisplay}
   />
 
   let itemChart = <Bar data={roeChartData} options={options} />

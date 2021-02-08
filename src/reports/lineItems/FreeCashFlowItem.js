@@ -21,6 +21,7 @@ import { faMoneyBillWave } from '@fortawesome/free-solid-svg-icons'
 
 function FreeCashFlowItem({unit, freeCashFlowItems}) {
   const [pass, setPass] = React.useState(true)
+  const [tipDisplay, setTipDisplay] = React.useState(false)
 
   React.useEffect(() => {
     if (freeCashFlowItems && freeCashFlowItems[0]) {
@@ -122,6 +123,10 @@ function FreeCashFlowItem({unit, freeCashFlowItems}) {
       positive, which means the company can reinvest back into the company."
   }
 
+  const closeTip = () => {
+    setTipDisplay(false)
+  }
+
   const freeCashFlowTip = <ItemTip
     guidance={guidance(pass)}
     definition="This is cash that a company generates after paying expenses."
@@ -129,6 +134,7 @@ function FreeCashFlowItem({unit, freeCashFlowItems}) {
     acquisitions, pay dividends, or reduce debt. Growing free cash flows frequently
     leads to increased earnings."
     caution="It should not be continuously decreasing."
+    onClose={closeTip}
   />
 
   let itemTitle = <ItemTitle
@@ -136,6 +142,8 @@ function FreeCashFlowItem({unit, freeCashFlowItems}) {
     icon={faMoneyBillWave}
     pass={pass}
     tip={freeCashFlowTip}
+    setDisplay={setTipDisplay}
+    tipDisplay={tipDisplay}
   />
 
   let itemChart = <Bar data={freeCashFlowChartData} options={options} />

@@ -21,6 +21,7 @@ import { faCreditCard } from '@fortawesome/free-solid-svg-icons'
 
 function DebtItem({unit, debtItems}) {
   const [pass, setPass] = React.useState(true)
+  const [tipDisplay, setTipDisplay] = React.useState(false)
 
   React.useEffect(() => {
     if (debtItems) {
@@ -184,6 +185,10 @@ function DebtItem({unit, debtItems}) {
     years. This means net income to long term debt should be greater than 0.2."
   }
 
+  const closeTip = () => {
+    setTipDisplay(false)
+  }
+
   const debtTip = <ItemTip
     guidance={guidance(pass)}
     definition="Long term debt is debt that matures past a year. Long term debt to net income is
@@ -192,6 +197,7 @@ function DebtItem({unit, debtItems}) {
     but profitable companies shouldn't need large amounts of debt. More importantly,
     a company should be able to afford their debt."
     caution="Increasing ROE may be due to increasing debt."
+    onClose={closeTip}
   />
 
   let itemTitle = <ItemTitle
@@ -199,6 +205,8 @@ function DebtItem({unit, debtItems}) {
     pass={pass}
     icon={faCreditCard}
     tip={debtTip}
+    setDisplay={setTipDisplay}
+    tipDisplay={tipDisplay}
   />
 
   let itemChart = <Bar data={debtChartData} options={options} />

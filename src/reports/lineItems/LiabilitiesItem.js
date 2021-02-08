@@ -21,6 +21,7 @@ import {
 
 function LeverageItem({unit, liabilitiesItems}) {
   const [pass, setPass] = React.useState(true)
+  const [tipDisplay, setTipDisplay] = React.useState(false)
 
   React.useEffect(() => {
     if (liabilitiesItems && liabilitiesItems[0].totalLiabilities) {
@@ -183,6 +184,10 @@ function LeverageItem({unit, liabilitiesItems}) {
       than 2 and a debt to equity greater than 50% is considered risky."
   }
 
+  const closeTip = () => {
+    setTipDisplay(false)
+  }
+
   const liabilitiesTip = <ItemTip
     guidance={guidance(pass)}
     definition="Financial leverage means you're using money to make money. One measure is to
@@ -192,6 +197,7 @@ function LeverageItem({unit, liabilitiesItems}) {
       debt to equity."
     importance="Increased leverage can lead to potential profitability, but also potential risk."
     caution="Increasing ROE may be due to increasing debt."
+    onClose={closeTip}
   />
 
   let itemTitle = <ItemTitle
@@ -199,6 +205,8 @@ function LeverageItem({unit, liabilitiesItems}) {
     pass={pass}
     icon={faBalanceScale}
     tip={liabilitiesTip}
+    setDisplay={setTipDisplay}
+    tipDisplay={tipDisplay}
   />
 
   let itemChart = <Bar data={leverageChartData} options={options} />

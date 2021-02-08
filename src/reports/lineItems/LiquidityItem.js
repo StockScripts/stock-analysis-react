@@ -21,6 +21,7 @@ import {
 
 function LiquidityItem({unit, liquidityItems}) {
   const [pass, setPass] = React.useState(true)
+  const [tipDisplay, setTipDisplay] = React.useState(false)
 
   React.useEffect(() => {
     if (liquidityItems && liquidityItems[0].currentLiabilities) {
@@ -176,6 +177,10 @@ function LiquidityItem({unit, liquidityItems}) {
     }
     return "Current ratio has dropped below 1. Ideally, this should consistently be above 1."
   }
+
+  const closeTip = () => {
+    setTipDisplay(false)
+  }
   
   const liquidityTip = <ItemTip
     guidance={guidance(pass)}
@@ -186,6 +191,7 @@ function LiquidityItem({unit, liquidityItems}) {
     caution="The lower the ratio, the more likely it is for a company to struggle paying their bills,
       but a high liquidity ratio can also indicate that the company isn't investing their cash
       efficiently."
+    onClose={closeTip}
   />
 
   let itemTitle = <ItemTitle
@@ -193,6 +199,8 @@ function LiquidityItem({unit, liquidityItems}) {
     pass={pass}
     icon={faFileInvoiceDollar}
     tip={liquidityTip}
+    setDisplay={setTipDisplay}
+    tipDisplay={tipDisplay}
   />
 
   let itemChart = <Bar data={currentRatioChartData} options={options} />

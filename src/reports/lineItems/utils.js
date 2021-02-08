@@ -11,7 +11,7 @@ export const getPassFailClass = (fail) => {
   if (fail) {
     classColor = 'text-orange-600'
   }
-  return `text-center text-sm py-1 ${classColor}`
+  return `text-center text-xs py-1 ${classColor}`
 }
 
 export const fiscalDateYear = (fiscalDate) => fiscalDate.split('-')[0]
